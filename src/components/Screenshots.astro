@@ -4,6 +4,7 @@
  * app has real screenshots, so a page never shows placeholder imagery.
  */
 import type { AppDefinition } from '@/data/apps';
+import { asset } from '@/config/site';
 
 interface Props {
   app: AppDefinition;
@@ -24,7 +25,7 @@ const shots = app.screenshots;
       <div class="screens" role="list" tabindex="0" aria-label={`${app.name} screenshots`}>
         {shots.map((shot) => (
           <figure class="screen" role="listitem">
-            <img src={shot.src} alt={shot.alt} width={shot.width} height={shot.height} loading="lazy" decoding="async" />
+            <img src={asset(shot.src)} alt={shot.alt} width={shot.width} height={shot.height} loading="lazy" decoding="async" />
           </figure>
         ))}
       </div>

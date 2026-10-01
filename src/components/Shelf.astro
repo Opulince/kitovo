@@ -8,6 +8,7 @@
  * fills itself from the app registry, so a new app simply takes the next slot.
  */
 import { apps, appPath } from '@/data/apps';
+import { toHref } from '@/config/site';
 import AppIcon from './AppIcon.astro';
 
 const COLUMNS = 4;
@@ -20,7 +21,7 @@ const emptySlots = Math.max(COLUMNS * ROWS - apps.length, 0);
     <div class="shelf-grid">
       {
         apps.map((app, i) => (
-          <a href={appPath(app)} class="shelf-app" style={`--i:${i}`}>
+          <a href={toHref(appPath(app))} class="shelf-app" style={`--i:${i}`}>
             <span class="shelf-tile">
               <AppIcon app={app} size={72} animated class="shelf-icon" loading="eager" />
               <span class="shelf-badge" aria-hidden="true" />

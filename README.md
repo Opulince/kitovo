@@ -60,8 +60,17 @@ These are intentionally left as TODOs rather than invented. Search the code for 
 
 ## Deployment
 
-Hosted on Vercel (static output, settings in `vercel.json`: clean URLs, security headers, long-lived caching for hashed assets).
+The site is plain static files (`dist/`), so it runs on any static host.
 
-The canonical origin is chosen in `astro.config.mjs`: `SITE_URL` if set, otherwise Vercel's production domain (`VERCEL_PROJECT_PRODUCTION_URL`), otherwise `https://kitovo.com`. Adding `kitovo.com` as the production domain in Vercel switches every canonical URL, the sitemap and share images to it on the next deploy.
+**GitHub Pages (current setup).** `.github/workflows/deploy-pages.yml` builds and publishes on every push to the default branch. One-time setup: repository **Settings → Pages → Source: GitHub Actions**. (Pages on a private repository needs a paid GitHub plan; on the free plan the repository must be public.)
+
+The workflow reads the origin and base path from the Pages configuration, so:
+
+- without a custom domain the site is served at `https://<owner>.github.io/kitovo/`, and every link, canonical URL and share image includes `/kitovo/`;
+- after adding `kitovo.com` under **Settings → Pages → Custom domain** (and pointing DNS at GitHub Pages), the next deploy serves everything from the domain root.
+
+All internal links go through `toHref()` / `asset()` in `src/config/site.ts`, which is what makes the base path work. Use them for any new link.
+
+**Other hosts.** `vercel.json` is kept for Vercel (security headers, caching). Anywhere else: `npm run build` and upload `dist/`. Set `SITE_URL` (origin) and, if serving from a sub-folder, `BASE_PATH` at build time.
 
 When any legal text changes, update its date: `src/config/site.ts` (`legal.*Updated`) for site-wide pages, or the app's `privacyPolicy.updated`.

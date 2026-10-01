@@ -5,6 +5,7 @@
  * go live on the site without one.
  */
 import type { MarkdownInstance } from 'astro';
+import { toHref } from '@/config/site';
 import LegalLayout from '@/layouts/LegalLayout.astro';
 import Icon from '@/components/Icon.astro';
 import { renderLegal, tokensFor } from '@/lib/legal';
@@ -50,8 +51,8 @@ const crumbs = [
   <Fragment set:html={html} />
 
   <div slot="after" class="policy-links">
-    <a class="link-arrow" href={appPath(app)}>About {app.name}<Icon name="arrow-right" /></a>
-    <a class="link-arrow" href={supportPath(app)}>{app.name} support<Icon name="arrow-right" /></a>
+    <a class="link-arrow" href={toHref(appPath(app))}>About {app.name}<Icon name="arrow-right" /></a>
+    <a class="link-arrow" href={toHref(supportPath(app))}>{app.name} support<Icon name="arrow-right" /></a>
   </div>
 </LegalLayout>
 

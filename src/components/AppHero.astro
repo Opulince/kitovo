@@ -5,6 +5,7 @@
  * the right is drawn in the app's own colours, like a store feature graphic.
  */
 import type { AppDefinition } from '@/data/apps';
+import { toHref } from '@/config/site';
 import { supportPath, privacyPath } from '@/data/apps';
 import AppIcon from './AppIcon.astro';
 import PlatformBadges from './PlatformBadges.astro';
@@ -31,13 +32,13 @@ const { app } = Astro.props;
     </div>
     <div class="btn-row btn-row-stack app-hero-actions rise" style="--delay: 200ms">
       <StoreButton app={app} />
-      <a href={supportPath(app)} class="btn btn-secondary">
+      <a href={toHref(supportPath(app))} class="btn btn-secondary">
         <Icon name="help" />
         Get support
       </a>
     </div>
     <p class="app-hero-links rise" style="--delay: 240ms">
-      <a href={privacyPath(app)}>{app.name} privacy policy</a>
+      <a href={toHref(privacyPath(app))}>{app.name} privacy policy</a>
       <span aria-hidden="true">·</span>
       <a href={`mailto:${app.supportEmail}`}>{app.supportEmail}</a>
     </p>

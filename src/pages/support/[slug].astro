@@ -10,7 +10,7 @@ import Icon from '@/components/Icon.astro';
 import StatusBadge from '@/components/StatusBadge.astro';
 import { apps, appPath, privacyPath, supportPath, androidPlatform } from '@/data/apps';
 import type { AppDefinition } from '@/data/apps';
-import { mailto } from '@/config/site';
+import { mailto, toHref } from '@/config/site';
 import { breadcrumbJsonLd, faqJsonLd } from '@/lib/seo';
 
 export function getStaticPaths() {
@@ -88,9 +88,9 @@ const bugMail = mailto(app.supportEmail, `Bug report: ${app.name}`);
           </a>
         </div>
         <ul role="list" class="contact-links">
-          <li><a href={appPath(app)}>About {app.name}</a></li>
-          <li><a href={privacyPath(app)}>{app.name} privacy policy</a></li>
-          <li><a href="/disclaimer">Disclaimer</a></li>
+          <li><a href={toHref(appPath(app))}>About {app.name}</a></li>
+          <li><a href={toHref(privacyPath(app))}>{app.name} privacy policy</a></li>
+          <li><a href={toHref('/disclaimer')}>Disclaimer</a></li>
         </ul>
         <div class="contact-status">
           {app.platforms.map((p) => <StatusBadge status={p.status} platform={p.name} size="sm" />)}
@@ -135,7 +135,7 @@ const bugMail = mailto(app.supportEmail, `Bug report: ${app.name}`);
             ))
           }
         </dl>
-        <a class="link-arrow support-more" href={privacyPath(app)}>
+        <a class="link-arrow support-more" href={toHref(privacyPath(app))}>
           Read the full {app.name} privacy policy
           <Icon name="arrow-right" />
         </a>

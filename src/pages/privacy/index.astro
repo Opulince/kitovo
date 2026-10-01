@@ -4,7 +4,7 @@ import AppIcon from '@/components/AppIcon.astro';
 import Icon from '@/components/Icon.astro';
 import * as doc from '@/content/legal/privacy.md';
 import { renderLegal, tokensFor } from '@/lib/legal';
-import { site, formatDate } from '@/config/site';
+import { site, formatDate, toHref } from '@/config/site';
 import { apps, privacyPath } from '@/data/apps';
 
 const { html, headings } = await renderLegal(doc, tokensFor());
@@ -24,7 +24,7 @@ const appSection = { slug: 'app-privacy-policies', text: 'App privacy policies' 
       {
         apps.map((app) => (
           <li>
-            <a href={privacyPath(app)}>
+            <a href={toHref(privacyPath(app))}>
               <AppIcon app={app} size={28} />
               {app.name} Privacy Policy
               <Icon name="arrow-right" size={18} />
@@ -49,7 +49,7 @@ const appSection = { slug: 'app-privacy-policies', text: 'App privacy policies' 
           <li>
             <AppIcon app={app} size={44} />
             <div>
-              <a href={privacyPath(app)}>
+              <a href={toHref(privacyPath(app))}>
                 <strong>{app.name} Privacy Policy</strong>
               </a>
               <span>Last updated {formatDate(app.privacyPolicy.updated)}</span>

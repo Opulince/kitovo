@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
+import { toHref } from '@/config/site';
 import Icon from '@/components/Icon.astro';
 import LogoMark from '@/components/LogoMark.astro';
 
@@ -27,11 +28,11 @@ const links = [
       on track.
     </p>
     <div class="btn-row nf-actions">
-      <a class="btn btn-primary" href="/">
+      <a class="btn btn-primary" href={toHref('/')}>
         Go to the homepage
         <Icon name="arrow-right" />
       </a>
-      {links.map((l) => <a class="btn btn-ghost" href={l.href}>{l.label}</a>)}
+      {links.map((l) => <a class="btn btn-ghost" href={toHref(l.href)}>{l.label}</a>)}
     </div>
   </section>
 </BaseLayout>

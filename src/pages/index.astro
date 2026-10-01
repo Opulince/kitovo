@@ -5,7 +5,7 @@ import AppCard from '@/components/AppCard.astro';
 import MoreAppsCard from '@/components/MoreAppsCard.astro';
 import CtaBand from '@/components/CtaBand.astro';
 import Icon from '@/components/Icon.astro';
-import { site, mailto } from '@/config/site';
+import { site, mailto, toHref } from '@/config/site';
 import { apps } from '@/data/apps';
 import { organizationJsonLd, websiteJsonLd } from '@/lib/seo';
 
@@ -51,7 +51,7 @@ const principles = [
             Explore apps
             <Icon name="arrow-right" />
           </a>
-          <a href="/about" class="btn btn-secondary">About Kitovo</a>
+          <a href={toHref('/about')} class="btn btn-secondary">About Kitovo</a>
         </div>
       </div>
       <Shelf />
@@ -113,7 +113,7 @@ const principles = [
         <Icon name="mail" />
         Share an idea
       </a>
-      <a class="btn btn-ghost" href="/contact">Other ways to reach us</a>
+      <a class="btn btn-ghost" href={toHref('/contact')}>Other ways to reach us</a>
     </Fragment>
   </CtaBand>
 </BaseLayout>

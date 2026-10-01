@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
+import { toHref } from '@/config/site';
 import LogoMark from '@/components/LogoMark.astro';
 import AppIcon from '@/components/AppIcon.astro';
 import Icon from '@/components/Icon.astro';
@@ -62,7 +63,7 @@ const principles = [
                 <li>
                   <AppIcon app={app} size={52} />
                   <div>
-                    <a href={appPath(app)}>
+                    <a href={toHref(appPath(app))}>
                       <strong>{app.name}</strong>
                     </a>
                     <span class="about-app-meta">
@@ -76,7 +77,7 @@ const principles = [
           }
         </ul>
         <p>
-          More apps will follow. They’ll appear on the <a href="/apps">apps page</a> when they are
+          More apps will follow. They’ll appear on the <a href={toHref('/apps')}>apps page</a> when they are
           ready for everyday use.
         </p>
       </div>
@@ -114,10 +115,10 @@ const principles = [
       <h2 id="contact-title">Get in touch</h2>
       <div class="about-text">
         <p>
-          Questions, ideas, or something not working? The <a href="/contact">contact page</a> lists
-          the best way to reach us, and <a href="/support">Support</a> has help for each app.
+          Questions, ideas, or something not working? The <a href={toHref('/contact')}>contact page</a> lists
+          the best way to reach us, and <a href={toHref('/support')}>Support</a> has help for each app.
         </p>
-        <a class="btn btn-primary about-cta" href="/contact">
+        <a class="btn btn-primary about-cta" href={toHref('/contact')}>
           Contact Kitovo
           <Icon name="arrow-right" />
         </a>

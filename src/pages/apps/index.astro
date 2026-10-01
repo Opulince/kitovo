@@ -4,7 +4,7 @@ import AppCard from '@/components/AppCard.astro';
 import MoreAppsCard from '@/components/MoreAppsCard.astro';
 import Icon from '@/components/Icon.astro';
 import { apps, appPath } from '@/data/apps';
-import { absoluteUrl } from '@/config/site';
+import { pageUrl, toHref } from '@/config/site';
 
 const itemList = {
   '@context': 'https://schema.org',
@@ -13,7 +13,7 @@ const itemList = {
   itemListElement: apps.map((app, i) => ({
     '@type': 'ListItem',
     position: i + 1,
-    url: absoluteUrl(appPath(app)),
+    url: pageUrl(appPath(app)),
     name: app.name,
   })),
 };
@@ -53,8 +53,8 @@ const itemList = {
       <Icon name="help" size={22} />
       <p>
         Looking for help with an app you already use?{' '}
-        <a href="/support">Go to Support</a>, or read each app’s{' '}
-        <a href="/privacy">privacy policy</a>.
+        <a href={toHref('/support')}>Go to Support</a>, or read each app’s{' '}
+        <a href={toHref('/privacy')}>privacy policy</a>.
       </p>
     </div>
   </section>

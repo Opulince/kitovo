@@ -6,7 +6,7 @@
  * The mobile menu uses the HTML popover attribute, so it opens, closes on
  * Escape and on outside taps, and restores focus without any JavaScript.
  */
-import { primaryNav, cleanPath } from '@/config/site';
+import { primaryNav, cleanPath, toHref } from '@/config/site';
 import Logo from './Logo.astro';
 import Icon from './Icon.astro';
 
@@ -27,7 +27,7 @@ const legal = [
 
 <header class="site-header">
   <div class="container header-inner">
-    <a href="/" class="brand" aria-label="Kitovo, home">
+    <a href={toHref('/')} class="brand" aria-label="Kitovo, home">
       <Logo />
     </a>
 
@@ -36,7 +36,7 @@ const legal = [
         {
           primaryNav.map((item) => (
             <li>
-              <a href={item.href} aria-current={isActive(item.href) ? 'page' : undefined}>
+              <a href={toHref(item.href)} aria-current={isActive(item.href) ? 'page' : undefined}>
                 {item.label}
               </a>
             </li>
@@ -46,7 +46,7 @@ const legal = [
     </nav>
 
     <div class="header-actions">
-      <a href="/apps" class="btn btn-primary btn-sm header-cta">Explore apps</a>
+      <a href={toHref('/apps')} class="btn btn-primary btn-sm header-cta">Explore apps</a>
       <button
         type="button"
         class="menu-button"
@@ -64,7 +64,7 @@ const legal = [
   <div id="mobile-menu" class="mobile-menu" popover role="dialog" aria-label="Menu">
     <div class="mobile-menu-inner">
       <div class="mobile-menu-top">
-        <a href="/" class="brand" aria-label="Kitovo, home"><Logo /></a>
+        <a href={toHref('/')} class="brand" aria-label="Kitovo, home"><Logo /></a>
         <button
           type="button"
           class="menu-button menu-close"
@@ -83,7 +83,7 @@ const legal = [
             mobileLinks.map((item) => (
               <li>
                 <a
-                  href={item.href}
+                  href={toHref(item.href)}
                   aria-current={
                     (item.href === '/' ? path === '/' : isActive(item.href)) ? 'page' : undefined
                   }
@@ -97,13 +97,13 @@ const legal = [
         </ul>
       </nav>
 
-      <a href="/apps" class="btn btn-primary mobile-cta">
+      <a href={toHref('/apps')} class="btn btn-primary mobile-cta">
         Explore apps
         <Icon name="arrow-right" />
       </a>
 
       <ul role="list" class="mobile-legal">
-        {legal.map((item) => <li><a href={item.href}>{item.label}</a></li>)}
+        {legal.map((item) => <li><a href={toHref(item.href)}>{item.label}</a></li>)}
       </ul>
     </div>
   </div>

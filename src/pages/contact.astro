@@ -2,7 +2,7 @@
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import Icon from '@/components/Icon.astro';
 import type { IconName } from '@/components/icons';
-import { site, mailto } from '@/config/site';
+import { site, mailto, toHref } from '@/config/site';
 import { apps, supportPath } from '@/data/apps';
 
 interface Topic {
@@ -95,7 +95,7 @@ const sharedInbox = allAddresses.size === 1 ? [...allAddresses][0] : null;
                 <li>
                   <span class="app-contact-name">{app.name}</span>
                   <a href={mailto(app.supportEmail, `${app.name} support`)}>{app.supportEmail}</a>
-                  <a class="link-arrow" href={supportPath(app)}>
+                  <a class="link-arrow" href={toHref(supportPath(app))}>
                     {app.name} support page
                     <Icon name="arrow-right" />
                   </a>
@@ -134,7 +134,7 @@ const sharedInbox = allAddresses.size === 1 ? [...allAddresses][0] : null;
         <li>Mention which app you’re writing about, and your phone model if something isn’t working.</li>
         <li>Never send passwords, sign-in codes or card numbers. We will never ask for them.</li>
         <li>
-          For questions about your data, the <a href="/privacy">privacy policies</a> may already
+          For questions about your data, the <a href={toHref('/privacy')}>privacy policies</a> may already
           have the answer.
         </li>
       </ul>

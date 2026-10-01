@@ -4,6 +4,7 @@
  * app's three steps; `compact` is the directory/support tile.
  */
 import type { AppDefinition } from '@/data/apps';
+import { toHref } from '@/config/site';
 import { appPath, supportPath } from '@/data/apps';
 import AppIcon from './AppIcon.astro';
 import PlatformBadges from './PlatformBadges.astro';
@@ -43,12 +44,12 @@ const Heading = headingLevel;
         <p class="app-summary">{app.summary}</p>
         <PlatformBadges app={app} />
         <div class="btn-row">
-          <a href={href} class="btn btn-primary">
+          <a href={toHref(href)} class="btn btn-primary">
             {cta}
             <span class="visually-hidden">: {app.name}</span>
             <Icon name="arrow-right" />
           </a>
-          <a href={supportPath(app)} class="btn btn-ghost">
+          <a href={toHref(supportPath(app))} class="btn btn-ghost">
             {app.name} support
           </a>
         </div>
@@ -74,7 +75,7 @@ const Heading = headingLevel;
     <article class="app-card app-card-compact card card-interactive">
       <AppIcon app={app} size={64} />
       <Heading class="app-name">
-        <a href={href} class="stretched-link">
+        <a href={toHref(href)} class="stretched-link">
           {app.name}
         </a>
       </Heading>

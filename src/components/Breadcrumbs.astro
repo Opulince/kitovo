@@ -4,6 +4,7 @@
  * produced by `breadcrumbJsonLd` in the page.
  */
 import Icon from './Icon.astro';
+import { toHref } from '@/config/site';
 import type { Crumb } from '@/lib/seo';
 
 interface Props {
@@ -20,7 +21,7 @@ const { items } = Astro.props;
         <li>
           {i < items.length - 1 ? (
             <>
-              <a href={item.href}>{item.label}</a>
+              <a href={toHref(item.href)}>{item.label}</a>
               <Icon name="chevron-right" size={14} class="crumb-sep" />
             </>
           ) : (

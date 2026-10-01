@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
+import { toHref } from '@/config/site';
 import AppCard from '@/components/AppCard.astro';
 import Icon from '@/components/Icon.astro';
 import { apps, supportPath } from '@/data/apps';
@@ -65,7 +66,7 @@ const other = [
               <Icon name={item.icon} size={22} />
             </span>
             <h3>
-              <a href={item.href} class="stretched-link">
+              <a href={toHref(item.href)} class="stretched-link">
                 {item.title}
               </a>
             </h3>

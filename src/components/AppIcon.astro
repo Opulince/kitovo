@@ -5,6 +5,7 @@
  * is the same rounded tile, so layouts never change when the real icon lands.
  */
 import type { AppDefinition } from '@/data/apps';
+import { asset } from '@/config/site';
 
 interface Props {
   app: AppDefinition;
@@ -40,7 +41,7 @@ const label = `${app.name} app icon`;
 >
   {
     icon.src ? (
-      <img src={icon.src} alt="" width={size} height={size} loading={loading} decoding="async" />
+      <img src={asset(icon.src)} alt="" width={size} height={size} loading={loading} decoding="async" />
     ) : (
       <svg
         xmlns="http://www.w3.org/2000/svg"

@@ -1,15 +1,17 @@
 import { defineConfig } from 'astro/config';
 
 /**
- * The public origin of the site. Canonical URLs, Open Graph images and the
- * sitemap are all built from it.
+ * Where the site is served from. Canonical URLs, Open Graph images, the
+ * sitemap and every internal link are built from these two values.
  *
- *   1. SITE_URL, if set at build time (e.g. "https://kitovo.com").
- *   2. VERCEL_PROJECT_PRODUCTION_URL, which Vercel sets on every build to the
- *      project's production domain: the custom domain once one is attached,
- *      otherwise the *.vercel.app domain. Attaching kitovo.com in Vercel is
- *      enough to move every canonical URL over on the next deploy.
+ * Origin (site):
+ *   1. SITE_URL, if set at build time. The GitHub Pages workflow sets it from
+ *      the Pages configuration, so a custom domain is picked up automatically.
+ *   2. VERCEL_PROJECT_PRODUCTION_URL, when built on Vercel.
  *   3. https://kitovo.com, the intended home.
+ *
+ * Base path (base): BASE_PATH, e.g. "/kitovo" for https://<user>.github.io/kitovo/.
+ * Empty when the site is served from the root of a domain.
  */
 function resolveSite() {
   if (process.env.SITE_URL) return process.env.SITE_URL;
@@ -19,16 +21,20 @@ function resolveSite() {
   return 'https://kitovo.com';
 }
 
+function resolveBase() {
+  const base = (process.env.BASE_PATH ?? '').replace(/\/+$/, '');
+  return base === '' ? '/' : base.startsWith('/') ? base : `/${base}`;
+}
+
 export default defineConfig({
   site: resolveSite(),
-  // Clean URLs with no trailing slash: /apps/cancelly, not /apps/cancelly/.
-  // Pages are emitted as files (apps/cancelly.html) and vercel.json's
-  // cleanUrls serves them without the extension.
-  trailingSlash: 'never',
+  base: resolveBase(),
+  // Every page is a folder with an index.html (/apps/cancelly/), which any
+  // static host serves correctly, GitHub Pages included.
+  trailingSlash: 'always',
   build: {
-    format: 'file',
+    format: 'directory',
     inlineStylesheets: 'auto',
   },
-  // No client-side JavaScript framework. Everything is static HTML and CSS.
   prefetch: false,
 });

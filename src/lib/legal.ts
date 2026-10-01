@@ -7,7 +7,7 @@
  * so an address is never hard-coded into a policy.
  */
 import type { MarkdownInstance } from 'astro';
-import { site } from '@/config/site';
+import { site, toHref } from '@/config/site';
 import type { AppDefinition } from '@/data/apps';
 
 export interface LegalHeading {
@@ -54,5 +54,11 @@ export async function renderLegal(mod: LegalModule, tokens: Record<string, strin
     .getHeadings()
     .filter((h) => h.depth === 2)
     .map((h) => ({ slug: h.slug, text: fillTokens(h.text, tokens) }));
-  return { html: fillTokens(html, tokens), headings };
+  // Markdown links like [Disclaimer](/disclaimer) are site paths; make them
+  // base-aware like every other internal link.
+  const linked = fillTokens(html, tokens).replace(
+    /href="(\/[^"]*)"/g,
+    (_, path: string) => `href="${toHref(path)}"`,
+  );
+  return { html: linked, headings };
 }

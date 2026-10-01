@@ -1,7 +1,7 @@
 /**
  * Builders for schema.org structured data (JSON-LD).
  */
-import { site, absoluteUrl } from '@/config/site';
+import { site, pageUrl, assetUrl } from '@/config/site';
 import type { AppDefinition } from '@/data/apps';
 import { appPath } from '@/data/apps';
 
@@ -14,10 +14,10 @@ export function organizationJsonLd() {
   return {
     '@context': 'https://schema.org',
     '@type': 'Organization',
-    '@id': `${absoluteUrl('/')}#organization`,
+    '@id': `${pageUrl('/')}#organization`,
     name: site.name,
-    url: absoluteUrl('/'),
-    logo: absoluteUrl('/icon-512.png'),
+    url: pageUrl('/'),
+    logo: assetUrl('/icon-512.png'),
     description: site.description,
   };
 }
@@ -27,8 +27,8 @@ export function websiteJsonLd() {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
     name: site.name,
-    url: absoluteUrl('/'),
-    publisher: { '@id': `${absoluteUrl('/')}#organization` },
+    url: pageUrl('/'),
+    publisher: { '@id': `${pageUrl('/')}#organization` },
   };
 }
 
@@ -39,15 +39,15 @@ export function appJsonLd(app: AppDefinition) {
     '@type': 'MobileApplication',
     name: app.name,
     description: app.summary,
-    url: absoluteUrl(appPath(app)),
+    url: pageUrl(appPath(app)),
     applicationCategory: app.category,
     operatingSystem: app.platforms
       .filter((p) => p.status !== 'in-development')
       .map((p) => p.name)
       .join(', '),
-    ...(app.icon.src ? { image: absoluteUrl(app.icon.src) } : {}),
+    ...(app.icon.src ? { image: assetUrl(app.icon.src) } : {}),
     ...(live?.storeUrl ? { downloadUrl: live.storeUrl, installUrl: live.storeUrl } : {}),
-    publisher: { '@id': `${absoluteUrl('/')}#organization`, '@type': 'Organization', name: site.name },
+    publisher: { '@id': `${pageUrl('/')}#organization`, '@type': 'Organization', name: site.name },
   };
 }
 
@@ -71,7 +71,7 @@ export function breadcrumbJsonLd(items: Crumb[]) {
       '@type': 'ListItem',
       position: i + 1,
       name: item.label,
-      item: absoluteUrl(item.href),
+      item: pageUrl(item.href),
     })),
   };
 }

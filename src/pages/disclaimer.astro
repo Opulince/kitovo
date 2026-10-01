@@ -4,7 +4,7 @@
  * each app's `disclaimer` data, so new apps are covered automatically.
  */
 import LegalLayout from '@/layouts/LegalLayout.astro';
-import { site } from '@/config/site';
+import { site, toHref } from '@/config/site';
 import { apps, appPath } from '@/data/apps';
 
 const general = { slug: 'general', text: 'General' };
@@ -38,7 +38,7 @@ const appHeadings = apps.map((app) => ({ slug: app.slug, text: app.name }));
           <p>{paragraph}</p>
         ))}
         <p>
-          See the <a href={appPath(app)}>{app.name} page</a> for what the app does.
+          See the <a href={toHref(appPath(app))}>{app.name} page</a> for what the app does.
         </p>
       </>
     ))
@@ -50,6 +50,6 @@ const appHeadings = apps.map((app) => ({ slug: app.slug, text: app.name }));
     convenience. We don’t control those websites and are not responsible for their content.
   </p>
   <p>
-    The <a href="/terms">Terms of Use</a> apply to your use of the website and our apps.
+    The <a href={toHref('/terms')}>Terms of Use</a> apply to your use of the website and our apps.
   </p>
 </LegalLayout>

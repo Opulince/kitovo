@@ -13,7 +13,7 @@ import CtaBand from '@/components/CtaBand.astro';
 import Icon from '@/components/Icon.astro';
 import { apps, supportPath, privacyPath, appPath } from '@/data/apps';
 import type { AppDefinition } from '@/data/apps';
-import { mailto } from '@/config/site';
+import { mailto, toHref } from '@/config/site';
 import { appJsonLd, breadcrumbJsonLd, faqJsonLd } from '@/lib/seo';
 
 export function getStaticPaths() {
@@ -125,7 +125,7 @@ const crumbs = [
               ))
             }
           </ul>
-          <a class="link-arrow" href={privacyPath(app)}>
+          <a class="link-arrow" href={toHref(privacyPath(app))}>
             Read the full {app.name} privacy policy
             <Icon name="arrow-right" />
           </a>
@@ -142,7 +142,7 @@ const crumbs = [
         <p class="eyebrow">FAQ</p>
         <h2 id="faq-title">Questions about {app.name}</h2>
         <p>
-          Can’t find your answer? <a href={supportPath(app)}>Visit {app.name} support</a>.
+          Can’t find your answer? <a href={toHref(supportPath(app))}>Visit {app.name} support</a>.
         </p>
       </div>
       <FAQ items={app.faq} />
@@ -156,7 +156,7 @@ const crumbs = [
       support page.
     </p>
     <Fragment slot="actions">
-      <a class="btn btn-light" href={supportPath(app)}>
+      <a class="btn btn-light" href={toHref(supportPath(app))}>
         {app.name} support
         <Icon name="arrow-right" />
       </a>

@@ -3,7 +3,7 @@
  * new app's pages are included automatically.
  */
 import type { APIRoute } from 'astro';
-import { absoluteUrl, site } from '@/config/site';
+import { pageUrl, site } from '@/config/site';
 import { apps, appPath, supportPath, privacyPath } from '@/data/apps';
 
 interface Entry {
@@ -36,7 +36,7 @@ export const GET: APIRoute = () => {
 ${entries
   .map(
     (e) =>
-      `  <url>\n    <loc>${absoluteUrl(e.path)}</loc>${e.lastmod ? `\n    <lastmod>${e.lastmod}</lastmod>` : ''}\n    <priority>${e.priority}</priority>\n  </url>`,
+      `  <url>\n    <loc>${pageUrl(e.path)}</loc>${e.lastmod ? `\n    <lastmod>${e.lastmod}</lastmod>` : ''}\n    <priority>${e.priority}</priority>\n  </url>`,
   )
   .join('\n')}
 </urlset>

@@ -7,11 +7,12 @@
  */
 
 /**
- * The public origin, used for canonical URLs, Open Graph images and the sitemap.
- * It is resolved once, in astro.config.mjs (see `site` there), and Astro
- * exposes it to the whole project as import.meta.env.SITE.
+ * Where the site lives. Both are resolved once, in astro.config.mjs:
+ *   SITE_ORIGIN  "https://kitovo.com" or "https://opulince.github.io"
+ *   BASE_PATH    "" at a domain root, "/kitovo" on a GitHub Pages project URL
  */
-export const SITE_URL: string = import.meta.env.SITE.replace(/\/$/, '');
+export const SITE_ORIGIN: string = new URL(import.meta.env.SITE).origin;
+export const BASE_PATH: string = import.meta.env.BASE_URL.replace(/\/+$/, '');
 
 export const site = {
   name: 'Kitovo',
@@ -83,21 +84,43 @@ export function mailto(email: string, subject?: string): string {
 }
 
 /**
- * The page's clean path (no trailing slash, no .html, no /index), e.g. "/",
- * "/apps/cancelly". Pages are built as files, so Astro.url can carry either.
+ * Link to a page, from its site path: toHref('/apps') -> "/kitovo/apps/".
+ * Every internal page link goes through this, so the site works both at a
+ * domain root and under a sub-path. External, mailto: and #hash links are
+ * returned untouched.
  */
-export function cleanPath(url: URL): string {
-  const p = url.pathname
-    .replace(/\.html$/, '')
-    .replace(/\/index$/, '')
-    .replace(/\/$/, '');
-  return p === '' ? '/' : p;
+export function toHref(path: string): string {
+  if (/^(?:[a-z][a-z0-9+.-]*:|#)/i.test(path)) return path;
+  const [p = '', hash] = path.split('#');
+  const out = `${BASE_PATH}${p.replace(/\/+$/, '')}/`;
+  return hash === undefined ? out : `${out}#${hash}`;
 }
 
-/** Absolute URL for a site path. The root is "https://example.com/". */
-export function absoluteUrl(path: string): string {
-  if (/^https?:\/\//.test(path)) return path;
-  if (path === '/' || path === '') return `${SITE_URL}/`;
-  const clean = path.replace(/\/$/, '');
-  return `${SITE_URL}${clean.startsWith('/') ? clean : `/${clean}`}`;
+/** Link to a file in /public: asset('/og.png') -> "/kitovo/og.png". */
+export function asset(path: string): string {
+  if (/^[a-z][a-z0-9+.-]*:/i.test(path)) return path;
+  return `${BASE_PATH}/${path.replace(/^\/+/, '')}`;
+}
+
+/** Absolute URL of a page, for canonicals, sitemaps and structured data. */
+export function pageUrl(path: string): string {
+  return /^https?:\/\//.test(path) ? path : `${SITE_ORIGIN}${toHref(path)}`;
+}
+
+/** Absolute URL of a file in /public, e.g. a share image. */
+export function assetUrl(path: string): string {
+  return /^https?:\/\//.test(path) ? path : `${SITE_ORIGIN}${asset(path)}`;
+}
+
+/**
+ * The current page's site path, without the base path, trailing slash or
+ * .html: "/", "/apps/cancelly". Used for canonicals and "you are here" states.
+ */
+export function cleanPath(url: URL): string {
+  let p = url.pathname;
+  if (BASE_PATH && (p === BASE_PATH || p.startsWith(`${BASE_PATH}/`))) {
+    p = p.slice(BASE_PATH.length);
+  }
+  p = p.replace(/\.html$/, '').replace(/\/index$/, '').replace(/\/+$/, '');
+  return p === '' ? '/' : p;
 }

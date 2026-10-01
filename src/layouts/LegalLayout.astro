@@ -6,7 +6,7 @@
 import BaseLayout from './BaseLayout.astro';
 import Breadcrumbs from '@/components/Breadcrumbs.astro';
 import Icon from '@/components/Icon.astro';
-import { formatDate, cleanPath } from '@/config/site';
+import { formatDate, cleanPath, toHref } from '@/config/site';
 import type { LegalHeading } from '@/lib/legal';
 import type { Crumb } from '@/lib/seo';
 import { breadcrumbJsonLd } from '@/lib/seo';
@@ -102,7 +102,7 @@ const related = [
       {
         related.map((r) => (
           <li>
-            <a class="link-arrow" href={r.href}>
+            <a class="link-arrow" href={toHref(r.href)}>
               {r.label}
               <Icon name="arrow-right" />
             </a>
@@ -110,7 +110,7 @@ const related = [
         ))
       }
       <li>
-        <a class="link-arrow" href="/contact">
+        <a class="link-arrow" href={toHref('/contact')}>
           Contact
           <Icon name="arrow-right" />
         </a>
