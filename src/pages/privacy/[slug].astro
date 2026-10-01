@@ -1,0 +1,67 @@
+---
+/**
+ * One privacy policy per app. The text lives in src/content/privacy/<slug>.md;
+ * the build fails if an app in the registry has no policy, so an app can never
+ * go live on the site without one.
+ */
+import type { MarkdownInstance } from 'astro';
+import LegalLayout from '@/layouts/LegalLayout.astro';
+import Icon from '@/components/Icon.astro';
+import { renderLegal, tokensFor } from '@/lib/legal';
+import { apps, appPath, privacyPath, supportPath } from '@/data/apps';
+import type { AppDefinition } from '@/data/apps';
+
+type Doc = MarkdownInstance<Record<string, unknown>>;
+
+export function getStaticPaths() {
+  const docs = import.meta.glob<Doc>('/src/content/privacy/*.md', { eager: true });
+  return apps.map((app) => {
+    const doc = docs[`/src/content/privacy/${app.slug}.md`];
+    if (!doc) {
+      throw new Error(
+        `Missing privacy policy for "${app.name}". Add src/content/privacy/${app.slug}.md.`,
+      );
+    }
+    return { params: { slug: app.slug }, props: { app, doc } };
+  });
+}
+
+interface Props {
+  app: AppDefinition;
+  doc: Doc;
+}
+
+const { app, doc } = Astro.props;
+const { html, headings } = await renderLegal(doc, tokensFor(app));
+const crumbs = [
+  { href: '/privacy', label: 'Privacy' },
+  { href: privacyPath(app), label: app.name },
+];
+---
+
+<LegalLayout
+  title={`${app.name} Privacy Policy`}
+  description={`What ${app.name} collects, why it collects it, who processes it, and how to delete your data.`}
+  updated={app.privacyPolicy.updated}
+  lead={`How ${app.name}, the ${app.descriptor} by Kitovo, handles your information.`}
+  headings={headings}
+  crumbs={crumbs}
+>
+  <Fragment set:html={html} />
+
+  <div slot="after" class="policy-links">
+    <a class="link-arrow" href={appPath(app)}>About {app.name}<Icon name="arrow-right" /></a>
+    <a class="link-arrow" href={supportPath(app)}>{app.name} support<Icon name="arrow-right" /></a>
+  </div>
+</LegalLayout>
+
+<style>
+  .policy-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 28px;
+    margin-top: 2.4em !important;
+    padding-top: 1.2em;
+    border-top: 1px solid var(--line);
+  }
+</style>

@@ -1,0 +1,366 @@
+---
+/**
+ * Site header. Desktop: logo, three links, one call to action.
+ * Mobile: logo and a menu button that opens a full-screen panel.
+ *
+ * The mobile menu uses the HTML popover attribute, so it opens, closes on
+ * Escape and on outside taps, and restores focus without any JavaScript.
+ */
+import { primaryNav, cleanPath } from '@/config/site';
+import Logo from './Logo.astro';
+import Icon from './Icon.astro';
+
+const path = cleanPath(Astro.url);
+const isActive = (href: string) => path === href || path.startsWith(`${href}/`);
+
+const mobileLinks = [
+  { href: '/', label: 'Home' },
+  ...primaryNav,
+  { href: '/contact', label: 'Contact' },
+];
+const legal = [
+  { href: '/privacy', label: 'Privacy' },
+  { href: '/terms', label: 'Terms' },
+  { href: '/disclaimer', label: 'Disclaimer' },
+];
+---
+
+<header class="site-header">
+  <div class="container header-inner">
+    <a href="/" class="brand" aria-label="Kitovo, home">
+      <Logo />
+    </a>
+
+    <nav class="nav-desktop" aria-label="Main">
+      <ul role="list">
+        {
+          primaryNav.map((item) => (
+            <li>
+              <a href={item.href} aria-current={isActive(item.href) ? 'page' : undefined}>
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <div class="header-actions">
+      <a href="/apps" class="btn btn-primary btn-sm header-cta">Explore apps</a>
+      <button
+        type="button"
+        class="menu-button"
+        popovertarget="mobile-menu"
+        popovertargetaction="show"
+        aria-controls="mobile-menu"
+        aria-haspopup="dialog"
+      >
+        <Icon name="menu" size={22} />
+        <span class="visually-hidden">Open menu</span>
+      </button>
+    </div>
+  </div>
+
+  <div id="mobile-menu" class="mobile-menu" popover role="dialog" aria-label="Menu">
+    <div class="mobile-menu-inner">
+      <div class="mobile-menu-top">
+        <a href="/" class="brand" aria-label="Kitovo, home"><Logo /></a>
+        <button
+          type="button"
+          class="menu-button menu-close"
+          popovertarget="mobile-menu"
+          popovertargetaction="hide"
+          aria-controls="mobile-menu"
+        >
+          <Icon name="close" size={22} />
+          <span class="visually-hidden">Close menu</span>
+        </button>
+      </div>
+
+      <nav aria-label="Main">
+        <ul role="list" class="mobile-links">
+          {
+            mobileLinks.map((item) => (
+              <li>
+                <a
+                  href={item.href}
+                  aria-current={
+                    (item.href === '/' ? path === '/' : isActive(item.href)) ? 'page' : undefined
+                  }
+                >
+                  {item.label}
+                  <Icon name="arrow-right" size={22} />
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+
+      <a href="/apps" class="btn btn-primary mobile-cta">
+        Explore apps
+        <Icon name="arrow-right" />
+      </a>
+
+      <ul role="list" class="mobile-legal">
+        {legal.map((item) => <li><a href={item.href}>{item.label}</a></li>)}
+      </ul>
+    </div>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: rgb(243 245 240 / 0.86);
+    backdrop-filter: saturate(1.4) blur(14px);
+    -webkit-backdrop-filter: saturate(1.4) blur(14px);
+    border-bottom: 1px solid rgb(216 224 218 / 0.9);
+  }
+
+  .header-inner {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    min-height: var(--header-h);
+  }
+
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    border-radius: var(--r-xs);
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .nav-desktop {
+    display: none;
+    margin-left: auto;
+  }
+
+  .nav-desktop ul {
+    display: flex;
+    gap: 4px;
+    margin: 0;
+  }
+
+  .nav-desktop a {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 0 14px;
+    border-radius: var(--r-pill);
+    color: var(--ink);
+    font-weight: 560;
+    text-decoration: none;
+    transition: background-color 0.15s ease;
+  }
+
+  .nav-desktop a:hover {
+    background: rgb(18 58 44 / 0.06);
+    color: var(--ink);
+  }
+
+  .nav-desktop a[aria-current='page'] {
+    color: var(--pine);
+  }
+
+  .nav-desktop a[aria-current='page']::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    bottom: 5px;
+    inline-size: 5px;
+    block-size: 5px;
+    border-radius: 50%;
+    background: var(--marigold);
+    transform: translateX(-50%);
+  }
+
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: auto;
+  }
+
+  .header-cta {
+    display: none;
+  }
+
+  .menu-button {
+    display: inline-grid;
+    place-items: center;
+    inline-size: 48px;
+    block-size: 48px;
+    margin-right: -8px;
+    border-radius: var(--r-pill);
+    color: var(--ink);
+    transition: background-color 0.15s ease;
+  }
+
+  .menu-button:hover {
+    background: rgb(18 58 44 / 0.07);
+  }
+
+  @media (min-width: 860px) {
+    .nav-desktop {
+      display: block;
+    }
+
+    .header-actions {
+      margin-left: 8px;
+    }
+
+    .header-cta {
+      display: inline-flex;
+    }
+
+    .menu-button:not(.menu-close) {
+      display: none;
+    }
+  }
+
+  /* ---- Mobile menu (popover) ---- */
+  .mobile-menu {
+    position: fixed;
+    inset: 0;
+    inline-size: 100%;
+    max-inline-size: 100%;
+    block-size: 100dvh;
+    max-block-size: 100dvh;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: var(--paper);
+    color: var(--ink);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    opacity: 0;
+    transform: translateY(-8px);
+    transition:
+      opacity 0.22s var(--ease-out),
+      transform 0.28s var(--ease-out),
+      overlay 0.28s allow-discrete,
+      display 0.28s allow-discrete;
+  }
+
+  .mobile-menu:popover-open {
+    opacity: 1;
+    transform: none;
+  }
+
+  @starting-style {
+    .mobile-menu:popover-open {
+      opacity: 0;
+      transform: translateY(-8px);
+    }
+  }
+
+  .mobile-menu::backdrop {
+    background: transparent;
+  }
+
+  .mobile-menu-inner {
+    display: flex;
+    flex-direction: column;
+    min-block-size: 100%;
+    width: min(100% - 2 * var(--gutter), 560px);
+    margin-inline: auto;
+    padding-bottom: 32px;
+  }
+
+  .mobile-menu-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: var(--header-h);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .mobile-links {
+    margin: 12px 0 0;
+  }
+
+  .mobile-links a {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 64px;
+    border-bottom: 1px solid var(--line);
+    color: var(--ink);
+    font-family: var(--font-display);
+    font-size: 1.75rem;
+    font-weight: 680;
+    letter-spacing: -0.02em;
+    text-decoration: none;
+  }
+
+  .mobile-links a :global(svg) {
+    color: var(--muted);
+    transition: transform 0.25s var(--ease-out);
+  }
+
+  .mobile-links a:hover :global(svg) {
+    transform: translateX(4px);
+    color: var(--pine);
+  }
+
+  .mobile-links a[aria-current='page'] {
+    color: var(--pine);
+  }
+
+  .mobile-cta {
+    margin-top: 28px;
+    inline-size: 100%;
+    min-height: 54px;
+    font-size: 1.0625rem;
+  }
+
+  .mobile-legal {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 20px;
+    margin-top: auto;
+    padding-top: 32px;
+  }
+
+  .mobile-legal a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    color: var(--muted);
+    font-size: 0.9375rem;
+  }
+
+  @media (min-width: 860px) {
+    .mobile-menu {
+      display: none;
+    }
+  }
+
+  :global(body:has(.mobile-menu:popover-open)) {
+    overflow: hidden;
+  }
+
+  /* Browsers without the popover API: no menu button, show the links inline. */
+  @supports not selector(:popover-open) {
+    .mobile-menu,
+    .menu-button {
+      display: none !important;
+    }
+
+    .nav-desktop {
+      display: block;
+      margin-left: auto;
+    }
+
+    .nav-desktop a {
+      padding: 0 10px;
+    }
+  }
+</style>

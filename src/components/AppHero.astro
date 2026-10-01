@@ -1,0 +1,196 @@
+---
+/**
+ * The top of an app page: name, promise, availability and the three actions
+ * people come for (get it, get help, read the privacy policy). The panel on
+ * the right is drawn in the app's own colours, like a store feature graphic.
+ */
+import type { AppDefinition } from '@/data/apps';
+import { supportPath, privacyPath } from '@/data/apps';
+import AppIcon from './AppIcon.astro';
+import PlatformBadges from './PlatformBadges.astro';
+import StoreButton from './StoreButton.astro';
+import Icon from './Icon.astro';
+
+interface Props {
+  app: AppDefinition;
+}
+
+const { app } = Astro.props;
+---
+
+<section class="app-hero" aria-labelledby="app-title">
+  <div class="app-hero-copy">
+    <div class="app-hero-id rise">
+      <AppIcon app={app} size={64} class="app-hero-icon-sm" />
+      <h1 id="app-title" class="app-hero-name">{app.name}</h1>
+    </div>
+    <p class="app-hero-tagline rise" style="--delay: 60ms">{app.tagline}</p>
+    <p class="app-hero-intro rise" style="--delay: 120ms">{app.intro[0]}</p>
+    <div class="rise" style="--delay: 160ms">
+      <PlatformBadges app={app} size="md" />
+    </div>
+    <div class="btn-row btn-row-stack app-hero-actions rise" style="--delay: 200ms">
+      <StoreButton app={app} />
+      <a href={supportPath(app)} class="btn btn-secondary">
+        <Icon name="help" />
+        Get support
+      </a>
+    </div>
+    <p class="app-hero-links rise" style="--delay: 240ms">
+      <a href={privacyPath(app)}>{app.name} privacy policy</a>
+      <span aria-hidden="true">·</span>
+      <a href={`mailto:${app.supportEmail}`}>{app.supportEmail}</a>
+    </p>
+  </div>
+
+  <div
+    class="app-hero-panel"
+    style={`--panel-bg:${app.icon.background};--panel-fg:${app.icon.foreground};`}
+    aria-hidden="true"
+  >
+    <div class="panel-rings">
+      <span></span><span></span><span></span>
+    </div>
+    <AppIcon app={app} size={168} animated class="panel-icon" loading="eager" />
+    <p class="panel-name">{app.name}</p>
+  </div>
+</section>
+
+<style>
+  .app-hero {
+    display: grid;
+    gap: clamp(36px, 6vw, 64px);
+    align-items: center;
+  }
+
+  .app-hero-id {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .app-hero-name {
+    font-size: var(--step-4);
+    letter-spacing: -0.04em;
+  }
+
+  .app-hero-tagline {
+    margin-top: 14px;
+    font-family: var(--font-display);
+    font-size: var(--step-3);
+    font-weight: 700;
+    line-height: 1.08;
+    letter-spacing: -0.03em;
+    color: var(--pine);
+    max-width: 18ch;
+    text-wrap: balance;
+  }
+
+  .app-hero-intro {
+    margin: 20px 0 22px;
+    font-size: var(--step-1);
+    line-height: 1.55;
+    color: var(--muted);
+    max-width: 50ch;
+  }
+
+  .app-hero-actions {
+    margin-top: 26px;
+  }
+
+  .app-hero-links {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px 12px;
+    margin-top: 18px;
+    font-size: 0.975rem;
+    color: var(--muted);
+  }
+
+  .app-hero-links a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 40px;
+  }
+
+  /* ---- brand panel ---- */
+  .app-hero-panel {
+    position: relative;
+    display: none;
+    place-items: center;
+    align-content: center;
+    gap: 22px;
+    aspect-ratio: 1 / 1;
+    max-width: 480px;
+    width: 100%;
+    justify-self: end;
+    border-radius: var(--r-xl);
+    background: var(--panel-bg);
+    color: var(--panel-fg);
+    overflow: hidden;
+    isolation: isolate;
+    box-shadow: var(--shadow-lg);
+  }
+
+  .panel-rings {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    z-index: -1;
+  }
+
+  .panel-rings span {
+    grid-area: 1 / 1;
+    border-radius: 50%;
+    border: 1px solid currentColor;
+    opacity: 0.14;
+  }
+
+  .panel-rings span:nth-child(1) {
+    inline-size: 52%;
+    aspect-ratio: 1;
+  }
+
+  .panel-rings span:nth-child(2) {
+    inline-size: 76%;
+    aspect-ratio: 1;
+    opacity: 0.09;
+  }
+
+  .panel-rings span:nth-child(3) {
+    inline-size: 100%;
+    aspect-ratio: 1;
+    opacity: 0.05;
+  }
+
+  .app-hero-panel :global(.panel-icon) {
+    box-shadow:
+      inset 0 0 0 1px rgb(255 255 255 / 0.12),
+      0 30px 60px -20px rgb(0 0 0 / 0.6),
+      0 0 80px -10px color-mix(in srgb, var(--panel-fg) 45%, transparent);
+  }
+
+  .panel-name {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: #fff;
+  }
+
+  @media (min-width: 960px) {
+    .app-hero {
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+    }
+
+    .app-hero-panel {
+      display: grid;
+    }
+
+    .app-hero-id :global(.app-hero-icon-sm) {
+      display: none;
+    }
+  }
+</style>

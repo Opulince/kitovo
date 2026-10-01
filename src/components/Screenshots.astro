@@ -1,0 +1,64 @@
+---
+/**
+ * App screenshots in a horizontally scrolling row. Renders nothing until the
+ * app has real screenshots, so a page never shows placeholder imagery.
+ */
+import type { AppDefinition } from '@/data/apps';
+
+interface Props {
+  app: AppDefinition;
+}
+
+const { app } = Astro.props;
+const shots = app.screenshots;
+---
+
+{
+  shots.length > 0 && (
+    <section class="section-tight" aria-labelledby="screens-title">
+      <div class="container">
+        <h2 id="screens-title" class="screens-title">
+          {app.name}, on your phone
+        </h2>
+      </div>
+      <div class="screens" role="list" tabindex="0" aria-label={`${app.name} screenshots`}>
+        {shots.map((shot) => (
+          <figure class="screen" role="listitem">
+            <img src={shot.src} alt={shot.alt} width={shot.width} height={shot.height} loading="lazy" decoding="async" />
+          </figure>
+        ))}
+      </div>
+    </section>
+  )
+}
+
+<style>
+  .screens-title {
+    font-size: var(--step-3);
+    margin-bottom: 28px;
+  }
+
+  .screens {
+    display: flex;
+    gap: 18px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    padding: 4px max(var(--gutter), calc((100vw - var(--container)) / 2)) 24px;
+    scrollbar-width: thin;
+  }
+
+  .screen {
+    flex: none;
+    width: min(70vw, 280px);
+    scroll-snap-align: center;
+    margin: 0;
+  }
+
+  .screen img {
+    width: 100%;
+    border-radius: 24px;
+    border: 1px solid var(--line);
+    box-shadow: var(--shadow-md);
+    background: var(--surface);
+  }
+</style>

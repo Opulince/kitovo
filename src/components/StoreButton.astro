@@ -1,0 +1,73 @@
+---
+/**
+ * The Google Play call to action for an app.
+ *
+ * With a store URL it is a real button. Without one it is a plain status line
+ * ("Coming soon to Google Play"), not a button: a button that goes nowhere
+ * would be a lie. Google's official Play badge artwork is intentionally not
+ * used until the listing exists; when it does, a text button keeps us inside
+ * Google's brand rules without shipping their artwork.
+ */
+import type { AppDefinition } from '@/data/apps';
+import { androidPlatform } from '@/data/apps';
+import Icon from './Icon.astro';
+
+interface Props {
+  app: AppDefinition;
+  tone?: 'light' | 'dark';
+}
+
+const { app, tone = 'light' } = Astro.props;
+const android = androidPlatform(app);
+const url = android?.status === 'available' ? android.storeUrl : null;
+---
+
+{
+  url ? (
+    <a
+      class:list={['btn', tone === 'dark' ? 'btn-light' : 'btn-primary']}
+      href={url}
+      rel="noopener"
+      target="_blank"
+    >
+      <Icon name="phone" />
+      Get it on Google Play
+      <span class="visually-hidden">(opens Google Play in a new tab)</span>
+    </a>
+  ) : android ? (
+    <p class:list={['store-pending', `store-pending-${tone}`]}>
+      <span class="store-pending-dot" aria-hidden="true" />
+      {android.status === 'in-development' ? 'In development for Android' : 'Coming soon to Google Play'}
+    </p>
+  ) : null
+}
+
+<style>
+  .store-pending {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6em;
+    min-height: 48px;
+    padding: 0 1.2rem;
+    border-radius: var(--r-pill);
+    border: 1.5px dashed var(--line-strong);
+    color: var(--ink);
+    font-weight: 620;
+    font-size: 1rem;
+    background: rgb(255 255 255 / 0.5);
+  }
+
+  .store-pending-dark {
+    color: var(--pine-ink);
+    border-color: rgb(255 255 255 / 0.28);
+    background: transparent;
+  }
+
+  .store-pending-dot {
+    inline-size: 0.55em;
+    block-size: 0.55em;
+    border-radius: 50%;
+    background: var(--marigold);
+    box-shadow: 0 0 0 3px rgb(242 179 61 / 0.25);
+  }
+</style>

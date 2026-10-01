@@ -1,0 +1,248 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import LogoMark from '@/components/LogoMark.astro';
+import AppIcon from '@/components/AppIcon.astro';
+import Icon from '@/components/Icon.astro';
+import { apps, appPath, statusLabel, primaryPlatform } from '@/data/apps';
+import { organizationJsonLd } from '@/lib/seo';
+
+const principles = [
+  {
+    title: 'Useful over bloated',
+    body: 'Every feature has to earn its place. If it doesn’t help you get something done, it doesn’t go in.',
+  },
+  {
+    title: 'Simple over complicated',
+    body: 'You should understand a Kitovo app in a minute, without a tutorial or a maze of settings.',
+  },
+  {
+    title: 'Real problems first',
+    body: 'Each app starts from one specific, everyday annoyance, like a free trial that quietly turns into a charge.',
+  },
+];
+---
+
+<BaseLayout
+  title="About"
+  description="Kitovo builds small, useful Android apps for problems that are easier to solve with the right tool. Here is what that means in practice."
+  jsonLd={[organizationJsonLd()]}
+>
+  <header class="page-header container about-header">
+    <p class="eyebrow">About</p>
+    <h1>Small apps for problems that deserve a proper tool.</h1>
+    <p class="lead">
+      Kitovo builds small, useful Android apps for problems that are easier to solve with the right
+      tool.
+    </p>
+  </header>
+
+  <div class="container about-body">
+    <section class="about-row" aria-labelledby="what-title">
+      <h2 id="what-title">What Kitovo is</h2>
+      <div class="about-text">
+        <p>
+          Kitovo is an independent app publisher. Each app it makes is meant to do one job, do it
+          properly, and stay out of your way the rest of the time.
+        </p>
+        <p>
+          Kitovo is the name on the door. The apps are what you actually use, and each one gets its
+          own page, its own support and its own privacy policy here.
+        </p>
+      </div>
+    </section>
+
+    <section class="about-row" aria-labelledby="make-title">
+      <h2 id="make-title">What we make</h2>
+      <div class="about-text">
+        <ul role="list" class="about-apps">
+          {
+            apps.map((app) => {
+              const platform = primaryPlatform(app);
+              return (
+                <li>
+                  <AppIcon app={app} size={52} />
+                  <div>
+                    <a href={appPath(app)}>
+                      <strong>{app.name}</strong>
+                    </a>
+                    <span class="about-app-meta">
+                      {platform.name} · {statusLabel[platform.status]}
+                    </span>
+                    <p>{app.summary}</p>
+                  </div>
+                </li>
+              );
+            })
+          }
+        </ul>
+        <p>
+          More apps will follow. They’ll appear on the <a href="/apps">apps page</a> when they are
+          ready for everyday use.
+        </p>
+      </div>
+    </section>
+
+    <section class="about-row" aria-labelledby="how-title">
+      <h2 id="how-title">How we build</h2>
+      <div class="about-text">
+        <ul role="list" class="about-principles">
+          {
+            principles.map((p) => (
+              <li>
+                <h3>{p.title}</h3>
+                <p>{p.body}</p>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </section>
+
+    <section class="about-row" aria-labelledby="mark-title">
+      <h2 id="mark-title">The mark</h2>
+      <div class="about-text about-mark">
+        <span class="about-mark-tile" aria-hidden="true"><LogoMark size={56} /></span>
+        <p>
+          Three app tiles and a dot, like the corner of a phone’s home screen. The dot sits where a
+          notification badge would: a small app telling you something useful at the right moment.
+          That’s the job every Kitovo app is built to do.
+        </p>
+      </div>
+    </section>
+
+    <section class="about-row" aria-labelledby="contact-title">
+      <h2 id="contact-title">Get in touch</h2>
+      <div class="about-text">
+        <p>
+          Questions, ideas, or something not working? The <a href="/contact">contact page</a> lists
+          the best way to reach us, and <a href="/support">Support</a> has help for each app.
+        </p>
+        <a class="btn btn-primary about-cta" href="/contact">
+          Contact Kitovo
+          <Icon name="arrow-right" />
+        </a>
+      </div>
+    </section>
+  </div>
+</BaseLayout>
+
+<style>
+  .about-header h1 {
+    max-width: 16ch;
+  }
+
+  .about-body {
+    padding-bottom: var(--section-y);
+  }
+
+  .about-row {
+    display: grid;
+    gap: 16px;
+    padding-block: clamp(28px, 4vw, 44px);
+    border-top: 1px solid var(--line);
+  }
+
+  .about-row h2 {
+    font-size: var(--step-2);
+  }
+
+  .about-text {
+    display: grid;
+    gap: 16px;
+    max-width: 62ch;
+    font-size: var(--step-1);
+    line-height: 1.6;
+  }
+
+  .about-text p {
+    color: var(--muted);
+  }
+
+  .about-apps {
+    display: grid;
+    gap: 16px;
+    margin: 0;
+  }
+
+  .about-apps li {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    padding: 20px 22px;
+    border-radius: var(--r-md);
+    background: var(--surface);
+    border: 1px solid var(--line);
+  }
+
+  .about-apps a {
+    font-family: var(--font-display);
+    font-size: 1.375rem;
+    text-decoration: none;
+  }
+
+  .about-apps a:hover {
+    text-decoration: underline;
+  }
+
+  .about-app-meta {
+    display: block;
+    margin-top: 2px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--muted);
+  }
+
+  .about-apps p {
+    margin-top: 8px;
+    font-size: 1rem;
+  }
+
+  .about-principles {
+    display: grid;
+    gap: 20px;
+    margin: 0;
+  }
+
+  .about-principles h3 {
+    font-size: 1.25rem;
+  }
+
+  .about-principles p {
+    margin-top: 4px;
+    font-size: 1.0625rem;
+  }
+
+  .about-mark {
+    grid-template-columns: auto 1fr;
+    align-items: center;
+    gap: 22px;
+  }
+
+  .about-mark-tile {
+    display: grid;
+    place-items: center;
+    inline-size: 96px;
+    block-size: 96px;
+    border-radius: var(--r-icon);
+    background: var(--surface);
+    border: 1px solid var(--line);
+  }
+
+  .about-cta {
+    justify-self: start;
+    margin-top: 4px;
+  }
+
+  @media (min-width: 860px) {
+    .about-row {
+      grid-template-columns: minmax(0, 0.7fr) minmax(0, 1.3fr);
+      gap: 48px;
+    }
+  }
+
+  @media (max-width: 479px) {
+    .about-mark {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

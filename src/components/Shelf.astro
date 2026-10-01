@@ -1,0 +1,230 @@
+---
+/**
+ * The homepage signature: a corner of an Android home screen.
+ *
+ * Each published Kitovo app is a real, tappable tile. The remaining slots are
+ * deliberately empty outlines: Kitovo is a publisher with room for more apps,
+ * and this says so without inventing products that don't exist. The grid
+ * fills itself from the app registry, so a new app simply takes the next slot.
+ */
+import { apps, appPath } from '@/data/apps';
+import AppIcon from './AppIcon.astro';
+
+const COLUMNS = 4;
+const ROWS = 2;
+const emptySlots = Math.max(COLUMNS * ROWS - apps.length, 0);
+---
+
+<figure class="shelf" aria-labelledby="shelf-caption">
+  <div class="shelf-screen">
+    <div class="shelf-grid">
+      {
+        apps.map((app, i) => (
+          <a href={appPath(app)} class="shelf-app" style={`--i:${i}`}>
+            <span class="shelf-tile">
+              <AppIcon app={app} size={72} animated class="shelf-icon" loading="eager" />
+              <span class="shelf-badge" aria-hidden="true" />
+            </span>
+            <span class="shelf-label">{app.name}</span>
+          </a>
+        ))
+      }
+      {
+        Array.from({ length: emptySlots }, (_, i) => (
+          <span class="shelf-slot" aria-hidden="true" style={`--i:${i + apps.length}`}>
+            <span class="shelf-slot-tile" />
+          </span>
+        ))
+      }
+    </div>
+    <div class="shelf-dock" aria-hidden="true">
+      <span class="shelf-dock-dot"></span>
+    </div>
+  </div>
+  <figcaption id="shelf-caption" class="shelf-caption">
+    {apps.length === 1 ? `${apps[0]!.name} is the first app on the shelf.` : `${apps.length} apps on the shelf.`}
+    <span> There’s room for more.</span>
+  </figcaption>
+</figure>
+
+<style>
+  .shelf {
+    --tile: clamp(54px, 13vw, 76px);
+    margin: 0;
+    width: 100%;
+    max-width: 480px;
+    justify-self: center;
+  }
+
+  .shelf-screen {
+    position: relative;
+    padding: clamp(22px, 5vw, 34px) clamp(18px, 4.5vw, 32px) clamp(18px, 4vw, 26px);
+    border-radius: var(--r-xl);
+    background:
+      radial-gradient(120% 90% at 0% 0%, rgb(255 255 255 / 0.09), transparent 55%),
+      radial-gradient(80% 70% at 100% 100%, rgb(242 179 61 / 0.1), transparent 60%),
+      var(--pine);
+    box-shadow:
+      inset 0 0 0 1px rgb(255 255 255 / 0.06),
+      var(--shadow-lg);
+    overflow: hidden;
+    isolation: isolate;
+  }
+
+  /* fine dot grid, like a lit screen up close */
+  .shelf-screen::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background-image: radial-gradient(rgb(255 255 255 / 0.08) 1px, transparent 1.4px);
+    background-size: 18px 18px;
+    mask-image: linear-gradient(180deg, #000, transparent 85%);
+    -webkit-mask-image: linear-gradient(180deg, #000, transparent 85%);
+  }
+
+  .shelf-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: clamp(16px, 4vw, 26px) clamp(8px, 2.5vw, 16px);
+    justify-items: center;
+  }
+
+  .shelf-app,
+  .shelf-slot {
+    display: grid;
+    justify-items: center;
+    gap: 8px;
+    inline-size: 100%;
+    animation: tile-in 0.6s var(--ease-out) both;
+    animation-delay: calc(240ms + var(--i) * 55ms);
+  }
+
+  .shelf-app {
+    color: #fff;
+    text-decoration: none;
+    border-radius: var(--r-md);
+    animation-name: tile-pop;
+    animation-duration: 0.75s;
+    animation-timing-function: var(--ease-spring);
+    animation-delay: 160ms;
+  }
+
+  .shelf-app:focus-visible {
+    outline-color: var(--marigold);
+    outline-offset: 6px;
+  }
+
+  .shelf-tile {
+    position: relative;
+    display: inline-grid;
+    transition: transform 0.35s var(--ease-spring);
+  }
+
+  .shelf-app:hover .shelf-tile {
+    transform: translateY(-4px) scale(1.04);
+  }
+
+  .shelf-app:active .shelf-tile {
+    transform: scale(0.96);
+  }
+
+  .shelf-tile :global(.shelf-icon) {
+    inline-size: var(--tile);
+    block-size: var(--tile);
+  }
+
+  /* the notification badge: the same marigold dot as the Kitovo mark */
+  .shelf-badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    inline-size: 18px;
+    block-size: 18px;
+    border-radius: 50%;
+    background: var(--marigold);
+    border: 3px solid var(--pine);
+    animation: badge-in 0.5s var(--ease-spring) both;
+    animation-delay: 900ms;
+  }
+
+  .shelf-label {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    letter-spacing: 0.005em;
+    line-height: 1.2;
+    color: #fff;
+  }
+
+  .shelf-slot-tile {
+    display: block;
+    inline-size: var(--tile);
+    block-size: var(--tile);
+    border-radius: var(--r-icon);
+    border: 1.5px dashed rgb(255 255 255 / 0.2);
+    background: rgb(255 255 255 / 0.025);
+  }
+
+  /* keeps empty slots aligned with labelled tiles */
+  .shelf-slot::after {
+    content: '';
+    block-size: calc(0.8125rem * 1.2);
+  }
+
+  .shelf-dock {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    margin-top: clamp(20px, 5vw, 30px);
+    height: 44px;
+    padding: 0 16px;
+    border-radius: var(--r-pill);
+    background: rgb(255 255 255 / 0.08);
+    border: 1px solid rgb(255 255 255 / 0.06);
+  }
+
+  .shelf-dock-dot {
+    inline-size: 8px;
+    block-size: 8px;
+    border-radius: 50%;
+    background: rgb(255 255 255 / 0.35);
+  }
+
+  .shelf-caption {
+    margin-top: 16px;
+    font-size: 0.9375rem;
+    color: var(--muted);
+    text-align: center;
+  }
+
+  @keyframes tile-in {
+    from {
+      opacity: 0;
+      transform: scale(0.88);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @keyframes tile-pop {
+    0% {
+      opacity: 0;
+      transform: scale(0.6) translateY(8px);
+    }
+    100% {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @keyframes badge-in {
+    from {
+      transform: scale(0);
+    }
+    to {
+      transform: scale(1);
+    }
+  }
+</style>

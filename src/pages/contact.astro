@@ -1,0 +1,280 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Icon from '@/components/Icon.astro';
+import type { IconName } from '@/components/icons';
+import { site, mailto } from '@/config/site';
+import { apps, supportPath } from '@/data/apps';
+
+interface Topic {
+  id: string;
+  icon: IconName;
+  title: string;
+  body: string;
+  email: string;
+  subject: string;
+  action: string;
+}
+
+const firstApp = apps[0]!;
+
+const topics: Topic[] = [
+  {
+    id: 'bug',
+    icon: 'bug',
+    title: 'Bug report',
+    body: 'Something in an app isn’t working as it should. Tell us what happened and on which phone.',
+    email: firstApp.supportEmail,
+    subject: `Bug report: ${firstApp.name}`,
+    action: 'Report a bug',
+  },
+  {
+    id: 'general',
+    icon: 'chat',
+    title: 'General inquiry',
+    body: 'Questions about Kitovo, feedback, or an idea for an app that should exist.',
+    email: site.contact.generalEmail,
+    subject: 'General inquiry',
+    action: 'Send a message',
+  },
+  {
+    id: 'business',
+    icon: 'briefcase',
+    title: 'Business inquiry',
+    body: 'Partnerships, press, or anything else business-related.',
+    email: site.contact.businessEmail,
+    subject: 'Business inquiry',
+    action: 'Get in touch',
+  },
+];
+
+const allAddresses = new Set([...apps.map((a) => a.supportEmail), ...topics.map((t) => t.email)]);
+const sharedInbox = allAddresses.size === 1 ? [...allAddresses][0] : null;
+---
+
+<BaseLayout
+  title="Contact"
+  description="How to contact Kitovo: app support, bug reports, general and business inquiries. Email is the fastest way to reach us."
+>
+  <header class="page-header container">
+    <p class="eyebrow">Contact</p>
+    <h1>Get in touch</h1>
+    <p class="lead">
+      Email is the best way to reach Kitovo. Choose the topic that fits and your email app opens
+      with the subject line filled in, so your message gets to the right place.
+    </p>
+  </header>
+
+  <div class="container contact-body">
+    {
+      sharedInbox && (
+        <div class="callout" role="note">
+          <Icon name="inbox" />
+          <p>
+            All topics currently go to one inbox:{' '}
+            <a href={mailto(sharedInbox)}>
+              <strong>{sharedInbox}</strong>
+            </a>
+            . The subject line tells us what your message is about.
+          </p>
+        </div>
+      )
+    }
+
+    <section class="topic-section" aria-labelledby="support-title">
+      <article class="topic-card topic-feature card">
+        <span class="topic-icon" aria-hidden="true"><Icon name="help" size={24} /></span>
+        <div class="topic-content">
+          <h2 id="support-title">App support</h2>
+          <p>
+            Questions about using an app? Each app has a support page with troubleshooting steps and
+            answers to common questions, and its own support address.
+          </p>
+          <ul role="list" class="app-contacts">
+            {
+              apps.map((app) => (
+                <li>
+                  <span class="app-contact-name">{app.name}</span>
+                  <a href={mailto(app.supportEmail, `${app.name} support`)}>{app.supportEmail}</a>
+                  <a class="link-arrow" href={supportPath(app)}>
+                    {app.name} support page
+                    <Icon name="arrow-right" />
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+      </article>
+    </section>
+
+    <section aria-label="Other topics">
+      <ul role="list" class="topics">
+        {
+          topics.map((topic) => (
+            <li id={topic.id} class="topic-card card">
+              <span class="topic-icon" aria-hidden="true">
+                <Icon name={topic.icon} size={24} />
+              </span>
+              <h2>{topic.title}</h2>
+              <p>{topic.body}</p>
+              <p class="topic-email">{topic.email}</p>
+              <a class="btn btn-secondary topic-btn" href={mailto(topic.email, topic.subject)}>
+                <Icon name="mail" />
+                {topic.action}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+
+    <section class="before" aria-labelledby="before-title">
+      <h2 id="before-title">Before you write</h2>
+      <ul>
+        <li>Mention which app you’re writing about, and your phone model if something isn’t working.</li>
+        <li>Never send passwords, sign-in codes or card numbers. We will never ask for them.</li>
+        <li>
+          For questions about your data, the <a href="/privacy">privacy policies</a> may already
+          have the answer.
+        </li>
+      </ul>
+    </section>
+  </div>
+</BaseLayout>
+
+<style>
+  .contact-body {
+    display: grid;
+    gap: 24px;
+    padding-bottom: var(--section-y);
+  }
+
+  .topic-card {
+    padding: clamp(22px, 3vw, 30px);
+    border-radius: var(--r-lg);
+  }
+
+  .topic-feature {
+    display: grid;
+    gap: 18px;
+  }
+
+  .topic-icon {
+    display: grid;
+    place-items: center;
+    inline-size: 50px;
+    block-size: 50px;
+    border-radius: 15px;
+    background: var(--mint);
+    color: var(--pine);
+  }
+
+  .topic-card h2 {
+    font-size: var(--step-2);
+  }
+
+  .topic-content > p,
+  .topic-card > p {
+    margin-top: 8px;
+    color: var(--muted);
+  }
+
+  .app-contacts {
+    display: grid;
+    gap: 10px;
+    margin: 18px 0 0;
+  }
+
+  .app-contacts li {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px 18px;
+    padding: 14px 18px;
+    border-radius: var(--r-md);
+    background: var(--paper);
+    border: 1px solid var(--line);
+  }
+
+  .app-contact-name {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.125rem;
+    min-width: 6ch;
+  }
+
+  .app-contacts li > a:not(.link-arrow) {
+    font-weight: 600;
+    word-break: break-all;
+  }
+
+  .app-contacts .link-arrow {
+    margin-left: auto;
+  }
+
+  .topics {
+    display: grid;
+    gap: 20px;
+    margin: 0;
+  }
+
+  .topics .topic-card {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .topics .topic-icon {
+    margin-bottom: 12px;
+  }
+
+  .topic-email {
+    margin-top: auto;
+    padding-top: 10px;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--ink) !important;
+    word-break: break-all;
+  }
+
+  .topic-btn {
+    align-self: flex-start;
+  }
+
+  .topics .topic-card > p:not(.topic-email) {
+    margin-bottom: 4px;
+  }
+
+  .topic-email + .topic-btn {
+    margin-top: 14px;
+  }
+
+  .before {
+    margin-top: 16px;
+    padding: clamp(22px, 3vw, 32px);
+    border-radius: var(--r-lg);
+    background: var(--mint);
+  }
+
+  .before h2 {
+    font-size: var(--step-2);
+  }
+
+  .before ul {
+    display: grid;
+    gap: 8px;
+    margin-top: 14px;
+    padding-left: 1.2em;
+  }
+
+  @media (min-width: 760px) {
+    .topic-feature {
+      grid-template-columns: auto 1fr;
+      gap: 24px;
+    }
+
+    .topics {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+</style>

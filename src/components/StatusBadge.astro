@@ -1,0 +1,99 @@
+---
+/**
+ * A release status pill: "Android · Coming soon".
+ */
+import { statusLabel } from '@/data/apps';
+import type { ReleaseStatus } from '@/data/apps/types';
+
+interface Props {
+  status: ReleaseStatus;
+  platform?: string;
+  size?: 'sm' | 'md';
+  tone?: 'light' | 'dark';
+}
+
+const { status, platform, size = 'md', tone = 'light' } = Astro.props;
+---
+
+<span class:list={['status', `status-${status}`, `status-${size}`, `status-on-${tone}`]}>
+  <span class="status-dot" aria-hidden="true"></span>
+  {platform && <span class="status-platform">{platform}</span>}
+  {platform && <span class="status-sep" aria-hidden="true">·</span>}
+  <span>{statusLabel[status]}</span>
+</span>
+
+<style>
+  .status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45em;
+    padding: 0.3em 0.75em 0.3em 0.65em;
+    border-radius: var(--r-pill);
+    font-size: 0.8125rem;
+    font-weight: 620;
+    line-height: 1.3;
+    white-space: nowrap;
+    border: 1px solid transparent;
+  }
+
+  .status-md {
+    font-size: 0.875rem;
+  }
+
+  .status-dot {
+    inline-size: 0.5em;
+    block-size: 0.5em;
+    border-radius: 50%;
+    background: currentColor;
+    flex: none;
+  }
+
+  .status-platform {
+    font-weight: 700;
+  }
+
+  .status-sep {
+    opacity: 0.55;
+  }
+
+  .status-available {
+    background: #dcefe2;
+    color: #0f4a2c;
+    border-color: #bcdcc6;
+  }
+
+  .status-coming-soon {
+    background: var(--marigold-soft);
+    color: var(--marigold-ink);
+    border-color: #f0d9a2;
+  }
+
+  .status-coming-soon .status-dot {
+    background: var(--marigold);
+    box-shadow: 0 0 0 2px rgb(242 179 61 / 0.25);
+  }
+
+  .status-in-development {
+    background: #eceeec;
+    color: #3e4a44;
+    border-color: #d7dcd8;
+  }
+
+  .status-on-dark.status-coming-soon {
+    background: rgb(242 179 61 / 0.14);
+    color: #ffd98c;
+    border-color: rgb(242 179 61 / 0.3);
+  }
+
+  .status-on-dark.status-in-development {
+    background: rgb(255 255 255 / 0.08);
+    color: var(--pine-ink);
+    border-color: rgb(255 255 255 / 0.14);
+  }
+
+  .status-on-dark.status-available {
+    background: rgb(120 220 160 / 0.14);
+    color: #b8f0cc;
+    border-color: rgb(120 220 160 / 0.3);
+  }
+</style>

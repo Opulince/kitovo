@@ -1,0 +1,101 @@
+---
+/**
+ * An app's launcher icon. Uses the real icon image when the app defines one
+ * (icon.src), otherwise draws the app's mark on its brand tile. Either way it
+ * is the same rounded tile, so layouts never change when the real icon lands.
+ */
+import type { AppDefinition } from '@/data/apps';
+
+interface Props {
+  app: AppDefinition;
+  /** Rendered size in px. */
+  size?: number;
+  /** Decorative when the app name is already next to it (the default). */
+  decorative?: boolean;
+  /** Slowly sweep the mark's hand (only marks that have one). */
+  animated?: boolean;
+  class?: string;
+  /** Loading hint when a real image is used. */
+  loading?: 'eager' | 'lazy';
+}
+
+const {
+  app,
+  size = 56,
+  decorative = true,
+  animated = false,
+  class: className,
+  loading = 'lazy',
+} = Astro.props;
+const { icon } = app;
+const label = `${app.name} app icon`;
+---
+
+<span
+  class:list={['app-icon', { 'is-animated': animated }, className]}
+  style={`--icon-size:${size}px;--icon-bg:${icon.background};--icon-fg:${icon.foreground};`}
+  role={decorative ? undefined : 'img'}
+  aria-label={decorative ? undefined : label}
+  aria-hidden={decorative ? 'true' : undefined}
+>
+  {
+    icon.src ? (
+      <img src={icon.src} alt="" width={size} height={size} loading={loading} decoding="async" />
+    ) : (
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 28 28"
+        class="app-icon-mark"
+        focusable="false"
+        set:html={icon.mark ?? ''}
+      />
+    )
+  }
+</span>
+
+<style>
+  .app-icon {
+    position: relative;
+    display: inline-grid;
+    place-items: center;
+    flex: none;
+    inline-size: var(--icon-size);
+    block-size: var(--icon-size);
+    border-radius: var(--r-icon);
+    background: var(--icon-bg);
+    color: var(--icon-fg);
+    overflow: hidden;
+    box-shadow:
+      inset 0 0 0 1px rgb(255 255 255 / 0.08),
+      0 1px 2px rgb(15 29 23 / 0.12),
+      0 8px 20px -10px rgb(15 29 23 / 0.45);
+  }
+
+  .app-icon img {
+    inline-size: 100%;
+    block-size: 100%;
+    object-fit: cover;
+  }
+
+  .app-icon-mark {
+    inline-size: 66%;
+    block-size: 66%;
+    overflow: visible;
+    filter: drop-shadow(0 0 calc(var(--icon-size) * 0.06) color-mix(in srgb, var(--icon-fg) 55%, transparent));
+  }
+
+  .app-icon :global(.mark-hand) {
+    transform-box: view-box;
+    transform-origin: 14px 14px;
+  }
+
+  .is-animated :global(.mark-hand) {
+    animation: sweep 14s linear infinite;
+  }
+
+  @keyframes sweep {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+</style>

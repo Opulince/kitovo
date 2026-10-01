@@ -1,0 +1,77 @@
+---
+/**
+ * Breadcrumb trail for nested pages, with matching BreadcrumbList JSON-LD
+ * produced by `breadcrumbJsonLd` in the page.
+ */
+import Icon from './Icon.astro';
+import type { Crumb } from '@/lib/seo';
+
+interface Props {
+  items: Crumb[];
+}
+
+const { items } = Astro.props;
+---
+
+<nav class="crumbs" aria-label="Breadcrumb">
+  <ol role="list">
+    {
+      items.map((item, i) => (
+        <li>
+          {i < items.length - 1 ? (
+            <>
+              <a href={item.href}>{item.label}</a>
+              <Icon name="chevron-right" size={14} class="crumb-sep" />
+            </>
+          ) : (
+            <span aria-current="page">{item.label}</span>
+          )}
+        </li>
+      ))
+    }
+  </ol>
+</nav>
+
+<style>
+  .crumbs ol {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 2px;
+    margin: 0;
+    font-size: 0.9rem;
+    color: var(--muted);
+  }
+
+  .crumbs li {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+  }
+
+  .crumbs a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 32px;
+    padding: 0 4px;
+    margin-left: -4px;
+    color: var(--muted);
+    text-decoration: none;
+    border-radius: 6px;
+  }
+
+  .crumbs a:hover {
+    color: var(--pine);
+    text-decoration: underline;
+  }
+
+  .crumbs :global(.crumb-sep) {
+    color: var(--line-strong);
+    margin-inline: 2px;
+  }
+
+  .crumbs [aria-current='page'] {
+    color: var(--ink);
+    font-weight: 600;
+  }
+</style>

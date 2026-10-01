@@ -1,0 +1,71 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Icon from '@/components/Icon.astro';
+import LogoMark from '@/components/LogoMark.astro';
+
+const links = [
+  { href: '/apps', label: 'Browse apps' },
+  { href: '/support', label: 'Get support' },
+  { href: '/contact', label: 'Contact Kitovo' },
+];
+---
+
+<BaseLayout
+  title="Page not found"
+  description="This page doesn't exist. Head back to Kitovo's apps, support or contact pages."
+  noindex
+>
+  <section class="container nf">
+    <div class="nf-mark" aria-hidden="true">
+      <span class="nf-slot"></span>
+      <LogoMark size={64} />
+    </div>
+    <p class="eyebrow">Error 404</p>
+    <h1>This page isn’t on the shelf.</h1>
+    <p class="lead">
+      The link may be out of date, or the address may have a typo. These pages should get you back
+      on track.
+    </p>
+    <div class="btn-row nf-actions">
+      <a class="btn btn-primary" href="/">
+        Go to the homepage
+        <Icon name="arrow-right" />
+      </a>
+      {links.map((l) => <a class="btn btn-ghost" href={l.href}>{l.label}</a>)}
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .nf {
+    display: grid;
+    justify-items: start;
+    padding-block: clamp(56px, 10vw, 128px);
+  }
+
+  .nf-mark {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 36px;
+  }
+
+  .nf-slot {
+    inline-size: 64px;
+    block-size: 64px;
+    border-radius: var(--r-icon);
+    border: 2px dashed var(--line-strong);
+  }
+
+  .nf h1 {
+    margin-top: 14px;
+    max-width: 16ch;
+  }
+
+  .nf .lead {
+    margin-top: 16px;
+  }
+
+  .nf-actions {
+    margin-top: 32px;
+  }
+</style>

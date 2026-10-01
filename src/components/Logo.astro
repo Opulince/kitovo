@@ -1,0 +1,51 @@
+---
+/**
+ * The Kitovo lockup: mark + wordmark. The wordmark is real text, so it stays
+ * crisp, selectable and readable by screen readers.
+ */
+import LogoMark from './LogoMark.astro';
+
+interface Props {
+  tone?: 'pine' | 'light';
+  size?: 'md' | 'lg';
+}
+
+const { tone = 'pine', size = 'md' } = Astro.props;
+---
+
+<span class:list={['logo', `logo-${tone}`, `logo-${size}`]}>
+  <LogoMark size={size === 'lg' ? 34 : 26} tone={tone} class="logo-mark" />
+  <span class="logo-word">Kitovo</span>
+</span>
+
+<style>
+  .logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    line-height: 1;
+  }
+
+  .logo-word {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 1.3125rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink);
+    /* optical nudge: caps sit visually high next to the mark */
+    transform: translateY(0.02em);
+  }
+
+  .logo-lg .logo-word {
+    font-size: 1.625rem;
+  }
+
+  .logo-light .logo-word {
+    color: #fff;
+  }
+
+  .logo-mark {
+    flex: none;
+  }
+</style>

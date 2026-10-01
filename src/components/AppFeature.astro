@@ -1,0 +1,58 @@
+---
+/** One feature: icon, title, one or two sentences. */
+import type { Feature } from '@/data/apps/types';
+import Icon from './Icon.astro';
+
+interface Props {
+  feature: Feature;
+}
+
+const { feature } = Astro.props;
+---
+
+<li class="feature">
+  <span class="feature-icon" aria-hidden="true">
+    <Icon name={feature.icon} size={22} />
+  </span>
+  <h3 class="feature-title">{feature.title}</h3>
+  <p class="feature-body">{feature.body}</p>
+</li>
+
+<style>
+  .feature {
+    padding: 26px;
+    border-radius: var(--r-lg);
+    background: var(--surface);
+    border: 1px solid var(--line);
+    transition:
+      border-color 0.2s ease,
+      transform 0.3s var(--ease-out),
+      box-shadow 0.3s var(--ease-out);
+  }
+
+  .feature:hover {
+    border-color: var(--line-strong);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+  }
+
+  .feature-icon {
+    display: grid;
+    place-items: center;
+    inline-size: 46px;
+    block-size: 46px;
+    border-radius: 14px;
+    background: var(--mint);
+    color: var(--pine);
+  }
+
+  .feature-title {
+    margin-top: 18px;
+    font-size: 1.25rem;
+  }
+
+  .feature-body {
+    margin-top: 6px;
+    color: var(--muted);
+  }
+</style>

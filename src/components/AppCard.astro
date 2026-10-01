@@ -1,0 +1,265 @@
+---
+/**
+ * An app in a listing. `featured` is the wide homepage version with the
+ * app's three steps; `compact` is the directory/support tile.
+ */
+import type { AppDefinition } from '@/data/apps';
+import { appPath, supportPath } from '@/data/apps';
+import AppIcon from './AppIcon.astro';
+import PlatformBadges from './PlatformBadges.astro';
+import Icon from './Icon.astro';
+
+interface Props {
+  app: AppDefinition;
+  variant?: 'featured' | 'compact';
+  /** Where the card links. Defaults to the app page. */
+  href?: string;
+  /** Label for the main link. */
+  cta?: string;
+  headingLevel?: 'h2' | 'h3';
+}
+
+const {
+  app,
+  variant = 'compact',
+  href = appPath(app),
+  cta = 'View app',
+  headingLevel = 'h3',
+} = Astro.props;
+const Heading = headingLevel;
+---
+
+{
+  variant === 'featured' ? (
+    <article class="app-card app-card-featured card">
+      <div class="featured-main">
+        <div class="app-head">
+          <AppIcon app={app} size={72} animated />
+          <div>
+            <Heading class="app-name">{app.name}</Heading>
+            <p class="app-tagline">{app.tagline}</p>
+          </div>
+        </div>
+        <p class="app-summary">{app.summary}</p>
+        <PlatformBadges app={app} />
+        <div class="btn-row">
+          <a href={href} class="btn btn-primary">
+            {cta}
+            <span class="visually-hidden">: {app.name}</span>
+            <Icon name="arrow-right" />
+          </a>
+          <a href={supportPath(app)} class="btn btn-ghost">
+            {app.name} support
+          </a>
+        </div>
+      </div>
+      <div class="featured-steps">
+        <p class="steps-label">How it works</p>
+        <ol role="list">
+          {app.steps.map((step, i) => (
+            <li>
+              <span class="step-num" aria-hidden="true">
+                {i + 1}
+              </span>
+              <div>
+                <h4 class="step-title">{step.title}</h4>
+                <p>{step.body}</p>
+              </div>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </article>
+  ) : (
+    <article class="app-card app-card-compact card card-interactive">
+      <AppIcon app={app} size={64} />
+      <Heading class="app-name">
+        <a href={href} class="stretched-link">
+          {app.name}
+        </a>
+      </Heading>
+      <p class="app-tagline">{app.tagline}</p>
+      <p class="app-summary">{app.summary}</p>
+      <div class="compact-foot">
+        <PlatformBadges app={app} />
+        <span class="compact-cta" aria-hidden="true">
+          {cta}
+          <Icon name="arrow-right" size={18} />
+        </span>
+      </div>
+    </article>
+  )
+}
+
+<style>
+  .app-card {
+    color: var(--ink);
+  }
+
+  .app-name {
+    font-size: var(--step-2);
+    letter-spacing: -0.025em;
+  }
+
+  .app-name a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .app-tagline {
+    margin-top: 4px;
+    font-family: var(--font-display);
+    font-weight: 560;
+    font-size: var(--step-1);
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+    color: var(--pine);
+  }
+
+  .app-summary {
+    color: var(--muted);
+  }
+
+  /* ---- featured ---- */
+  .app-card-featured {
+    display: grid;
+    overflow: hidden;
+    border-radius: var(--r-xl);
+  }
+
+  .featured-main {
+    display: grid;
+    gap: 20px;
+    align-content: center;
+    padding: clamp(24px, 4vw, 44px);
+  }
+
+  .app-head {
+    display: flex;
+    gap: 18px;
+    align-items: center;
+  }
+
+  .featured-main .app-summary {
+    font-size: var(--step-1);
+    line-height: 1.55;
+    max-width: 46ch;
+  }
+
+  .featured-main .btn-row {
+    margin-top: 4px;
+  }
+
+  .featured-steps {
+    padding: clamp(24px, 4vw, 44px);
+    background: var(--mint);
+    border-top: 1px solid var(--line);
+  }
+
+  .steps-label {
+    font-size: 0.8125rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .featured-steps ol {
+    display: grid;
+    gap: 22px;
+    margin: 20px 0 0;
+  }
+
+  .featured-steps li {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 14px;
+    align-items: start;
+  }
+
+  .step-num {
+    display: grid;
+    place-items: center;
+    inline-size: 32px;
+    block-size: 32px;
+    border-radius: 50%;
+    background: var(--pine);
+    color: #fff;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 0.9375rem;
+  }
+
+  .step-title {
+    font-family: var(--font-display);
+    font-size: 1.125rem;
+    font-weight: 680;
+    letter-spacing: -0.01em;
+    line-height: 1.3;
+    margin-top: 3px;
+  }
+
+  .featured-steps p {
+    margin-top: 4px;
+    color: var(--muted);
+    font-size: 0.975rem;
+  }
+
+  @media (min-width: 900px) {
+    .app-card-featured {
+      grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+    }
+
+    .featured-steps {
+      border-top: 0;
+      border-left: 1px solid var(--line);
+    }
+  }
+
+  /* ---- compact ---- */
+  .app-card-compact {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 28px;
+    height: 100%;
+  }
+
+  .app-card-compact .app-name {
+    margin-top: 14px;
+  }
+
+  .app-card-compact .app-summary {
+    margin-top: 6px;
+  }
+
+  .compact-foot {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    margin-top: auto;
+    padding-top: 18px;
+  }
+
+  .compact-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 650;
+    color: var(--pine);
+  }
+
+  .compact-cta :global(svg) {
+    transition: transform 0.25s var(--ease-out);
+  }
+
+  .app-card-compact:hover .compact-cta :global(svg) {
+    transform: translateX(3px);
+  }
+
+  .app-card-compact:focus-within {
+    border-color: var(--pine);
+  }
+</style>

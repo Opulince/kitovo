@@ -1,0 +1,32 @@
+---
+/** Every platform an app is on (or coming to), as status pills. */
+import type { AppDefinition } from '@/data/apps';
+import StatusBadge from './StatusBadge.astro';
+
+interface Props {
+  app: AppDefinition;
+  tone?: 'light' | 'dark';
+  size?: 'sm' | 'md';
+}
+
+const { app, tone = 'light', size = 'sm' } = Astro.props;
+---
+
+<ul class="platforms" role="list" aria-label={`${app.name} availability`}>
+  {
+    app.platforms.map((p) => (
+      <li>
+        <StatusBadge status={p.status} platform={p.name} tone={tone} size={size} />
+      </li>
+    ))
+  }
+</ul>
+
+<style>
+  .platforms {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 0;
+  }
+</style>

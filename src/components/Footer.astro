@@ -1,0 +1,197 @@
+---
+/**
+ * The publisher footer: who Kitovo is, every app, help, and the legal pages.
+ * App links are generated from the registry, so new apps appear here
+ * automatically.
+ */
+import { site } from '@/config/site';
+import { apps, appPath } from '@/data/apps';
+import Logo from './Logo.astro';
+
+const columns = [
+  {
+    title: 'Apps',
+    links: [...apps.map((app) => ({ href: appPath(app), label: app.name })), { href: '/apps', label: 'All apps' }],
+  },
+  {
+    title: 'Kitovo',
+    links: [
+      { href: '/about', label: 'About' },
+      { href: '/support', label: 'Support' },
+      { href: '/contact', label: 'Contact' },
+    ],
+  },
+  {
+    title: 'Legal',
+    links: [
+      { href: '/privacy', label: 'Privacy Policy' },
+      { href: '/terms', label: 'Terms' },
+      { href: '/disclaimer', label: 'Disclaimer' },
+    ],
+  },
+];
+---
+
+<footer class="site-footer on-dark">
+  <div class="container footer-top">
+    <div class="footer-brand">
+      <a href="/" class="footer-logo" aria-label="Kitovo, home">
+        <Logo tone="light" size="lg" />
+      </a>
+      <p class="footer-tagline">{site.tagline}</p>
+      <p class="footer-note">
+        An independent publisher of simple, focused Android apps.
+      </p>
+    </div>
+
+    <nav class="footer-nav" aria-label="Footer">
+      {
+        columns.map((col) => (
+          <div class="footer-col">
+            <h2 class="footer-heading">{col.title}</h2>
+            <ul role="list">
+              {col.links.map((link) => (
+                <li>
+                  <a href={link.href}>{link.label}</a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))
+      }
+    </nav>
+  </div>
+
+  <div class="footer-bottom">
+    <div class="container footer-bottom-inner">
+      <p>Copyright © {site.copyrightYear} Kitovo. All rights reserved.</p>
+      <p class="footer-small">
+        Android is a trademark of Google LLC. Google Play is a trademark of Google LLC.
+      </p>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    margin-top: auto;
+    background: var(--pine-deep);
+    color: var(--pine-ink);
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* a faint echo of the mark's tile grid, top-right */
+  .site-footer::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(rgb(255 255 255 / 0.07) 1px, transparent 1.4px);
+    background-size: 22px 22px;
+    mask-image: radial-gradient(70% 90% at 100% 0%, #000 0%, transparent 70%);
+    -webkit-mask-image: radial-gradient(70% 90% at 100% 0%, #000 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .footer-top {
+    position: relative;
+    display: grid;
+    gap: 48px;
+    padding-block: clamp(56px, 8vw, 88px) clamp(40px, 6vw, 64px);
+  }
+
+  .footer-logo {
+    display: inline-flex;
+    min-height: 44px;
+    align-items: center;
+    border-radius: var(--r-xs);
+  }
+
+  .footer-tagline {
+    margin-top: 18px;
+    font-family: var(--font-display);
+    font-size: var(--step-2);
+    font-weight: 650;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    color: #fff;
+    max-width: 18ch;
+  }
+
+  .footer-note {
+    margin-top: 12px;
+    color: var(--pine-muted);
+    max-width: 36ch;
+    font-size: 0.975rem;
+  }
+
+  .footer-nav {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 32px 24px;
+  }
+
+  .footer-heading {
+    font-family: var(--font-body);
+    font-size: 0.8125rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--pine-muted);
+    margin-bottom: 10px;
+  }
+
+  .footer-col ul {
+    margin: 0;
+    display: grid;
+  }
+
+  .footer-col a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 40px;
+    color: var(--pine-ink);
+    text-decoration: none;
+    font-weight: 500;
+  }
+
+  .footer-col a:hover {
+    color: #fff;
+    text-decoration: underline;
+    text-decoration-color: var(--marigold);
+    text-decoration-thickness: 2px;
+  }
+
+  .footer-bottom {
+    position: relative;
+    border-top: 1px solid rgb(255 255 255 / 0.1);
+  }
+
+  .footer-bottom-inner {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 8px 32px;
+    padding-block: 22px 26px;
+    font-size: 0.9rem;
+    color: var(--pine-ink);
+  }
+
+  .footer-small {
+    color: var(--pine-muted);
+    font-size: 0.8125rem;
+  }
+
+  @media (min-width: 560px) {
+    .footer-nav {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 960px) {
+    .footer-top {
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.4fr);
+      gap: 64px;
+    }
+  }
+</style>

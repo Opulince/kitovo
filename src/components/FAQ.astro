@@ -1,0 +1,122 @@
+---
+/**
+ * Questions and answers as native <details> disclosures: keyboard and
+ * screen-reader friendly, and no JavaScript.
+ */
+import type { FaqItem } from '@/data/apps/types';
+import Icon from './Icon.astro';
+
+interface Props {
+  items: FaqItem[];
+  /** Heading level used for each question. */
+  questionLevel?: 'h3' | 'h4';
+}
+
+const { items, questionLevel = 'h3' } = Astro.props;
+const Q = questionLevel;
+---
+
+<div class="faq">
+  {
+    items.map((item) => (
+      <details class="faq-item">
+        <summary>
+          <Q class="faq-q">{item.question}</Q>
+          <span class="faq-toggle" aria-hidden="true">
+            <Icon name="plus" size={18} strokeWidth={2} />
+          </span>
+        </summary>
+        <div class="faq-a">
+          <p>{item.answer}</p>
+        </div>
+      </details>
+    ))
+  }
+</div>
+
+<style>
+  .faq {
+    border-top: 1px solid var(--line);
+  }
+
+  .faq-item {
+    border-bottom: 1px solid var(--line);
+  }
+
+  summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    min-height: 64px;
+    padding: 16px 4px;
+    cursor: pointer;
+    list-style: none;
+    border-radius: var(--r-xs);
+  }
+
+  summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .faq-q {
+    font-family: var(--font-display);
+    font-size: 1.1875rem;
+    font-weight: 640;
+    letter-spacing: -0.012em;
+    line-height: 1.3;
+  }
+
+  summary:hover .faq-q {
+    color: var(--pine);
+  }
+
+  .faq-toggle {
+    display: grid;
+    place-items: center;
+    flex: none;
+    inline-size: 36px;
+    block-size: 36px;
+    border-radius: 50%;
+    border: 1px solid var(--line-strong);
+    color: var(--pine);
+    transition:
+      transform 0.3s var(--ease-out),
+      background-color 0.2s ease,
+      color 0.2s ease;
+  }
+
+  details[open] .faq-toggle {
+    transform: rotate(45deg);
+    background: var(--pine);
+    border-color: var(--pine);
+    color: #fff;
+  }
+
+  .faq-a {
+    padding: 0 56px 22px 4px;
+    color: var(--muted);
+    max-width: 70ch;
+  }
+
+  details[open] .faq-a {
+    animation: faq-open 0.35s var(--ease-out);
+  }
+
+  @keyframes faq-open {
+    from {
+      opacity: 0;
+      transform: translateY(-4px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @media (max-width: 559px) {
+    .faq-a {
+      padding-right: 4px;
+    }
+  }
+</style>

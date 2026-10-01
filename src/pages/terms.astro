@@ -1,0 +1,19 @@
+---
+import LegalLayout from '@/layouts/LegalLayout.astro';
+import * as doc from '@/content/legal/terms.md';
+import { renderLegal, tokensFor } from '@/lib/legal';
+import { site } from '@/config/site';
+
+const { html, headings } = await renderLegal(doc, tokensFor());
+---
+
+<LegalLayout
+  title="Terms of Use"
+  metaTitle="Terms of Use"
+  description="The terms for using the Kitovo website and Kitovo apps: your account, acceptable use, paid features, and what we can and can't guarantee."
+  updated={site.legal.termsUpdated}
+  lead="The rules for using the Kitovo website and Kitovo apps, in plain language."
+  headings={headings}
+>
+  <Fragment set:html={html} />
+</LegalLayout>

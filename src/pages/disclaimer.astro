@@ -1,0 +1,55 @@
+---
+/**
+ * The disclaimer: a general section, then one section per app built from
+ * each app's `disclaimer` data, so new apps are covered automatically.
+ */
+import LegalLayout from '@/layouts/LegalLayout.astro';
+import { site } from '@/config/site';
+import { apps, appPath } from '@/data/apps';
+
+const general = { slug: 'general', text: 'General' };
+const links = { slug: 'external-links', text: 'External links' };
+const appHeadings = apps.map((app) => ({ slug: app.slug, text: app.name }));
+---
+
+<LegalLayout
+  title="Disclaimer"
+  description="What Kitovo apps can and can't guarantee. Cancelly is a reminder tool: it does not cancel subscriptions or stop merchants from charging you."
+  updated={site.legal.disclaimerUpdated}
+  lead="What our apps are for, and the limits of what they can promise."
+  headings={[general, ...appHeadings, links]}
+>
+  <h2 id={general.slug}>{general.text}</h2>
+  <p>
+    The information on this website is provided to describe Kitovo and its apps. We work to keep it
+    accurate and up to date, but we can’t guarantee it is complete or current at all times. App
+    availability and features may change.
+  </p>
+  <p>
+    Kitovo apps are tools for everyday tasks. They are not a substitute for professional advice,
+    including financial or legal advice.
+  </p>
+
+  {
+    apps.map((app) => (
+      <>
+        <h2 id={app.slug}>{app.name}</h2>
+        {app.disclaimer.map((paragraph) => (
+          <p>{paragraph}</p>
+        ))}
+        <p>
+          See the <a href={appPath(app)}>{app.name} page</a> for what the app does.
+        </p>
+      </>
+    ))
+  }
+
+  <h2 id={links.slug}>{links.text}</h2>
+  <p>
+    This website links to other websites, such as Google Play. Those links are there for
+    convenience. We don’t control those websites and are not responsible for their content.
+  </p>
+  <p>
+    The <a href="/terms">Terms of Use</a> apply to your use of the website and our apps.
+  </p>
+</LegalLayout>

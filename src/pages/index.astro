@@ -1,0 +1,259 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Shelf from '@/components/Shelf.astro';
+import AppCard from '@/components/AppCard.astro';
+import MoreAppsCard from '@/components/MoreAppsCard.astro';
+import CtaBand from '@/components/CtaBand.astro';
+import Icon from '@/components/Icon.astro';
+import { site, mailto } from '@/config/site';
+import { apps } from '@/data/apps';
+import { organizationJsonLd, websiteJsonLd } from '@/lib/seo';
+
+const principles = [
+  {
+    keep: 'Useful',
+    drop: 'bloated',
+    body: 'Every feature has to earn its place. If it doesn’t help you get something done, it doesn’t go in.',
+  },
+  {
+    keep: 'Simple',
+    drop: 'complicated',
+    body: 'You should understand a Kitovo app in a minute, without a tutorial or a maze of settings.',
+  },
+  {
+    keep: 'Real problems',
+    drop: 'feature lists',
+    body: 'Each app starts from one specific, everyday annoyance, like a free trial that quietly turns into a charge.',
+  },
+];
+---
+
+<BaseLayout
+  title={`${site.name}: ${site.tagline.replace(/\.$/, '')}`}
+  exactTitle
+  description={site.description}
+  jsonLd={[organizationJsonLd(), websiteJsonLd()]}
+>
+  <!-- Hero -->
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="container hero-grid">
+      <div class="hero-copy">
+        <p class="eyebrow rise">Independent Android app publisher</p>
+        <h1 id="hero-title" class="hero-title rise" style="--delay: 60ms">
+          <span class="hero-useful">Useful</span> apps for everyday problems.
+        </h1>
+        <p class="hero-lead rise" style="--delay: 140ms">
+          Kitovo builds simple Android apps that each solve one specific, everyday problem, and
+          do that one job properly.
+        </p>
+        <div class="btn-row btn-row-stack hero-actions rise" style="--delay: 220ms">
+          <a href="#apps" class="btn btn-primary">
+            Explore apps
+            <Icon name="arrow-right" />
+          </a>
+          <a href="/about" class="btn btn-secondary">About Kitovo</a>
+        </div>
+      </div>
+      <Shelf />
+    </div>
+  </section>
+
+  <!-- Apps -->
+  <section id="apps" class="section apps-section" aria-labelledby="apps-title">
+    <div class="container">
+      <div class="section-header">
+        <p class="eyebrow">The apps</p>
+        <h2 id="apps-title">Small apps that each do one job well.</h2>
+        <p>
+          Everything Kitovo publishes lives here. Each app has its own page, its own support and
+          its own privacy policy.
+        </p>
+      </div>
+
+      <div class="apps-list">
+        {apps.map((app) => <AppCard app={app} variant="featured" />)}
+        <MoreAppsCard />
+      </div>
+    </div>
+  </section>
+
+  <!-- Why Kitovo -->
+  <section class="section band" aria-labelledby="why-title">
+    <div class="container">
+      <div class="section-header">
+        <p class="eyebrow">Why Kitovo</p>
+        <h2 id="why-title">How every Kitovo app gets made.</h2>
+      </div>
+
+      <ul class="principles" role="list">
+        {
+          principles.map((p) => (
+            <li class="principle">
+              <h3 class="principle-title">
+                <span class="keep">{p.keep}</span> <span class="over">over</span>{' '}
+                <s class="drop">{p.drop}</s>
+              </h3>
+              <p>{p.body}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <!-- Final CTA -->
+  <CtaBand labelledby="idea-title">
+    <h2 id="idea-title">Have a problem that should have an app?</h2>
+    <p>
+      Kitovo’s apps start with everyday annoyances. If one keeps getting in your way, tell us
+      about it.
+    </p>
+    <Fragment slot="actions">
+      <a class="btn btn-primary" href={mailto(site.contact.generalEmail, 'App idea for Kitovo')}>
+        <Icon name="mail" />
+        Share an idea
+      </a>
+      <a class="btn btn-ghost" href="/contact">Other ways to reach us</a>
+    </Fragment>
+  </CtaBand>
+</BaseLayout>
+
+<style>
+  .hero {
+    position: relative;
+    isolation: isolate;
+    padding-top: clamp(40px, 7vw, 96px);
+    padding-bottom: clamp(56px, 8vw, 112px);
+    overflow: hidden;
+  }
+
+  /* soft ground under the shelf */
+  .hero::before {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    inset: 8% -12% 4% 38%;
+    background: radial-gradient(closest-side, rgb(207 223 211 / 0.85), rgb(207 223 211 / 0) 100%);
+    pointer-events: none;
+  }
+
+  .hero-grid {
+    display: grid;
+    gap: clamp(44px, 8vw, 72px);
+    align-items: center;
+  }
+
+  .hero-title {
+    margin-top: 18px;
+    font-size: var(--step-5);
+    font-weight: 780;
+    line-height: 0.98;
+    letter-spacing: -0.045em;
+    max-width: 12ch;
+  }
+
+  .hero-useful {
+    color: var(--pine);
+    position: relative;
+    white-space: nowrap;
+  }
+
+  /* a short marigold stroke under "Useful", drawn on load */
+  .hero-useful::after {
+    content: '';
+    position: absolute;
+    left: 0.04em;
+    right: 0.06em;
+    bottom: 0.02em;
+    height: 0.11em;
+    border-radius: 999px;
+    background: var(--marigold);
+    transform-origin: left center;
+    animation: underline-draw 0.9s var(--ease-out) 0.55s both;
+    z-index: -1;
+  }
+
+  @keyframes underline-draw {
+    from {
+      transform: scaleX(0);
+    }
+    to {
+      transform: scaleX(1);
+    }
+  }
+
+  .hero-lead {
+    margin-top: 22px;
+    font-size: var(--step-1);
+    line-height: 1.55;
+    color: var(--muted);
+    max-width: 44ch;
+  }
+
+  .hero-actions {
+    margin-top: 32px;
+  }
+
+  @media (min-width: 960px) {
+    .hero-grid {
+      grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+    }
+  }
+
+  /* ---- apps ---- */
+  .apps-section {
+    padding-top: clamp(24px, 4vw, 48px);
+  }
+
+  .apps-list {
+    display: grid;
+    gap: 20px;
+  }
+
+  /* ---- principles ---- */
+  .principles {
+    display: grid;
+    gap: clamp(28px, 4vw, 40px);
+    margin: 0;
+  }
+
+  .principle {
+    padding-top: 22px;
+    border-top: 2px solid var(--ink);
+  }
+
+  .principle-title {
+    font-size: clamp(1.625rem, 1.2rem + 1.3vw, 2.25rem);
+    line-height: 1.05;
+    letter-spacing: -0.035em;
+    font-weight: 760;
+  }
+
+  .principle-title .keep {
+    color: var(--ink);
+  }
+
+  .principle-title .over,
+  .principle-title .drop {
+    color: #7d8b84;
+    font-weight: 560;
+  }
+
+  .principle-title .drop {
+    text-decoration: line-through;
+    text-decoration-color: var(--marigold);
+    text-decoration-thickness: 0.09em;
+  }
+
+  .principle p {
+    margin-top: 14px;
+    color: var(--muted);
+    max-width: 38ch;
+  }
+
+  @media (min-width: 860px) {
+    .principles {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+</style>

@@ -1,0 +1,358 @@
+---
+/**
+ * Layout for legal pages: readable measure, a table of contents, the date the
+ * text last changed, and links to the other legal pages.
+ */
+import BaseLayout from './BaseLayout.astro';
+import Breadcrumbs from '@/components/Breadcrumbs.astro';
+import Icon from '@/components/Icon.astro';
+import { formatDate, cleanPath } from '@/config/site';
+import type { LegalHeading } from '@/lib/legal';
+import type { Crumb } from '@/lib/seo';
+import { breadcrumbJsonLd } from '@/lib/seo';
+
+interface Props {
+  title: string;
+  /** Overrides the <title> (defaults to `title`). */
+  metaTitle?: string;
+  description: string;
+  updated: string;
+  eyebrow?: string;
+  lead?: string;
+  headings?: LegalHeading[];
+  crumbs?: Crumb[];
+}
+
+const {
+  title,
+  metaTitle,
+  description,
+  updated,
+  eyebrow = 'Legal',
+  lead,
+  headings = [],
+  crumbs,
+} = Astro.props;
+
+const path = cleanPath(Astro.url);
+const related = [
+  { href: '/privacy', label: 'Privacy Policy' },
+  { href: '/terms', label: 'Terms of Use' },
+  { href: '/disclaimer', label: 'Disclaimer' },
+].filter((r) => r.href !== path);
+---
+
+<BaseLayout
+  title={metaTitle ?? title}
+  description={description}
+  ogType="article"
+  jsonLd={crumbs ? [breadcrumbJsonLd(crumbs)] : []}
+>
+  <header class="page-header container legal-header">
+    {crumbs ? <Breadcrumbs items={crumbs} /> : <p class="eyebrow">{eyebrow}</p>}
+    <h1>{title}</h1>
+    {lead && <p class="lead">{lead}</p>}
+    <p class="legal-updated">
+      <Icon name="calendar" size={18} />
+      Last updated <time datetime={updated}>{formatDate(updated)}</time>
+    </p>
+  </header>
+
+  <div class="container legal-grid">
+    {
+      headings.length > 2 && (
+        <aside class="legal-toc" aria-label="On this page">
+          <details class="toc-box toc-mobile">
+            <summary>
+              On this page
+              <Icon name="chevron-down" size={18} class="toc-chevron" />
+            </summary>
+            <ol role="list" class="toc-list">
+              {headings.map((h) => (
+                <li>
+                  <a href={`#${h.slug}`} set:html={h.text} />
+                </li>
+              ))}
+            </ol>
+          </details>
+          <nav class="toc-box toc-desktop" aria-label="On this page">
+            <p class="toc-title">On this page</p>
+            <ol role="list" class="toc-list">
+              {headings.map((h) => (
+                <li>
+                  <a href={`#${h.slug}`} set:html={h.text} />
+                </li>
+              ))}
+            </ol>
+          </nav>
+        </aside>
+      )
+    }
+
+    <article class="prose">
+      <slot name="before" />
+      <slot />
+      <slot name="after" />
+    </article>
+  </div>
+
+  <nav class="container legal-related" aria-label="Other legal pages">
+    <p class="legal-related-title">Related</p>
+    <ul role="list">
+      {
+        related.map((r) => (
+          <li>
+            <a class="link-arrow" href={r.href}>
+              {r.label}
+              <Icon name="arrow-right" />
+            </a>
+          </li>
+        ))
+      }
+      <li>
+        <a class="link-arrow" href="/contact">
+          Contact
+          <Icon name="arrow-right" />
+        </a>
+      </li>
+    </ul>
+  </nav>
+</BaseLayout>
+
+<style>
+  .legal-header :global(.crumbs) {
+    margin-bottom: 4px;
+  }
+
+  .legal-header h1 {
+    max-width: 22ch;
+  }
+
+  .legal-updated {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 18px;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--muted);
+  }
+
+  .legal-grid {
+    display: grid;
+    gap: 32px;
+    padding-bottom: clamp(48px, 7vw, 88px);
+  }
+
+  .legal-toc {
+    align-self: start;
+  }
+
+  .toc-box {
+    border: 1px solid var(--line);
+    border-radius: var(--r-md);
+    background: var(--surface);
+  }
+
+  .toc-mobile summary,
+  .toc-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 52px;
+    padding: 0 18px;
+    font-weight: 700;
+    font-size: 0.9375rem;
+  }
+
+  .toc-mobile summary {
+    cursor: pointer;
+    list-style: none;
+  }
+
+  .toc-mobile summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .toc-mobile :global(.toc-chevron) {
+    transition: transform 0.25s var(--ease-out);
+    color: var(--muted);
+  }
+
+  .toc-mobile[open] :global(.toc-chevron) {
+    transform: rotate(180deg);
+  }
+
+  .toc-desktop {
+    display: none;
+  }
+
+  .toc-list {
+    margin: 0;
+    padding: 0 10px 12px;
+    counter-reset: toc;
+  }
+
+  .toc-list li {
+    counter-increment: toc;
+  }
+
+  .toc-list a {
+    display: flex;
+    gap: 10px;
+    padding: 8px;
+    border-radius: var(--r-xs);
+    color: var(--muted);
+    font-size: 0.9375rem;
+    line-height: 1.35;
+    text-decoration: none;
+  }
+
+  .toc-list a::before {
+    content: counter(toc);
+    min-width: 1.4em;
+    color: #8a978f;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .toc-list a:hover {
+    background: var(--mint);
+    color: var(--ink);
+  }
+
+  .legal-related {
+    display: grid;
+    gap: 8px;
+    padding-top: 28px;
+    padding-bottom: var(--section-y);
+    border-top: 1px solid var(--line);
+  }
+
+  .legal-related-title {
+    font-size: 0.8125rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .legal-related ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 28px;
+    margin: 0;
+  }
+
+  @media (min-width: 1000px) {
+    .legal-grid {
+      grid-template-columns: 260px minmax(0, 1fr);
+      gap: 64px;
+    }
+
+    .legal-toc {
+      position: sticky;
+      top: calc(var(--header-h) + 24px);
+    }
+
+    .toc-mobile {
+      display: none;
+    }
+
+    .toc-desktop {
+      display: block;
+    }
+  }
+
+</style>
+
+<style is:global>
+  /* ---- prose (legal text, rendered from Markdown) ---- */
+  .prose {
+    max-width: 70ch;
+    min-width: 0;
+    font-size: 1.0625rem;
+    line-height: 1.75;
+  }
+
+  .prose > * + * {
+    margin-top: 1.1em;
+  }
+
+  .prose h2 {
+    margin-top: 2.4em;
+    font-size: var(--step-2);
+    scroll-margin-top: calc(var(--header-h) + 20px);
+  }
+
+  .prose > h2:first-child {
+    margin-top: 0;
+  }
+
+  .prose h3 {
+    margin-top: 1.8em;
+    font-size: 1.25rem;
+  }
+
+  .prose h2 + *,
+  .prose h3 + * {
+    margin-top: 0.7em;
+  }
+
+  .prose ul,
+  .prose ol {
+    padding-left: 1.3em;
+  }
+
+  .prose li + li {
+    margin-top: 0.45em;
+  }
+
+  .prose li::marker {
+    color: var(--pine);
+  }
+
+  .prose a {
+    font-weight: 560;
+    overflow-wrap: anywhere;
+  }
+
+  .prose strong {
+    color: var(--ink);
+  }
+
+  .prose p,
+  .prose li {
+    color: #26352e;
+  }
+
+  .prose .pending {
+    padding: 14px 18px;
+    border-radius: var(--r-sm);
+    border: 1.5px dashed #d9b765;
+    background: var(--marigold-soft);
+    font-size: 0.975rem;
+    line-height: 1.6;
+  }
+
+  .prose .pending p,
+  .prose .pending strong {
+    color: var(--marigold-ink);
+  }
+
+  .prose .summary-box {
+    padding: 20px 24px;
+    border-radius: var(--r-md);
+    background: var(--mint);
+  }
+
+  .prose .summary-box > * + * {
+    margin-top: 0.6em;
+  }
+
+  .prose hr {
+    border: 0;
+    border-top: 1px solid var(--line);
+    margin-block: 2.4em;
+  }
+</style>

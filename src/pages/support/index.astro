@@ -1,0 +1,164 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import AppCard from '@/components/AppCard.astro';
+import Icon from '@/components/Icon.astro';
+import { apps, supportPath } from '@/data/apps';
+
+const other = [
+  {
+    icon: 'chat' as const,
+    title: 'Contact Kitovo',
+    body: 'General questions, business inquiries, or anything not about a specific app.',
+    href: '/contact',
+    label: 'Contact options',
+  },
+  {
+    icon: 'lock' as const,
+    title: 'Privacy questions',
+    body: 'How the website and each app handle your information, and how to make a request.',
+    href: '/privacy',
+    label: 'Privacy policies',
+  },
+  {
+    icon: 'doc' as const,
+    title: 'Terms and disclaimer',
+    body: 'The rules for using Kitovo apps, and what they can and can’t guarantee.',
+    href: '/terms',
+    label: 'Read the terms',
+  },
+];
+---
+
+<BaseLayout
+  title="Support"
+  description="Get help with Kitovo apps: troubleshooting steps, account help, bug reporting and how to contact support for each app."
+>
+  <header class="page-header container">
+    <p class="eyebrow">Support</p>
+    <h1>How can we help?</h1>
+    <p class="lead">
+      Pick an app for troubleshooting steps, answers to common questions and the right way to reach
+      us.
+    </p>
+  </header>
+
+  <section class="container" aria-labelledby="choose-title">
+    <h2 id="choose-title" class="support-sub">Choose an app</h2>
+    <ul role="list" class="support-apps">
+      {
+        apps.map((app) => (
+          <li>
+            <AppCard app={app} href={supportPath(app)} cta="Get help" />
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  <section class="container section" aria-labelledby="other-title">
+    <h2 id="other-title" class="support-sub">Something else?</h2>
+    <ul role="list" class="other-help">
+      {
+        other.map((item) => (
+          <li class="other-card card card-interactive">
+            <span class="other-icon" aria-hidden="true">
+              <Icon name={item.icon} size={22} />
+            </span>
+            <h3>
+              <a href={item.href} class="stretched-link">
+                {item.title}
+              </a>
+            </h3>
+            <p>{item.body}</p>
+            <span class="other-link" aria-hidden="true">
+              {item.label}
+              <Icon name="arrow-right" size={18} />
+            </span>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+</BaseLayout>
+
+<style>
+  .support-sub {
+    font-size: var(--step-2);
+    margin-bottom: 20px;
+  }
+
+  .support-apps {
+    display: grid;
+    gap: 20px;
+    margin: 0;
+  }
+
+  @media (min-width: 720px) {
+    .support-apps {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 1100px) {
+    .support-apps {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  .other-help {
+    display: grid;
+    gap: 16px;
+    margin: 0;
+  }
+
+  @media (min-width: 860px) {
+    .other-help {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  .other-card {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 26px;
+  }
+
+  .other-icon {
+    display: grid;
+    place-items: center;
+    inline-size: 46px;
+    block-size: 46px;
+    border-radius: 14px;
+    background: var(--mint);
+    color: var(--pine);
+    margin-bottom: 8px;
+  }
+
+  .other-card h3 {
+    font-size: 1.25rem;
+  }
+
+  .other-card h3 a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .other-card p {
+    color: var(--muted);
+  }
+
+  .other-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: auto;
+    padding-top: 8px;
+    font-weight: 650;
+    color: var(--pine);
+  }
+
+  .other-card:focus-within {
+    border-color: var(--pine);
+  }
+</style>

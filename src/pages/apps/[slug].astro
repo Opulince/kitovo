@@ -1,0 +1,299 @@
+---
+/**
+ * One page per app, generated from the registry in src/data/apps.
+ */
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Breadcrumbs from '@/components/Breadcrumbs.astro';
+import AppHero from '@/components/AppHero.astro';
+import Steps from '@/components/Steps.astro';
+import AppFeature from '@/components/AppFeature.astro';
+import Screenshots from '@/components/Screenshots.astro';
+import FAQ from '@/components/FAQ.astro';
+import CtaBand from '@/components/CtaBand.astro';
+import Icon from '@/components/Icon.astro';
+import { apps, supportPath, privacyPath, appPath } from '@/data/apps';
+import type { AppDefinition } from '@/data/apps';
+import { mailto } from '@/config/site';
+import { appJsonLd, breadcrumbJsonLd, faqJsonLd } from '@/lib/seo';
+
+export function getStaticPaths() {
+  return apps.map((app) => ({ params: { slug: app.slug }, props: { app } }));
+}
+
+interface Props {
+  app: AppDefinition;
+}
+
+const { app } = Astro.props;
+const crumbs = [
+  { href: '/apps', label: 'Apps' },
+  { href: appPath(app), label: app.name },
+];
+---
+
+<BaseLayout
+  title={app.seo.title}
+  description={app.seo.description}
+  ogImage={app.seo.ogImage}
+  ogImageAlt={`${app.name}: ${app.tagline}`}
+  jsonLd={[appJsonLd(app), breadcrumbJsonLd(crumbs), faqJsonLd(app.faq)]}
+>
+  <div class="container app-top">
+    <Breadcrumbs items={crumbs} />
+    <AppHero app={app} />
+  </div>
+
+  {
+    app.intro.length > 1 && (
+      <section class="container-narrow intro-more" aria-label={`About ${app.name}`}>
+        {app.intro.slice(1).map((p) => <p>{p}</p>)}
+      </section>
+    )
+  }
+
+  <section class="section" aria-labelledby="how-title">
+    <div class="container">
+      <div class="section-header">
+        <p class="eyebrow">How it works</p>
+        <h2 id="how-title">Add it once. Hear about it in time.</h2>
+      </div>
+      <Steps steps={app.steps} />
+    </div>
+  </section>
+
+  <section class="section band" aria-labelledby="features-title">
+    <div class="container">
+      <div class="section-header">
+        <p class="eyebrow">Features</p>
+        <h2 id="features-title">What {app.name} does.</h2>
+      </div>
+      <ul class="features" role="list">
+        {app.features.map((feature) => <AppFeature feature={feature} />)}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="clear-title">
+    <div class="container">
+      <div class="section-header">
+        <p class="eyebrow">Straight answers</p>
+        <h2 id="clear-title">What {app.name} is not, and what it never asks for.</h2>
+      </div>
+
+      <div class="clarity">
+        <div class="clarity-card card">
+          <h3>What it isn’t</h3>
+          <ul role="list" class="clarity-list">
+            {
+              app.notThis.map((item) => (
+                <li>
+                  <span class="clarity-mark clarity-no" aria-hidden="true">
+                    <Icon name="ban" size={18} />
+                  </span>
+                  {item}
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+
+        <div class="clarity-card card">
+          <h3>Privacy at a glance</h3>
+          <p class="clarity-sub">What {app.name} uses</p>
+          <ul role="list" class="clarity-list">
+            {
+              app.privacyAtAGlance.uses.map((item) => (
+                <li>
+                  <span class="clarity-mark clarity-yes" aria-hidden="true">
+                    <Icon name="check" size={18} strokeWidth={2.2} />
+                  </span>
+                  {item}
+                </li>
+              ))
+            }
+          </ul>
+          <p class="clarity-sub">What it never asks for</p>
+          <ul role="list" class="clarity-list">
+            {
+              app.privacyAtAGlance.neverAsksFor.map((item) => (
+                <li>
+                  <span class="clarity-mark clarity-no" aria-hidden="true">
+                    <Icon name="close" size={18} />
+                  </span>
+                  {item}
+                </li>
+              ))
+            }
+          </ul>
+          <a class="link-arrow" href={privacyPath(app)}>
+            Read the full {app.name} privacy policy
+            <Icon name="arrow-right" />
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <Screenshots app={app} />
+
+  <section class="section band" aria-labelledby="faq-title">
+    <div class="container faq-layout">
+      <div class="section-header faq-head">
+        <p class="eyebrow">FAQ</p>
+        <h2 id="faq-title">Questions about {app.name}</h2>
+        <p>
+          Can’t find your answer? <a href={supportPath(app)}>Visit {app.name} support</a>.
+        </p>
+      </div>
+      <FAQ items={app.faq} />
+    </div>
+  </section>
+
+  <CtaBand tone="pine" labelledby="help-title">
+    <h2 id="help-title">Need help with {app.name}?</h2>
+    <p>
+      Troubleshooting steps, account help and the fastest way to report a bug are all on the
+      support page.
+    </p>
+    <Fragment slot="actions">
+      <a class="btn btn-light" href={supportPath(app)}>
+        {app.name} support
+        <Icon name="arrow-right" />
+      </a>
+      <a class="btn btn-ghost" href={mailto(app.supportEmail, `${app.name} support`)}>
+        <Icon name="mail" />
+        Email us
+      </a>
+    </Fragment>
+  </CtaBand>
+</BaseLayout>
+
+<style>
+  .app-top {
+    padding-top: clamp(20px, 3vw, 32px);
+    padding-bottom: clamp(24px, 5vw, 56px);
+  }
+
+  .app-top :global(.crumbs) {
+    margin-bottom: clamp(24px, 4vw, 40px);
+  }
+
+  .intro-more {
+    padding-bottom: 8px;
+  }
+
+  .intro-more p {
+    font-family: var(--font-display);
+    font-size: var(--step-2);
+    font-weight: 560;
+    line-height: 1.35;
+    letter-spacing: -0.015em;
+    color: var(--ink);
+    padding-left: 22px;
+    border-left: 3px solid var(--marigold);
+  }
+
+  .features {
+    display: grid;
+    gap: 16px;
+    margin: 0;
+  }
+
+  @media (min-width: 640px) {
+    .features {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 1000px) {
+    .features {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  .clarity {
+    display: grid;
+    gap: 20px;
+  }
+
+  .clarity-card {
+    padding: clamp(24px, 4vw, 36px);
+  }
+
+  .clarity-card h3 {
+    font-size: var(--step-2);
+  }
+
+  .clarity-sub {
+    margin-top: 22px;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .clarity-list {
+    display: grid;
+    gap: 12px;
+    margin: 14px 0 0;
+  }
+
+  .clarity-card h3 + .clarity-list {
+    margin-top: 22px;
+  }
+
+  .clarity-list li {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 12px;
+    align-items: start;
+  }
+
+  .clarity-mark {
+    display: grid;
+    place-items: center;
+    inline-size: 28px;
+    block-size: 28px;
+    border-radius: 50%;
+    margin-top: -1px;
+  }
+
+  .clarity-yes {
+    background: #dcefe2;
+    color: #0f4a2c;
+  }
+
+  .clarity-no {
+    background: #eef0ee;
+    color: #5b6862;
+  }
+
+  .clarity-card .link-arrow {
+    margin-top: 20px;
+  }
+
+  @media (min-width: 900px) {
+    .clarity {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  .faq-layout {
+    display: grid;
+    gap: 8px;
+  }
+
+  @media (min-width: 960px) {
+    .faq-layout {
+      grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+      gap: 56px;
+      align-items: start;
+    }
+
+    .faq-head {
+      position: sticky;
+      top: calc(var(--header-h) + 32px);
+    }
+  }
+</style>

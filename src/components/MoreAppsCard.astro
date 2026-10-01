@@ -1,0 +1,67 @@
+---
+/**
+ * The honest placeholder for future apps: no fake products, just a note that
+ * more are coming and what to expect.
+ */
+import LogoMark from './LogoMark.astro';
+
+interface Props {
+  compact?: boolean;
+}
+
+const { compact = false } = Astro.props;
+---
+
+<aside class:list={['more-apps', { 'more-apps-compact': compact }]} aria-label="More apps">
+  <span class="more-icon" aria-hidden="true">
+    <LogoMark size={26} />
+  </span>
+  <div>
+    <h3 class="more-title">More apps coming soon</h3>
+    <p class="more-body">
+      New Kitovo apps will appear here when they are ready for everyday use, not before.
+    </p>
+  </div>
+</aside>
+
+<style>
+  .more-apps {
+    display: flex;
+    gap: 18px;
+    align-items: center;
+    padding: 24px clamp(20px, 4vw, 32px);
+    border-radius: var(--r-lg);
+    border: 1.5px dashed var(--line-strong);
+    background: rgb(255 255 255 / 0.4);
+  }
+
+  .more-apps-compact {
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    height: 100%;
+    min-height: 220px;
+    padding: 28px;
+  }
+
+  .more-icon {
+    display: grid;
+    place-items: center;
+    flex: none;
+    inline-size: 64px;
+    block-size: 64px;
+    border-radius: var(--r-icon);
+    border: 1.5px dashed var(--line-strong);
+    background: var(--paper);
+  }
+
+  .more-title {
+    font-size: 1.1875rem;
+  }
+
+  .more-body {
+    margin-top: 4px;
+    color: var(--muted);
+    max-width: 52ch;
+  }
+</style>

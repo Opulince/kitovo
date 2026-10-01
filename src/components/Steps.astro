@@ -1,0 +1,87 @@
+---
+/**
+ * "How it works": a real sequence, so it is numbered.
+ */
+import type { Step } from '@/data/apps/types';
+
+interface Props {
+  steps: Step[];
+}
+
+const { steps } = Astro.props;
+---
+
+<ol class="steps" role="list">
+  {
+    steps.map((step, i) => (
+      <li class="step">
+        <span class="step-index" aria-hidden="true">
+          {String(i + 1)}
+        </span>
+        <h3 class="step-title">
+          <span class="visually-hidden">Step {i + 1}: </span>
+          {step.title}
+        </h3>
+        <p>{step.body}</p>
+      </li>
+    ))
+  }
+</ol>
+
+<style>
+  .steps {
+    position: relative;
+    display: grid;
+    gap: 28px;
+    margin: 0;
+  }
+
+  .step {
+    position: relative;
+    padding: 28px;
+    border-radius: var(--r-lg);
+    background: var(--surface);
+    border: 1px solid var(--line);
+  }
+
+  .step-index {
+    display: grid;
+    place-items: center;
+    inline-size: 44px;
+    block-size: 44px;
+    border-radius: 14px;
+    background: var(--pine);
+    color: #fff;
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    font-weight: 750;
+  }
+
+  .step-title {
+    margin-top: 18px;
+    font-size: var(--step-2);
+  }
+
+  .step p {
+    margin-top: 8px;
+    color: var(--muted);
+  }
+
+  @media (min-width: 860px) {
+    .steps {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 20px;
+    }
+
+    /* the thread between steps */
+    .step:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      top: 49px;
+      left: calc(28px + 44px + 12px);
+      right: -8px;
+      border-top: 2px dashed var(--line-strong);
+      z-index: 1;
+    }
+  }
+</style>

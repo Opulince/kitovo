@@ -1,0 +1,129 @@
+---
+import LegalLayout from '@/layouts/LegalLayout.astro';
+import AppIcon from '@/components/AppIcon.astro';
+import Icon from '@/components/Icon.astro';
+import * as doc from '@/content/legal/privacy.md';
+import { renderLegal, tokensFor } from '@/lib/legal';
+import { site, formatDate } from '@/config/site';
+import { apps, privacyPath } from '@/data/apps';
+
+const { html, headings } = await renderLegal(doc, tokensFor());
+const appSection = { slug: 'app-privacy-policies', text: 'App privacy policies' };
+---
+
+<LegalLayout
+  title="Privacy Policy"
+  description="How the Kitovo website handles information, and where to find the privacy policy for each Kitovo app."
+  updated={site.legal.websitePrivacyUpdated}
+  lead="How the Kitovo website handles your information. Each Kitovo app has its own privacy policy, linked below."
+  headings={[...headings, appSection]}
+>
+  <nav slot="before" class="app-policies-quick" aria-label="App privacy policies">
+    <p>Looking for an app’s privacy policy?</p>
+    <ul role="list">
+      {
+        apps.map((app) => (
+          <li>
+            <a href={privacyPath(app)}>
+              <AppIcon app={app} size={28} />
+              {app.name} Privacy Policy
+              <Icon name="arrow-right" size={18} />
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </nav>
+
+  <Fragment set:html={html} />
+
+  <Fragment slot="after">
+    <h2 id={appSection.slug}>{appSection.text}</h2>
+    <p>
+      Each app works differently, so each has its own policy describing exactly what it collects and
+      why.
+    </p>
+    <ul role="list" class="app-policy-list">
+      {
+        apps.map((app) => (
+          <li>
+            <AppIcon app={app} size={44} />
+            <div>
+              <a href={privacyPath(app)}>
+                <strong>{app.name} Privacy Policy</strong>
+              </a>
+              <span>Last updated {formatDate(app.privacyPolicy.updated)}</span>
+            </div>
+          </li>
+        ))
+      }
+    </ul>
+  </Fragment>
+</LegalLayout>
+
+<style>
+  .app-policies-quick {
+    padding: 16px 18px;
+    border-radius: var(--r-md);
+    border: 1px solid var(--line);
+    background: var(--surface);
+  }
+
+  .app-policies-quick p {
+    font-weight: 650;
+    font-size: 0.975rem;
+  }
+
+  .app-policies-quick ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 20px;
+    margin: 8px 0 0;
+    padding: 0;
+  }
+
+  .app-policies-quick li + li {
+    margin-top: 0;
+  }
+
+  .app-policies-quick a {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 44px;
+    text-decoration: none;
+  }
+
+  .app-policies-quick a:hover {
+    text-decoration: underline;
+  }
+
+  .app-policy-list {
+    display: grid;
+    gap: 12px;
+    padding: 0 !important;
+  }
+
+  .app-policy-list li {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    padding: 16px 18px;
+    border-radius: var(--r-md);
+    border: 1px solid var(--line);
+    background: var(--surface);
+  }
+
+  .app-policy-list li + li {
+    margin-top: 0;
+  }
+
+  .app-policy-list div {
+    display: grid;
+  }
+
+  .app-policy-list span {
+    font-size: 0.9rem;
+    color: var(--muted);
+  }
+</style>

@@ -1,0 +1,385 @@
+---
+/**
+ * Support for one app, generated from the app's `support` data.
+ */
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Breadcrumbs from '@/components/Breadcrumbs.astro';
+import AppIcon from '@/components/AppIcon.astro';
+import FAQ from '@/components/FAQ.astro';
+import Icon from '@/components/Icon.astro';
+import StatusBadge from '@/components/StatusBadge.astro';
+import { apps, appPath, privacyPath, supportPath, androidPlatform } from '@/data/apps';
+import type { AppDefinition } from '@/data/apps';
+import { mailto } from '@/config/site';
+import { breadcrumbJsonLd, faqJsonLd } from '@/lib/seo';
+
+export function getStaticPaths() {
+  return apps.map((app) => ({ params: { slug: app.slug }, props: { app } }));
+}
+
+interface Props {
+  app: AppDefinition;
+}
+
+const { app } = Astro.props;
+const crumbs = [
+  { href: '/support', label: 'Support' },
+  { href: supportPath(app), label: app.name },
+];
+const android = androidPlatform(app);
+const notReleased = !app.platforms.some((p) => p.status === 'available');
+
+const sections = [
+  { id: 'troubleshooting', label: 'Troubleshooting' },
+  { id: 'account', label: 'Account & data' },
+  { id: 'report-a-bug', label: 'Report a bug' },
+  { id: 'faq', label: 'FAQ' },
+];
+
+const supportMail = mailto(app.supportEmail, `${app.name} support`);
+const bugMail = mailto(app.supportEmail, `Bug report: ${app.name}`);
+---
+
+<BaseLayout
+  title={`${app.name} support`}
+  description={`Help with ${app.name}: troubleshooting, account and data questions, bug reporting and how to contact ${app.name} support.`}
+  jsonLd={[breadcrumbJsonLd(crumbs), faqJsonLd(app.faq)]}
+>
+  <div class="container support-top">
+    <Breadcrumbs items={crumbs} />
+
+    <header class="support-header">
+      <AppIcon app={app} size={72} />
+      <div>
+        <h1>{app.name} support</h1>
+        <p class="lead">Help with {app.name}, the {app.descriptor} by Kitovo.</p>
+      </div>
+    </header>
+
+    {
+      notReleased && android && (
+        <div class="callout callout-warn release-note" role="note">
+          <Icon name="clock" />
+          <p>
+            <strong>{app.name} isn’t on Google Play yet.</strong> The Android app is{' '}
+            {android.note ? android.note.toLowerCase() : 'coming soon'}. This page covers the app as
+            it ships. Questions in the meantime? Email{' '}
+            <a href={supportMail}>{app.supportEmail}</a>.
+          </p>
+        </div>
+      )
+    }
+  </div>
+
+  <div class="container support-layout">
+    <aside class="support-aside" aria-label={`Contact ${app.name} support`}>
+      <div class="contact-card card">
+        <h2 class="contact-title">Contact support</h2>
+        <p>Email is the fastest way to reach us about {app.name}.</p>
+        <a class="contact-email" href={supportMail}>{app.supportEmail}</a>
+        <div class="contact-actions">
+          <a class="btn btn-primary" href={supportMail}>
+            <Icon name="mail" />
+            Email support
+          </a>
+          <a class="btn btn-secondary" href={bugMail}>
+            <Icon name="bug" />
+            Report a bug
+          </a>
+        </div>
+        <ul role="list" class="contact-links">
+          <li><a href={appPath(app)}>About {app.name}</a></li>
+          <li><a href={privacyPath(app)}>{app.name} privacy policy</a></li>
+          <li><a href="/disclaimer">Disclaimer</a></li>
+        </ul>
+        <div class="contact-status">
+          {app.platforms.map((p) => <StatusBadge status={p.status} platform={p.name} size="sm" />)}
+        </div>
+      </div>
+    </aside>
+
+    <div class="support-main">
+      <nav class="jump" aria-label="On this page">
+        <ul role="list">
+          {sections.map((s) => <li><a href={`#${s.id}`}>{s.label}</a></li>)}
+        </ul>
+      </nav>
+
+      <section id="troubleshooting" class="support-section" aria-labelledby="troubleshooting-title">
+        <h2 id="troubleshooting-title">Troubleshooting</h2>
+        <div class="trouble-list">
+          {
+            app.support.troubleshooting.map((item) => (
+              <article class="trouble card">
+                <h3>{item.title}</h3>
+                <ol>
+                  {item.steps.map((step) => (
+                    <li>{step}</li>
+                  ))}
+                </ol>
+              </article>
+            ))
+          }
+        </div>
+      </section>
+
+      <section id="account" class="support-section" aria-labelledby="account-title">
+        <h2 id="account-title">Account &amp; data</h2>
+        <dl class="topics">
+          {
+            app.support.account.map((topic) => (
+              <div class="topic">
+                <dt>{topic.title}</dt>
+                <dd>{topic.body}</dd>
+              </div>
+            ))
+          }
+        </dl>
+        <a class="link-arrow support-more" href={privacyPath(app)}>
+          Read the full {app.name} privacy policy
+          <Icon name="arrow-right" />
+        </a>
+      </section>
+
+      <section id="report-a-bug" class="support-section" aria-labelledby="bug-title">
+        <h2 id="bug-title">Report a bug</h2>
+        <p>
+          Found something that isn’t working? Email <a href={bugMail}>{app.supportEmail}</a> with
+          “Bug report” in the subject. These details help us fix it faster:
+        </p>
+        <ul class="bug-list">
+          {app.support.bugReport.include.map((item) => <li>{item}</li>)}
+        </ul>
+        {
+          app.support.bugReport.note && (
+            <div class="callout" role="note">
+              <Icon name="shield" />
+              <p>{app.support.bugReport.note}</p>
+            </div>
+          )
+        }
+        <a class="btn btn-primary bug-btn" href={bugMail}>
+          <Icon name="bug" />
+          Email a bug report
+        </a>
+      </section>
+
+      <section id="faq" class="support-section" aria-labelledby="faq-title">
+        <h2 id="faq-title">Frequently asked questions</h2>
+        <FAQ items={app.faq} />
+      </section>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .support-top {
+    padding-top: clamp(20px, 3vw, 32px);
+  }
+
+  .support-header {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    margin-top: clamp(24px, 4vw, 40px);
+  }
+
+  .support-header .lead {
+    margin-top: 8px;
+  }
+
+  .release-note {
+    margin-top: 28px;
+    max-width: 820px;
+  }
+
+  .support-layout {
+    display: grid;
+    gap: 40px;
+    padding-top: clamp(32px, 5vw, 56px);
+    padding-bottom: var(--section-y);
+  }
+
+  .contact-card {
+    display: grid;
+    gap: 12px;
+    padding: 26px;
+    border-radius: var(--r-lg);
+  }
+
+  .contact-title {
+    font-size: 1.375rem;
+  }
+
+  .contact-card > p {
+    color: var(--muted);
+    font-size: 0.975rem;
+  }
+
+  .contact-email {
+    font-weight: 650;
+    word-break: break-all;
+  }
+
+  .contact-actions {
+    display: grid;
+    gap: 10px;
+    margin-top: 6px;
+  }
+
+  .contact-links {
+    margin: 6px 0 0;
+    padding-top: 14px;
+    border-top: 1px solid var(--line);
+    display: grid;
+  }
+
+  .contact-links a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 40px;
+    font-size: 0.975rem;
+  }
+
+  .contact-status {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .jump ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 0;
+  }
+
+  .jump a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 40px;
+    padding: 0 16px;
+    border-radius: var(--r-pill);
+    border: 1px solid var(--line-strong);
+    background: var(--surface);
+    color: var(--ink);
+    font-size: 0.9375rem;
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  .jump a:hover {
+    border-color: var(--pine);
+    color: var(--pine);
+  }
+
+  .support-section {
+    padding-top: clamp(40px, 6vw, 56px);
+  }
+
+  .support-section > h2 {
+    font-size: var(--step-3);
+    margin-bottom: 20px;
+  }
+
+  .support-section > p {
+    color: var(--muted);
+    max-width: 65ch;
+  }
+
+  .trouble-list {
+    display: grid;
+    gap: 14px;
+  }
+
+  .trouble {
+    padding: 22px 24px;
+    border-radius: var(--r-md);
+  }
+
+  .trouble h3 {
+    font-size: 1.1875rem;
+  }
+
+  .trouble ol {
+    display: grid;
+    gap: 8px;
+    margin-top: 12px;
+    padding-left: 1.3em;
+    color: var(--muted);
+  }
+
+  .trouble li::marker {
+    color: var(--pine);
+    font-weight: 700;
+  }
+
+  .topics {
+    display: grid;
+    gap: 0;
+    border-top: 1px solid var(--line);
+  }
+
+  .topic {
+    display: grid;
+    gap: 4px;
+    padding: 18px 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .topic dt {
+    font-family: var(--font-display);
+    font-size: 1.1875rem;
+    font-weight: 660;
+  }
+
+  .topic dd {
+    margin: 0;
+    color: var(--muted);
+  }
+
+  .support-more {
+    margin-top: 18px;
+  }
+
+  .bug-list {
+    display: grid;
+    gap: 8px;
+    margin: 16px 0 20px;
+    padding-left: 1.2em;
+    color: var(--ink);
+  }
+
+  .bug-list li::marker {
+    color: var(--marigold);
+  }
+
+  .bug-btn {
+    margin-top: 20px;
+  }
+
+  @media (min-width: 960px) {
+    .support-layout {
+      grid-template-columns: minmax(0, 1fr) 320px;
+      gap: 56px;
+      align-items: start;
+    }
+
+    .support-aside {
+      order: 2;
+      position: sticky;
+      top: calc(var(--header-h) + 24px);
+    }
+
+    .support-main {
+      order: 1;
+    }
+  }
+
+  @media (max-width: 479px) {
+    .support-header {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+</style>
