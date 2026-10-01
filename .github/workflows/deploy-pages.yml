@@ -5,7 +5,7 @@
 #
 # The site's origin and base path come from the Pages configuration, so the
 # same workflow works for https://<owner>.github.io/<repo>/ and, once a custom
-# domain such as kitovo.com is set in Pages settings, for the domain root.
+# domain such as kitovo.in is set in Pages settings, for the domain root.
 name: Deploy to GitHub Pages
 
 on:

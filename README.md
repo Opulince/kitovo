@@ -1,4 +1,4 @@
-# kitovo.com
+# kitovo.in
 
 The official website for **Kitovo**, an independent Android app publisher, currently featuring **Cancelly**.
 
@@ -52,7 +52,7 @@ These are intentionally left as TODOs rather than invented. Search the code for 
 | `src/data/apps/cancelly.ts` → `platforms[0].storeUrl` | Google Play listing URL for Cancelly (then set `status: 'available'`, and update the "Is Cancelly available yet?" FAQ answer). |
 | `src/data/apps/cancelly.ts` → `icon` | Final Cancelly launcher icon. Until then, the tile uses Cancelly's own dial mark. |
 | `src/data/apps/cancelly.ts` → `screenshots` | Real screenshots from the shipping app. |
-| `src/config/site.ts` → `contact.generalEmail`, `contact.businessEmail` | A dedicated Kitovo inbox. Both currently use cancelly@kitovo.com, the only confirmed address. |
+| `src/config/site.ts` → `contact.generalEmail`, `contact.businessEmail` | Optional separate inboxes. Both currently use support@kitovo.in, the same address as Cancelly support. |
 | `src/config/site.ts` → `playDeveloperUrl` | Google Play developer page, once public. |
 | `src/config/site.ts` → `legal.governingLaw` | Jurisdiction for the Terms. Shown as "Pending confirmation" until set. |
 | `src/config/site.ts` → `legal.entityName` | Change if Kitovo is a registered legal entity. |
@@ -67,7 +67,7 @@ The site is plain static files (`dist/`), so it runs on any static host.
 The workflow reads the origin and base path from the Pages configuration, so:
 
 - without a custom domain the site is served at `https://<owner>.github.io/kitovo/`, and every link, canonical URL and share image includes `/kitovo/`;
-- after adding `kitovo.com` under **Settings → Pages → Custom domain** (and pointing DNS at GitHub Pages), the next deploy serves everything from the domain root.
+- after adding `kitovo.in` under **Settings → Pages → Custom domain** (and pointing DNS at GitHub Pages), the next deploy serves everything from the domain root.
 
 All internal links go through `toHref()` / `asset()` in `src/config/site.ts`, which is what makes the base path work. Use them for any new link.
 

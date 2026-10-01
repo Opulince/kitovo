@@ -1,5 +1,5 @@
 /**
- * Site-wide configuration for kitovo.com.
+ * Site-wide configuration for kitovo.in.
  *
  * Everything that is a fact about Kitovo (names, addresses, dates) lives here,
  * so it can be checked and changed in one place. Values marked TODO are not
@@ -8,7 +8,7 @@
 
 /**
  * Where the site lives. Both are resolved once, in astro.config.mjs:
- *   SITE_ORIGIN  "https://kitovo.com" or "https://opulince.github.io"
+ *   SITE_ORIGIN  "https://kitovo.in" or "https://opulince.github.io"
  *   BASE_PATH    "" at a domain root, "/kitovo" on a GitHub Pages project URL
  */
 export const SITE_ORIGIN: string = new URL(import.meta.env.SITE).origin;
@@ -26,14 +26,12 @@ export const site = {
 
   contact: {
     /**
-     * TODO(kitovo): Kitovo does not have a dedicated general inbox yet.
-     * cancelly@kitovo.com is the only confirmed address, so general and
-     * business messages go there for now (the contact page pre-fills a subject
-     * line so they can be told apart). When a general address exists, change
-     * these two values and every page picks it up.
+     * Where general and business messages go. Both use the support inbox for
+     * now; the contact page pre-fills a subject line so they can be told
+     * apart. Give either its own address here and every page picks it up.
      */
-    generalEmail: 'cancelly@kitovo.com',
-    businessEmail: 'cancelly@kitovo.com',
+    generalEmail: 'support@kitovo.in',
+    businessEmail: 'support@kitovo.in',
   },
 
   /**

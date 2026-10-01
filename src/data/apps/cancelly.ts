@@ -63,7 +63,7 @@ export const cancelly: AppDefinition = {
     foreground: '#1cb5e0',
   },
 
-  supportEmail: 'cancelly@kitovo.com',
+  supportEmail: 'support@kitovo.in',
 
   steps: [
     {
