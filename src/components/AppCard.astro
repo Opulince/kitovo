@@ -1,11 +1,13 @@
 ---
 /**
- * An app in a listing. `featured` is the wide homepage version with the
- * app's three steps; `compact` is the directory/support tile.
+ * An app in a listing.
+ * - featured: the homepage "app drawer" listing. The left half is drawn in
+ *   the app's own colours, like a store feature graphic.
+ * - compact: the tile used in the directory and on the support index.
  */
 import type { AppDefinition } from '@/data/apps';
-import { toHref } from '@/config/site';
 import { appPath, supportPath } from '@/data/apps';
+import { toHref } from '@/config/site';
 import AppIcon from './AppIcon.astro';
 import PlatformBadges from './PlatformBadges.astro';
 import Icon from './Icon.astro';
@@ -13,7 +15,7 @@ import Icon from './Icon.astro';
 interface Props {
   app: AppDefinition;
   variant?: 'featured' | 'compact';
-  /** Where the card links. Defaults to the app page. */
+  /** Where the card links (a site path). Defaults to the app page. */
   href?: string;
   /** Label for the main link. */
   cta?: string;
@@ -28,21 +30,40 @@ const {
   headingLevel = 'h3',
 } = Astro.props;
 const Heading = headingLevel;
+const art = `--art-bg:${app.icon.background};--art-fg:${app.icon.foreground};`;
 ---
 
 {
   variant === 'featured' ? (
-    <article class="app-card app-card-featured card">
-      <div class="featured-main">
-        <div class="app-head">
-          <AppIcon app={app} size={72} animated />
-          <div>
-            <Heading class="app-name">{app.name}</Heading>
-            <p class="app-tagline">{app.tagline}</p>
-          </div>
+    <article class="featured">
+      <div class="featured-art" style={art}>
+        <div class="art-rings" aria-hidden="true">
+          <span />
+          <span />
+          <span />
         </div>
-        <p class="app-summary">{app.summary}</p>
+        <AppIcon app={app} size={132} animated class="art-icon" />
+        <div class="art-text">
+          <Heading class="art-name">{app.name}</Heading>
+          <p class="art-tagline">{app.tagline}</p>
+        </div>
+      </div>
+
+      <div class="featured-info">
         <PlatformBadges app={app} />
+        <p class="featured-summary">{app.summary}</p>
+        <ol role="list" class="featured-steps">
+          {app.steps.map((step, i) => (
+            <li>
+              <span class="step-num" aria-hidden="true">
+                {i + 1}
+              </span>
+              <span>
+                <strong>{step.title}.</strong> {step.body}
+              </span>
+            </li>
+          ))}
+        </ol>
         <div class="btn-row">
           <a href={toHref(href)} class="btn btn-primary">
             {cta}
@@ -54,38 +75,26 @@ const Heading = headingLevel;
           </a>
         </div>
       </div>
-      <div class="featured-steps">
-        <p class="steps-label">How it works</p>
-        <ol role="list">
-          {app.steps.map((step, i) => (
-            <li>
-              <span class="step-num" aria-hidden="true">
-                {i + 1}
-              </span>
-              <div>
-                <h4 class="step-title">{step.title}</h4>
-                <p>{step.body}</p>
-              </div>
-            </li>
-          ))}
-        </ol>
-      </div>
     </article>
   ) : (
-    <article class="app-card app-card-compact card card-interactive">
-      <AppIcon app={app} size={64} />
-      <Heading class="app-name">
+    <article class="compact card card-interactive">
+      <div class="compact-top">
+        <AppIcon app={app} size={64} />
+        <span class="compact-go" aria-hidden="true">
+          <Icon name="arrow-up-right" size={20} strokeWidth={2} />
+        </span>
+      </div>
+      <Heading class="compact-name">
         <a href={toHref(href)} class="stretched-link">
           {app.name}
         </a>
       </Heading>
-      <p class="app-tagline">{app.tagline}</p>
-      <p class="app-summary">{app.summary}</p>
+      <p class="compact-tagline">{app.tagline}</p>
+      <p class="compact-summary">{app.summary}</p>
       <div class="compact-foot">
-        <PlatformBadges app={app} />
+        <PlatformBadges app={app} size="sm" />
         <span class="compact-cta" aria-hidden="true">
           {cta}
-          <Icon name="arrow-right" size={18} />
         </span>
       </div>
     </article>
@@ -93,82 +102,103 @@ const Heading = headingLevel;
 }
 
 <style>
-  .app-card {
-    color: var(--ink);
-  }
-
-  .app-name {
-    font-size: var(--step-2);
-    letter-spacing: -0.025em;
-  }
-
-  .app-name a {
-    color: inherit;
-    text-decoration: none;
-  }
-
-  .app-tagline {
-    margin-top: 4px;
-    font-family: var(--font-display);
-    font-weight: 560;
-    font-size: var(--step-1);
-    line-height: 1.3;
-    letter-spacing: -0.01em;
-    color: var(--pine);
-  }
-
-  .app-summary {
-    color: var(--muted);
-  }
-
   /* ---- featured ---- */
-  .app-card-featured {
+  .featured {
     display: grid;
+    border-radius: var(--r-panel);
     overflow: hidden;
-    border-radius: var(--r-xl);
+    background: var(--snow);
   }
 
-  .featured-main {
+  .featured-art {
+    position: relative;
     display: grid;
-    gap: 20px;
+    align-content: end;
+    gap: 28px;
+    min-height: 380px;
+    padding: clamp(28px, 4vw, 48px);
+    background: var(--art-bg);
+    color: var(--art-fg);
+    overflow: hidden;
+    isolation: isolate;
+  }
+
+  .art-rings {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+  }
+
+  .art-rings span {
+    position: absolute;
+    top: 0;
+    right: 0;
+    translate: 30% -30%;
+    border-radius: 50%;
+    border: 1.5px solid currentColor;
+  }
+
+  .art-rings span:nth-child(1) {
+    width: 300px;
+    aspect-ratio: 1;
+    opacity: 0.22;
+  }
+
+  .art-rings span:nth-child(2) {
+    width: 520px;
+    aspect-ratio: 1;
+    opacity: 0.13;
+  }
+
+  .art-rings span:nth-child(3) {
+    width: 740px;
+    aspect-ratio: 1;
+    opacity: 0.07;
+  }
+
+  .featured-art :global(.art-icon) {
+    inline-size: clamp(96px, 16vw, 132px);
+    block-size: clamp(96px, 16vw, 132px);
+    box-shadow:
+      inset 0 0 0 1px rgb(255 255 255 / 0.14),
+      0 24px 50px -18px rgb(0 0 0 / 0.65),
+      0 0 70px -10px color-mix(in srgb, var(--art-fg) 45%, transparent);
+  }
+
+  .art-name {
+    font-size: var(--step-4);
+    color: #fff;
+  }
+
+  .art-tagline {
+    margin-top: 12px;
+    font-family: var(--font-display);
+    font-size: var(--step-2);
+    font-weight: 600;
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+    color: rgb(255 255 255 / 0.86);
+    max-width: 16ch;
+  }
+
+  .featured-info {
+    display: grid;
     align-content: center;
-    padding: clamp(24px, 4vw, 44px);
+    gap: 22px;
+    padding: clamp(28px, 4vw, 48px);
   }
 
-  .app-head {
-    display: flex;
-    gap: 18px;
-    align-items: center;
-  }
-
-  .featured-main .app-summary {
+  .featured-summary {
     font-size: var(--step-1);
-    line-height: 1.55;
-    max-width: 46ch;
-  }
-
-  .featured-main .btn-row {
-    margin-top: 4px;
+    line-height: 1.5;
+    max-width: 44ch;
   }
 
   .featured-steps {
-    padding: clamp(24px, 4vw, 44px);
-    background: var(--mint);
-    border-top: 1px solid var(--line);
-  }
-
-  .steps-label {
-    font-size: 0.8125rem;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--muted);
-  }
-
-  .featured-steps ol {
     display: grid;
-    gap: 22px;
-    margin: 20px 0 0;
+    gap: 14px;
+    margin: 0;
   }
 
   .featured-steps li {
@@ -176,62 +206,91 @@ const Heading = headingLevel;
     grid-template-columns: auto 1fr;
     gap: 14px;
     align-items: start;
+    color: var(--muted);
+  }
+
+  .featured-steps strong {
+    color: var(--ink);
   }
 
   .step-num {
     display: grid;
     place-items: center;
-    inline-size: 32px;
-    block-size: 32px;
+    inline-size: 30px;
+    block-size: 30px;
     border-radius: 50%;
-    background: var(--pine);
+    background: var(--ink);
     color: #fff;
-    font-family: var(--font-display);
-    font-weight: 700;
-    font-size: 0.9375rem;
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    font-weight: 500;
   }
 
-  .step-title {
-    font-family: var(--font-display);
-    font-size: 1.125rem;
-    font-weight: 680;
-    letter-spacing: -0.01em;
-    line-height: 1.3;
-    margin-top: 3px;
-  }
-
-  .featured-steps p {
-    margin-top: 4px;
-    color: var(--muted);
-    font-size: 0.975rem;
-  }
-
-  @media (min-width: 900px) {
-    .app-card-featured {
-      grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  @media (min-width: 960px) {
+    .featured {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     }
 
-    .featured-steps {
-      border-top: 0;
-      border-left: 1px solid var(--line);
+    .featured-art {
+      min-height: 520px;
     }
   }
 
   /* ---- compact ---- */
-  .app-card-compact {
+  .compact {
     display: flex;
     flex-direction: column;
     gap: 6px;
-    padding: 28px;
     height: 100%;
+    padding: 28px;
   }
 
-  .app-card-compact .app-name {
-    margin-top: 14px;
+  .compact-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 14px;
   }
 
-  .app-card-compact .app-summary {
+  .compact-go {
+    display: grid;
+    place-items: center;
+    inline-size: 44px;
+    block-size: 44px;
+    border-radius: 50%;
+    background: var(--snow);
+    transition:
+      background-color 0.2s ease,
+      color 0.2s ease,
+      transform 0.35s var(--ease-spring);
+  }
+
+  .compact:hover .compact-go {
+    background: var(--ink);
+    color: #fff;
+    transform: rotate(45deg);
+  }
+
+  .compact-name {
+    font-size: var(--step-3);
+  }
+
+  .compact-name a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .compact-tagline {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: var(--step-1);
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+  }
+
+  .compact-summary {
     margin-top: 6px;
+    color: var(--muted);
   }
 
   .compact-foot {
@@ -241,26 +300,19 @@ const Heading = headingLevel;
     justify-content: space-between;
     gap: 14px;
     margin-top: auto;
-    padding-top: 18px;
+    padding-top: 22px;
   }
 
   .compact-cta {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
     font-weight: 650;
-    color: var(--pine);
   }
 
-  .compact-cta :global(svg) {
-    transition: transform 0.25s var(--ease-out);
+  .compact:focus-within {
+    outline: 3px solid var(--blue);
+    outline-offset: 3px;
   }
 
-  .app-card-compact:hover .compact-cta :global(svg) {
-    transform: translateX(3px);
-  }
-
-  .app-card-compact:focus-within {
-    border-color: var(--pine);
+  .compact:focus-within :focus-visible {
+    outline: none;
   }
 </style>

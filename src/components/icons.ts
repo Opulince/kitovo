@@ -36,6 +36,9 @@ export const icons = {
   inbox:
     '<path d="M3 13.5 5.5 5h13l2.5 8.5V19H3Z"/><path d="M3 13.5h5l1.5 2.5h5l1.5-2.5h5"/>',
   shield: '<path d="M12 3 4.5 6v5.5c0 4.6 3.1 8 7.5 9.5 4.4-1.5 7.5-4.9 7.5-9.5V6Z"/>',
+  target: '<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.2" fill="currentColor"/>',
+  layers: '<path d="m12 3 9 5-9 5-9-5Z"/><path d="m3 13 9 5 9-5"/><path d="m3 17.5 9 5 9-5" opacity=".5"/>',
+  wand: '<path d="m4 20 11-11"/><path d="m13 7 2-2 4 4-2 2"/><path d="M19 3v2M18 4h2M8 3v1.5M7.25 3.75h1.5M20 13v1.5M19.25 13.75h1.5"/>',
 } as const;
 
 export type IconName = keyof typeof icons;

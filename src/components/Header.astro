@@ -1,7 +1,7 @@
 ---
 /**
- * Site header. Desktop: logo, three links, one call to action.
- * Mobile: logo and a menu button that opens a full-screen panel.
+ * Site header: a floating pill. Desktop shows three links and one call to
+ * action; mobile shows a menu button that opens a full-screen panel.
  *
  * The mobile menu uses the HTML popover attribute, so it opens, closes on
  * Escape and on outside taps, and restores focus without any JavaScript.
@@ -11,13 +11,10 @@ import Logo from './Logo.astro';
 import Icon from './Icon.astro';
 
 const path = cleanPath(Astro.url);
-const isActive = (href: string) => path === href || path.startsWith(`${href}/`);
+const isActive = (href: string) =>
+  href === '/' ? path === '/' : path === href || path.startsWith(`${href}/`);
 
-const mobileLinks = [
-  { href: '/', label: 'Home' },
-  ...primaryNav,
-  { href: '/contact', label: 'Contact' },
-];
+const mobileLinks = [{ href: '/', label: 'Home' }, ...primaryNav, { href: '/contact', label: 'Contact' }];
 const legal = [
   { href: '/privacy', label: 'Privacy' },
   { href: '/terms', label: 'Terms' },
@@ -26,7 +23,7 @@ const legal = [
 ---
 
 <header class="site-header">
-  <div class="container header-inner">
+  <div class="header-pill">
     <a href={toHref('/')} class="brand" aria-label="Kitovo, home">
       <Logo />
     </a>
@@ -46,7 +43,10 @@ const legal = [
     </nav>
 
     <div class="header-actions">
-      <a href={toHref('/apps')} class="btn btn-primary btn-sm header-cta">Explore apps</a>
+      <a href={toHref('/apps')} class="btn btn-primary btn-sm header-cta">
+        Explore apps
+        <Icon name="arrow-right" />
+      </a>
       <button
         type="button"
         class="menu-button"
@@ -55,16 +55,16 @@ const legal = [
         aria-controls="mobile-menu"
         aria-haspopup="dialog"
       >
-        <Icon name="menu" size={22} />
+        <Icon name="menu" size={22} strokeWidth={2} />
         <span class="visually-hidden">Open menu</span>
       </button>
     </div>
   </div>
 
-  <div id="mobile-menu" class="mobile-menu" popover role="dialog" aria-label="Menu">
+  <div id="mobile-menu" class="mobile-menu on-blue" popover role="dialog" aria-label="Menu">
     <div class="mobile-menu-inner">
       <div class="mobile-menu-top">
-        <a href={toHref('/')} class="brand" aria-label="Kitovo, home"><Logo /></a>
+        <a href={toHref('/')} class="brand" aria-label="Kitovo, home"><Logo tone="light" /></a>
         <button
           type="button"
           class="menu-button menu-close"
@@ -72,7 +72,7 @@ const legal = [
           popovertargetaction="hide"
           aria-controls="mobile-menu"
         >
-          <Icon name="close" size={22} />
+          <Icon name="close" size={22} strokeWidth={2} />
           <span class="visually-hidden">Close menu</span>
         </button>
       </div>
@@ -80,16 +80,11 @@ const legal = [
       <nav aria-label="Main">
         <ul role="list" class="mobile-links">
           {
-            mobileLinks.map((item) => (
-              <li>
-                <a
-                  href={toHref(item.href)}
-                  aria-current={
-                    (item.href === '/' ? path === '/' : isActive(item.href)) ? 'page' : undefined
-                  }
-                >
+            mobileLinks.map((item, i) => (
+              <li style={`--i:${i}`}>
+                <a href={toHref(item.href)} aria-current={isActive(item.href) ? 'page' : undefined}>
                   {item.label}
-                  <Icon name="arrow-right" size={22} />
+                  <Icon name="arrow-right" size={26} strokeWidth={2} />
                 </a>
               </li>
             ))
@@ -97,7 +92,7 @@ const legal = [
         </ul>
       </nav>
 
-      <a href={toHref('/apps')} class="btn btn-primary mobile-cta">
+      <a href={toHref('/apps')} class="btn btn-light mobile-cta">
         Explore apps
         <Icon name="arrow-right" />
       </a>
@@ -112,26 +107,31 @@ const legal = [
 <style>
   .site-header {
     position: sticky;
-    top: 0;
+    top: var(--edge);
     z-index: 50;
-    background: rgb(243 245 240 / 0.86);
-    backdrop-filter: saturate(1.4) blur(14px);
-    -webkit-backdrop-filter: saturate(1.4) blur(14px);
-    border-bottom: 1px solid rgb(216 224 218 / 0.9);
+    margin: var(--edge) var(--edge) 0;
   }
 
-  .header-inner {
+  .header-pill {
     display: flex;
     align-items: center;
-    gap: 24px;
+    gap: 16px;
     min-height: var(--header-h);
+    padding: 8px 8px 8px 20px;
+    border-radius: var(--r-pill);
+    background: rgb(255 255 255 / 0.86);
+    backdrop-filter: saturate(1.6) blur(16px);
+    -webkit-backdrop-filter: saturate(1.6) blur(16px);
+    box-shadow:
+      0 0 0 1px rgb(16 17 20 / 0.05),
+      0 10px 30px -18px rgb(16 17 20 / 0.35);
   }
 
   .brand {
     display: inline-flex;
     align-items: center;
     min-height: 44px;
-    border-radius: var(--r-xs);
+    border-radius: var(--r-pill);
     text-decoration: none;
     color: inherit;
   }
@@ -143,42 +143,29 @@ const legal = [
 
   .nav-desktop ul {
     display: flex;
-    gap: 4px;
+    gap: 2px;
     margin: 0;
   }
 
   .nav-desktop a {
-    position: relative;
     display: inline-flex;
     align-items: center;
     min-height: 44px;
-    padding: 0 14px;
+    padding: 0 16px;
     border-radius: var(--r-pill);
     color: var(--ink);
-    font-weight: 560;
+    font-weight: 600;
     text-decoration: none;
-    transition: background-color 0.15s ease;
+    transition: background-color 0.15s ease, color 0.15s ease;
   }
 
   .nav-desktop a:hover {
-    background: rgb(18 58 44 / 0.06);
-    color: var(--ink);
+    background: var(--snow);
   }
 
   .nav-desktop a[aria-current='page'] {
-    color: var(--pine);
-  }
-
-  .nav-desktop a[aria-current='page']::after {
-    content: '';
-    position: absolute;
-    left: 50%;
-    bottom: 5px;
-    inline-size: 5px;
-    block-size: 5px;
-    border-radius: 50%;
-    background: var(--marigold);
-    transform: translateX(-50%);
+    background: var(--ink);
+    color: #fff;
   }
 
   .header-actions {
@@ -197,17 +184,17 @@ const legal = [
     place-items: center;
     inline-size: 48px;
     block-size: 48px;
-    margin-right: -8px;
-    border-radius: var(--r-pill);
-    color: var(--ink);
-    transition: background-color 0.15s ease;
+    border-radius: 50%;
+    background: var(--ink);
+    color: #fff;
+    transition: transform 0.3s var(--ease-spring);
   }
 
-  .menu-button:hover {
-    background: rgb(18 58 44 / 0.07);
+  .menu-button:active {
+    transform: scale(0.92);
   }
 
-  @media (min-width: 860px) {
+  @media (min-width: 880px) {
     .nav-desktop {
       display: block;
     }
@@ -225,7 +212,7 @@ const legal = [
     }
   }
 
-  /* ---- Mobile menu (popover) ---- */
+  /* ---- Mobile menu (popover): a full-screen blue panel ---- */
   .mobile-menu {
     position: fixed;
     inset: 0;
@@ -234,30 +221,26 @@ const legal = [
     block-size: 100dvh;
     max-block-size: 100dvh;
     margin: 0;
-    padding: 0;
+    padding: var(--edge);
     border: 0;
-    background: var(--paper);
-    color: var(--ink);
+    background: var(--snow);
+    color: #fff;
     overflow-y: auto;
     overscroll-behavior: contain;
     opacity: 0;
-    transform: translateY(-8px);
     transition:
-      opacity 0.22s var(--ease-out),
-      transform 0.28s var(--ease-out),
-      overlay 0.28s allow-discrete,
-      display 0.28s allow-discrete;
+      opacity 0.25s var(--ease-out),
+      overlay 0.3s allow-discrete,
+      display 0.3s allow-discrete;
   }
 
   .mobile-menu:popover-open {
     opacity: 1;
-    transform: none;
   }
 
   @starting-style {
     .mobile-menu:popover-open {
       opacity: 0;
-      transform: translateY(-8px);
     }
   }
 
@@ -269,55 +252,69 @@ const legal = [
     display: flex;
     flex-direction: column;
     min-block-size: 100%;
-    width: min(100% - 2 * var(--gutter), 560px);
-    margin-inline: auto;
-    padding-bottom: 32px;
+    padding: 8px 20px 28px;
+    border-radius: var(--r-panel);
+    background: var(--blue);
   }
 
   .mobile-menu-top {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    min-height: var(--header-h);
-    border-bottom: 1px solid var(--line);
+    min-height: 64px;
+  }
+
+  .menu-close {
+    background: #fff;
+    color: var(--ink);
   }
 
   .mobile-links {
-    margin: 12px 0 0;
+    margin: 20px 0 0;
+  }
+
+  .mobile-links li {
+    animation: menu-in 0.5s var(--ease-out) both;
+    animation-delay: calc(60ms + var(--i) * 40ms);
+  }
+
+  .mobile-menu:not(:popover-open) .mobile-links li {
+    animation: none;
   }
 
   .mobile-links a {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    min-height: 64px;
-    border-bottom: 1px solid var(--line);
-    color: var(--ink);
+    min-height: 68px;
+    border-bottom: 1.5px solid rgb(255 255 255 / 0.18);
+    color: #fff;
     font-family: var(--font-display);
-    font-size: 1.75rem;
-    font-weight: 680;
-    letter-spacing: -0.02em;
+    font-size: clamp(2rem, 9vw, 2.75rem);
+    font-weight: 800;
+    letter-spacing: -0.04em;
     text-decoration: none;
   }
 
   .mobile-links a :global(svg) {
-    color: var(--muted);
-    transition: transform 0.25s var(--ease-out);
+    opacity: 0.6;
+    transition: transform 0.3s var(--ease-spring), opacity 0.2s ease;
   }
 
-  .mobile-links a:hover :global(svg) {
+  .mobile-links a:hover :global(svg),
+  .mobile-links a[aria-current='page'] :global(svg) {
+    opacity: 1;
     transform: translateX(4px);
-    color: var(--pine);
   }
 
   .mobile-links a[aria-current='page'] {
-    color: var(--pine);
+    color: var(--tangerine);
   }
 
   .mobile-cta {
-    margin-top: 28px;
+    margin-top: 32px;
     inline-size: 100%;
-    min-height: 54px;
+    min-height: 58px;
     font-size: 1.0625rem;
   }
 
@@ -333,11 +330,22 @@ const legal = [
     display: inline-flex;
     align-items: center;
     min-height: 44px;
-    color: var(--muted);
+    color: var(--blue-soft);
     font-size: 0.9375rem;
   }
 
-  @media (min-width: 860px) {
+  @keyframes menu-in {
+    from {
+      opacity: 0;
+      transform: translateY(14px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @media (min-width: 880px) {
     .mobile-menu {
       display: none;
     }

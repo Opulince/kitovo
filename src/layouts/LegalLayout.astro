@@ -1,10 +1,10 @@
 ---
 /**
- * Layout for legal pages: readable measure, a table of contents, the date the
- * text last changed, and links to the other legal pages.
+ * Layout for legal pages: a readable measure, a table of contents, the date
+ * the text last changed, and links to the other legal pages.
  */
 import BaseLayout from './BaseLayout.astro';
-import Breadcrumbs from '@/components/Breadcrumbs.astro';
+import PageHeader from '@/components/PageHeader.astro';
 import Icon from '@/components/Icon.astro';
 import { formatDate, cleanPath, toHref } from '@/config/site';
 import type { LegalHeading } from '@/lib/legal';
@@ -48,100 +48,100 @@ const related = [
   ogType="article"
   jsonLd={crumbs ? [breadcrumbJsonLd(crumbs)] : []}
 >
-  <header class="page-header container legal-header">
-    {crumbs ? <Breadcrumbs items={crumbs} /> : <p class="eyebrow">{eyebrow}</p>}
-    <h1>{title}</h1>
-    {lead && <p class="lead">{lead}</p>}
+  <PageHeader title={title} eyebrow={crumbs ? undefined : eyebrow} crumbs={crumbs} lead={lead} size="lg">
     <p class="legal-updated">
-      <Icon name="calendar" size={18} />
+      <Icon name="calendar" size={16} strokeWidth={2} />
       Last updated <time datetime={updated}>{formatDate(updated)}</time>
     </p>
-  </header>
+  </PageHeader>
 
-  <div class="container legal-grid">
-    {
-      headings.length > 2 && (
-        <aside class="legal-toc" aria-label="On this page">
-          <details class="toc-box toc-mobile">
-            <summary>
-              On this page
-              <Icon name="chevron-down" size={18} class="toc-chevron" />
-            </summary>
-            <ol role="list" class="toc-list">
-              {headings.map((h) => (
-                <li>
-                  <a href={`#${h.slug}`} set:html={h.text} />
-                </li>
-              ))}
-            </ol>
-          </details>
-          <nav class="toc-box toc-desktop" aria-label="On this page">
-            <p class="toc-title">On this page</p>
-            <ol role="list" class="toc-list">
-              {headings.map((h) => (
-                <li>
-                  <a href={`#${h.slug}`} set:html={h.text} />
-                </li>
-              ))}
-            </ol>
-          </nav>
-        </aside>
-      )
-    }
+  <div class="panel legal-panel">
+    <div class="container legal-grid">
+      {
+        headings.length > 2 && (
+          <aside class="legal-toc" aria-label="On this page">
+            <details class="toc-box toc-mobile">
+              <summary>
+                On this page
+                <Icon name="chevron-down" size={18} class="toc-chevron" />
+              </summary>
+              <ol role="list" class="toc-list">
+                {headings.map((h) => (
+                  <li>
+                    <a href={`#${h.slug}`} set:html={h.text} />
+                  </li>
+                ))}
+              </ol>
+            </details>
+            <nav class="toc-box toc-desktop" aria-label="On this page">
+              <p class="toc-title">On this page</p>
+              <ol role="list" class="toc-list">
+                {headings.map((h) => (
+                  <li>
+                    <a href={`#${h.slug}`} set:html={h.text} />
+                  </li>
+                ))}
+              </ol>
+            </nav>
+          </aside>
+        )
+      }
 
-    <article class="prose">
-      <slot name="before" />
-      <slot />
-      <slot name="after" />
-    </article>
+      <article class="prose">
+        <slot name="before" />
+        <slot />
+        <slot name="after" />
+      </article>
+    </div>
   </div>
 
-  <nav class="container legal-related" aria-label="Other legal pages">
-    <p class="legal-related-title">Related</p>
-    <ul role="list">
-      {
-        related.map((r) => (
-          <li>
-            <a class="link-arrow" href={toHref(r.href)}>
-              {r.label}
-              <Icon name="arrow-right" />
-            </a>
-          </li>
-        ))
-      }
-      <li>
-        <a class="link-arrow" href={toHref('/contact')}>
-          Contact
-          <Icon name="arrow-right" />
-        </a>
-      </li>
-    </ul>
+  <nav class="panel panel-tight legal-related" aria-label="Other legal pages">
+    <div class="container related-inner">
+      <p class="eyebrow">Related</p>
+      <ul role="list">
+        {
+          related.map((r) => (
+            <li>
+              <a class="btn btn-secondary btn-sm" href={toHref(r.href)}>
+                {r.label}
+                <Icon name="arrow-right" />
+              </a>
+            </li>
+          ))
+        }
+        <li>
+          <a class="btn btn-secondary btn-sm" href={toHref('/contact')}>
+            Contact
+            <Icon name="arrow-right" />
+          </a>
+        </li>
+      </ul>
+    </div>
   </nav>
 </BaseLayout>
 
 <style>
-  .legal-header :global(.crumbs) {
-    margin-bottom: 4px;
-  }
-
-  .legal-header h1 {
-    max-width: 22ch;
-  }
-
   .legal-updated {
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    margin-top: 18px;
-    font-size: 0.9375rem;
-    font-weight: 600;
-    color: var(--muted);
+    min-height: 34px;
+    padding: 0 14px;
+    border-radius: var(--r-pill);
+    background: var(--white);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .legal-panel {
+    padding-block: clamp(32px, 5vw, 72px);
   }
 
   .legal-grid {
     display: grid;
-    gap: 32px;
-    padding-bottom: clamp(48px, 7vw, 88px);
+    gap: 28px;
   }
 
   .legal-toc {
@@ -149,9 +149,8 @@ const related = [
   }
 
   .toc-box {
-    border: 1px solid var(--line);
-    border-radius: var(--r-md);
-    background: var(--surface);
+    border-radius: var(--r-lg);
+    background: var(--snow);
   }
 
   .toc-mobile summary,
@@ -159,10 +158,12 @@ const related = [
     display: flex;
     align-items: center;
     justify-content: space-between;
-    min-height: 52px;
-    padding: 0 18px;
-    font-weight: 700;
-    font-size: 0.9375rem;
+    min-height: 54px;
+    padding: 0 20px;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
   }
 
   .toc-mobile summary {
@@ -175,8 +176,7 @@ const related = [
   }
 
   .toc-mobile :global(.toc-chevron) {
-    transition: transform 0.25s var(--ease-out);
-    color: var(--muted);
+    transition: transform 0.3s var(--ease-spring);
   }
 
   .toc-mobile[open] :global(.toc-chevron) {
@@ -200,59 +200,49 @@ const related = [
   .toc-list a {
     display: flex;
     gap: 10px;
-    padding: 8px;
-    border-radius: var(--r-xs);
-    color: var(--muted);
+    padding: 8px 10px;
+    border-radius: var(--r-sm);
+    color: var(--ink);
     font-size: 0.9375rem;
     line-height: 1.35;
     text-decoration: none;
+    transition: background-color 0.15s ease;
   }
 
   .toc-list a::before {
-    content: counter(toc);
-    min-width: 1.4em;
-    color: #8a978f;
-    font-weight: 700;
-    font-variant-numeric: tabular-nums;
+    content: counter(toc, decimal-leading-zero);
+    min-width: 1.8em;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    line-height: 1.8;
+    color: var(--muted);
   }
 
   .toc-list a:hover {
-    background: var(--mint);
-    color: var(--ink);
+    background: var(--white);
   }
 
-  .legal-related {
+  .related-inner {
     display: grid;
-    gap: 8px;
-    padding-top: 28px;
-    padding-bottom: var(--section-y);
-    border-top: 1px solid var(--line);
-  }
-
-  .legal-related-title {
-    font-size: 0.8125rem;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--muted);
+    gap: 14px;
   }
 
   .legal-related ul {
     display: flex;
     flex-wrap: wrap;
-    gap: 0 28px;
+    gap: 10px;
     margin: 0;
   }
 
   @media (min-width: 1000px) {
     .legal-grid {
-      grid-template-columns: 260px minmax(0, 1fr);
-      gap: 64px;
+      grid-template-columns: 280px minmax(0, 1fr);
+      gap: 72px;
     }
 
     .legal-toc {
       position: sticky;
-      top: calc(var(--header-h) + 24px);
+      top: calc(var(--header-h) + 32px);
     }
 
     .toc-mobile {
@@ -263,7 +253,6 @@ const related = [
       display: block;
     }
   }
-
 </style>
 
 <style is:global>
@@ -280,9 +269,11 @@ const related = [
   }
 
   .prose h2 {
-    margin-top: 2.4em;
+    margin-top: 2.2em;
     font-size: var(--step-2);
-    scroll-margin-top: calc(var(--header-h) + 20px);
+    letter-spacing: -0.035em;
+    line-height: 1.1;
+    scroll-margin-top: calc(var(--header-h) + 40px);
   }
 
   .prose > h2:first-child {
@@ -309,41 +300,42 @@ const related = [
   }
 
   .prose li::marker {
-    color: var(--pine);
+    color: var(--blue);
   }
 
   .prose a {
-    font-weight: 560;
+    font-weight: 600;
+    color: var(--blue);
     overflow-wrap: anywhere;
+  }
+
+  .prose p,
+  .prose li {
+    color: #2a2d34;
   }
 
   .prose strong {
     color: var(--ink);
   }
 
-  .prose p,
-  .prose li {
-    color: #26352e;
-  }
-
   .prose .pending {
     padding: 14px 18px;
-    border-radius: var(--r-sm);
-    border: 1.5px dashed #d9b765;
-    background: var(--marigold-soft);
+    border-radius: var(--r-md);
+    border: 2px dashed #f2a07f;
+    background: var(--tangerine-soft);
     font-size: 0.975rem;
     line-height: 1.6;
   }
 
   .prose .pending p,
   .prose .pending strong {
-    color: var(--marigold-ink);
+    color: #5a1f08;
   }
 
   .prose .summary-box {
-    padding: 20px 24px;
-    border-radius: var(--r-md);
-    background: var(--mint);
+    padding: 22px 26px;
+    border-radius: var(--r-lg);
+    background: var(--lilac);
   }
 
   .prose .summary-box > * + * {

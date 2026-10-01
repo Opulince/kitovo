@@ -1,17 +1,20 @@
 ---
 /**
  * The publisher footer: who Kitovo is, every app, help, and the legal pages.
- * App links are generated from the registry, so new apps appear here
- * automatically.
+ * App links come from the registry, so new apps appear here automatically.
+ * It ends with the wordmark set huge, like a signature.
  */
 import { site, toHref } from '@/config/site';
 import { apps, appPath } from '@/data/apps';
-import Logo from './Logo.astro';
+import LogoMark from './LogoMark.astro';
 
 const columns = [
   {
     title: 'Apps',
-    links: [...apps.map((app) => ({ href: appPath(app), label: app.name })), { href: '/apps', label: 'All apps' }],
+    links: [
+      ...apps.map((app) => ({ href: appPath(app), label: app.name })),
+      { href: '/apps', label: 'All apps' },
+    ],
   },
   {
     title: 'Kitovo',
@@ -32,16 +35,12 @@ const columns = [
 ];
 ---
 
-<footer class="site-footer on-dark">
+<footer class="site-footer panel panel-ink on-dark">
   <div class="container footer-top">
     <div class="footer-brand">
-      <a href={toHref('/')} class="footer-logo" aria-label="Kitovo, home">
-        <Logo tone="light" size="lg" />
-      </a>
       <p class="footer-tagline">{site.tagline}</p>
-      <p class="footer-note">
-        An independent publisher of simple, focused Android apps.
-      </p>
+      <p class="footer-note">An independent studio making simple, focused Android apps.</p>
+      <a class="footer-mail" href={`mailto:${site.contact.generalEmail}`}>{site.contact.generalEmail}</a>
     </div>
 
     <nav class="footer-nav" aria-label="Footer">
@@ -62,67 +61,52 @@ const columns = [
     </nav>
   </div>
 
-  <div class="footer-bottom">
-    <div class="container footer-bottom-inner">
-      <p>Copyright © {site.copyrightYear} Kitovo. All rights reserved.</p>
-      <p class="footer-small">
-        Android is a trademark of Google LLC. Google Play is a trademark of Google LLC.
-      </p>
-    </div>
+  <div class="container footer-sign" aria-hidden="true">
+    <span class="footer-word">kitovo</span>
+    <LogoMark size={120} tone="light" class="footer-mark" />
+  </div>
+
+  <div class="container footer-bottom">
+    <p>Copyright © {site.copyrightYear} Kitovo. All rights reserved.</p>
+    <p class="footer-small">
+      Android and Google Play are trademarks of Google LLC.
+    </p>
   </div>
 </footer>
 
 <style>
   .site-footer {
-    margin-top: auto;
-    background: var(--pine-deep);
-    color: var(--pine-ink);
-    position: relative;
+    padding-block: clamp(48px, 7vw, 88px) 28px;
     overflow: hidden;
   }
 
-  /* a faint echo of the mark's tile grid, top-right */
-  .site-footer::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background-image: radial-gradient(rgb(255 255 255 / 0.07) 1px, transparent 1.4px);
-    background-size: 22px 22px;
-    mask-image: radial-gradient(70% 90% at 100% 0%, #000 0%, transparent 70%);
-    -webkit-mask-image: radial-gradient(70% 90% at 100% 0%, #000 0%, transparent 70%);
-    pointer-events: none;
-  }
-
   .footer-top {
-    position: relative;
     display: grid;
     gap: 48px;
-    padding-block: clamp(56px, 8vw, 88px) clamp(40px, 6vw, 64px);
-  }
-
-  .footer-logo {
-    display: inline-flex;
-    min-height: 44px;
-    align-items: center;
-    border-radius: var(--r-xs);
   }
 
   .footer-tagline {
-    margin-top: 18px;
     font-family: var(--font-display);
-    font-size: var(--step-2);
-    font-weight: 650;
-    line-height: 1.15;
-    letter-spacing: -0.02em;
-    color: #fff;
-    max-width: 18ch;
+    font-size: var(--step-3);
+    font-weight: 800;
+    line-height: 0.98;
+    letter-spacing: -0.045em;
+    max-width: 12ch;
   }
 
   .footer-note {
-    margin-top: 12px;
-    color: var(--pine-muted);
+    margin-top: 16px;
+    color: #b9bcc6;
     max-width: 36ch;
-    font-size: 0.975rem;
+  }
+
+  .footer-mail {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    margin-top: 8px;
+    font-weight: 600;
+    color: var(--tangerine);
   }
 
   .footer-nav {
@@ -132,12 +116,12 @@ const columns = [
   }
 
   .footer-heading {
-    font-family: var(--font-body);
-    font-size: 0.8125rem;
-    font-weight: 700;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 500;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: var(--pine-muted);
+    color: #9da1ad;
     margin-bottom: 10px;
   }
 
@@ -150,35 +134,56 @@ const columns = [
     display: inline-flex;
     align-items: center;
     min-height: 40px;
-    color: var(--pine-ink);
-    text-decoration: none;
+    color: #fff;
     font-weight: 500;
+    font-size: 1.0625rem;
+    text-decoration: none;
   }
 
   .footer-col a:hover {
+    color: var(--tangerine);
+  }
+
+  .footer-sign {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px;
+    margin-top: clamp(40px, 7vw, 88px);
+    user-select: none;
+  }
+
+  .footer-word {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: clamp(4.5rem, 21vw, 18rem);
+    line-height: 0.78;
+    letter-spacing: -0.06em;
     color: #fff;
-    text-decoration: underline;
-    text-decoration-color: var(--marigold);
-    text-decoration-thickness: 2px;
+    margin-left: -0.04em;
+  }
+
+  .footer-sign :global(.footer-mark) {
+    inline-size: clamp(56px, 11vw, 150px);
+    block-size: auto;
+    flex: none;
+    margin-bottom: 0.4%;
   }
 
   .footer-bottom {
-    position: relative;
-    border-top: 1px solid rgb(255 255 255 / 0.1);
-  }
-
-  .footer-bottom-inner {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
-    gap: 8px 32px;
-    padding-block: 22px 26px;
+    gap: 6px 32px;
+    margin-top: 28px;
+    padding-top: 20px;
+    border-top: 1px solid rgb(255 255 255 / 0.12);
     font-size: 0.9rem;
-    color: var(--pine-ink);
+    color: #d6d8de;
   }
 
   .footer-small {
-    color: var(--pine-muted);
+    color: #9da1ad;
     font-size: 0.8125rem;
   }
 
@@ -190,7 +195,7 @@ const columns = [
 
   @media (min-width: 960px) {
     .footer-top {
-      grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.4fr);
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.3fr);
       gap: 64px;
     }
   }

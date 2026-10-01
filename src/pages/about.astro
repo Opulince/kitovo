@@ -1,9 +1,11 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
-import { toHref } from '@/config/site';
+import PageHeader from '@/components/PageHeader.astro';
 import LogoMark from '@/components/LogoMark.astro';
 import AppIcon from '@/components/AppIcon.astro';
+import CtaBand from '@/components/CtaBand.astro';
 import Icon from '@/components/Icon.astro';
+import { toHref } from '@/config/site';
 import { apps, appPath, statusLabel, primaryPlatform } from '@/data/apps';
 import { organizationJsonLd } from '@/lib/seo';
 
@@ -28,17 +30,15 @@ const principles = [
   description="Kitovo builds small, useful Android apps for problems that are easier to solve with the right tool. Here is what that means in practice."
   jsonLd={[organizationJsonLd()]}
 >
-  <header class="page-header container about-header">
-    <p class="eyebrow">About</p>
-    <h1>Small apps for problems that deserve a proper tool.</h1>
-    <p class="lead">
-      Kitovo builds small, useful Android apps for problems that are easier to solve with the right
-      tool.
-    </p>
-  </header>
+  <PageHeader
+    eyebrow="About"
+    title="Small apps for problems that deserve a proper tool."
+    lead="Kitovo builds small, useful Android apps for problems that are easier to solve with the right tool."
+    tone="blue"
+  />
 
-  <div class="container about-body">
-    <section class="about-row" aria-labelledby="what-title">
+  <section class="panel" aria-labelledby="what-title">
+    <div class="container about-grid">
       <h2 id="what-title">What Kitovo is</h2>
       <div class="about-text">
         <p>
@@ -50,9 +50,11 @@ const principles = [
           own page, its own support and its own privacy policy here.
         </p>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <section class="about-row" aria-labelledby="make-title">
+  <section class="panel panel-lilac" aria-labelledby="make-title">
+    <div class="container about-grid">
       <h2 id="make-title">What we make</h2>
       <div class="about-text">
         <ul role="list" class="about-apps">
@@ -61,11 +63,9 @@ const principles = [
               const platform = primaryPlatform(app);
               return (
                 <li>
-                  <AppIcon app={app} size={52} />
+                  <AppIcon app={app} size={64} />
                   <div>
-                    <a href={toHref(appPath(app))}>
-                      <strong>{app.name}</strong>
-                    </a>
+                    <a href={toHref(appPath(app))}>{app.name}</a>
                     <span class="about-app-meta">
                       {platform.name} · {statusLabel[platform.status]}
                     </span>
@@ -77,107 +77,98 @@ const principles = [
           }
         </ul>
         <p>
-          More apps will follow. They’ll appear on the <a href={toHref('/apps')}>apps page</a> when they are
-          ready for everyday use.
+          More apps will follow. They’ll appear on the <a href={toHref('/apps')}>apps page</a> when
+          they are ready for everyday use.
         </p>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <section class="about-row" aria-labelledby="how-title">
+  <section class="panel panel-ink on-dark" aria-labelledby="how-title">
+    <div class="container about-grid">
       <h2 id="how-title">How we build</h2>
-      <div class="about-text">
-        <ul role="list" class="about-principles">
-          {
-            principles.map((p) => (
-              <li>
-                <h3>{p.title}</h3>
-                <p>{p.body}</p>
-              </li>
-            ))
-          }
-        </ul>
-      </div>
-    </section>
+      <ul role="list" class="about-principles">
+        {
+          principles.map((p) => (
+            <li>
+              <h3>{p.title}</h3>
+              <p>{p.body}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
 
-    <section class="about-row" aria-labelledby="mark-title">
+  <section class="panel" aria-labelledby="mark-title">
+    <div class="container about-grid">
       <h2 id="mark-title">The mark</h2>
       <div class="about-text about-mark">
-        <span class="about-mark-tile" aria-hidden="true"><LogoMark size={56} /></span>
+        <span class="about-mark-tile" aria-hidden="true"><LogoMark size={72} /></span>
         <p>
           Three app tiles and a dot, like the corner of a phone’s home screen. The dot sits where a
           notification badge would: a small app telling you something useful at the right moment.
           That’s the job every Kitovo app is built to do.
         </p>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <section class="about-row" aria-labelledby="contact-title">
-      <h2 id="contact-title">Get in touch</h2>
-      <div class="about-text">
-        <p>
-          Questions, ideas, or something not working? The <a href={toHref('/contact')}>contact page</a> lists
-          the best way to reach us, and <a href={toHref('/support')}>Support</a> has help for each app.
-        </p>
-        <a class="btn btn-primary about-cta" href={toHref('/contact')}>
-          Contact Kitovo
-          <Icon name="arrow-right" />
-        </a>
-      </div>
-    </section>
-  </div>
+  <CtaBand tone="tangerine" labelledby="contact-title">
+    <h2 id="contact-title">Questions, ideas, or something broken?</h2>
+    <p>The contact page has the fastest way to reach us, and Support has help for each app.</p>
+    <Fragment slot="actions">
+      <a class="btn btn-primary" href={toHref('/contact')}>
+        Contact Kitovo
+        <Icon name="arrow-right" />
+      </a>
+      <a class="btn btn-ghost" href={toHref('/support')}>Get support</a>
+    </Fragment>
+  </CtaBand>
 </BaseLayout>
 
 <style>
-  .about-header h1 {
-    max-width: 16ch;
-  }
-
-  .about-body {
-    padding-bottom: var(--section-y);
-  }
-
-  .about-row {
+  .about-grid {
     display: grid;
-    gap: 16px;
-    padding-block: clamp(28px, 4vw, 44px);
-    border-top: 1px solid var(--line);
+    gap: 24px;
   }
 
-  .about-row h2 {
-    font-size: var(--step-2);
+  .about-grid > h2 {
+    font-size: var(--step-3);
   }
 
   .about-text {
     display: grid;
-    gap: 16px;
+    gap: 18px;
     max-width: 62ch;
     font-size: var(--step-1);
-    line-height: 1.6;
+    line-height: 1.55;
   }
 
-  .about-text p {
+  .about-text > p {
     color: var(--muted);
   }
 
   .about-apps {
     display: grid;
-    gap: 16px;
+    gap: 12px;
     margin: 0;
   }
 
   .about-apps li {
     display: flex;
-    gap: 16px;
+    gap: 18px;
     align-items: flex-start;
-    padding: 20px 22px;
-    border-radius: var(--r-md);
-    background: var(--surface);
-    border: 1px solid var(--line);
+    padding: 22px;
+    border-radius: var(--r-lg);
+    background: var(--white);
   }
 
   .about-apps a {
     font-family: var(--font-display);
-    font-size: 1.375rem;
+    font-size: 1.75rem;
+    font-weight: 800;
+    letter-spacing: -0.035em;
     text-decoration: none;
   }
 
@@ -187,56 +178,56 @@ const principles = [
 
   .about-app-meta {
     display: block;
-    margin-top: 2px;
-    font-size: 0.9rem;
-    font-weight: 600;
+    margin-top: 4px;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
     color: var(--muted);
   }
 
   .about-apps p {
-    margin-top: 8px;
-    font-size: 1rem;
+    margin-top: 10px;
+    font-size: 1.0625rem;
+    color: var(--muted);
   }
 
   .about-principles {
     display: grid;
-    gap: 20px;
+    gap: 28px;
     margin: 0;
   }
 
   .about-principles h3 {
-    font-size: 1.25rem;
+    font-size: var(--step-2);
+    letter-spacing: -0.035em;
   }
 
   .about-principles p {
-    margin-top: 4px;
+    margin-top: 8px;
+    color: #c4c7d0;
     font-size: 1.0625rem;
+    max-width: 52ch;
   }
 
   .about-mark {
     grid-template-columns: auto 1fr;
     align-items: center;
-    gap: 22px;
+    gap: 26px;
   }
 
   .about-mark-tile {
     display: grid;
     place-items: center;
-    inline-size: 96px;
-    block-size: 96px;
+    inline-size: 120px;
+    block-size: 120px;
     border-radius: var(--r-icon);
-    background: var(--surface);
-    border: 1px solid var(--line);
-  }
-
-  .about-cta {
-    justify-self: start;
-    margin-top: 4px;
+    background: var(--snow);
   }
 
   @media (min-width: 860px) {
-    .about-row {
-      grid-template-columns: minmax(0, 0.7fr) minmax(0, 1.3fr);
+    .about-grid {
+      grid-template-columns: minmax(0, 0.75fr) minmax(0, 1.25fr);
       gap: 48px;
     }
   }

@@ -3,8 +3,9 @@
  * The page shell: <head> metadata (title, description, canonical, Open Graph,
  * Twitter, icons, structured data), fonts, header, main and footer.
  */
-import displayFont from '@fontsource-variable/bricolage-grotesque/files/bricolage-grotesque-latin-opsz-normal.woff2?url';
-import bodyFont from '@fontsource-variable/figtree/files/figtree-latin-wght-normal.woff2?url';
+import displayFont from '@fontsource-variable/funnel-display/files/funnel-display-latin-wght-normal.woff2?url';
+import bodyFont from '@fontsource-variable/funnel-sans/files/funnel-sans-latin-wght-normal.woff2?url';
+import monoFont from '@fontsource/jetbrains-mono/files/jetbrains-mono-latin-500-normal.woff2?url';
 import { site, asset, assetUrl, pageUrl, cleanPath } from '@/config/site';
 import Header from '@/components/Header.astro';
 import Footer from '@/components/Footer.astro';
@@ -41,9 +42,12 @@ const pathname = cleanPath(Astro.url);
 const canonical = pageUrl(pathname);
 const ogImageUrl = assetUrl(ogImage);
 
+const latin =
+  'U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2190-2193,U+2212,U+2215,U+FEFF,U+FFFD';
 const fontFaces = `
-@font-face{font-family:'Bricolage Grotesque Variable';font-style:normal;font-display:swap;font-weight:200 800;src:url(${displayFont}) format('woff2-variations'),url(${displayFont}) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;}
-@font-face{font-family:'Figtree Variable';font-style:normal;font-display:swap;font-weight:300 900;src:url(${bodyFont}) format('woff2-variations'),url(${bodyFont}) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;}
+@font-face{font-family:'Funnel Display Variable';font-style:normal;font-display:swap;font-weight:300 800;src:url(${displayFont}) format('woff2-variations'),url(${displayFont}) format('woff2');unicode-range:${latin};}
+@font-face{font-family:'Funnel Sans Variable';font-style:normal;font-display:swap;font-weight:300 800;src:url(${bodyFont}) format('woff2-variations'),url(${bodyFont}) format('woff2');unicode-range:${latin};}
+@font-face{font-family:'JetBrains Mono';font-style:normal;font-display:swap;font-weight:500;src:url(${monoFont}) format('woff2');unicode-range:${latin};}
 `;
 ---
 
@@ -68,7 +72,7 @@ const fontFaces = `
     <link rel="icon" href={asset('/favicon.svg')} type="image/svg+xml" />
     <link rel="apple-touch-icon" href={asset('/apple-touch-icon.png')} />
     <link rel="manifest" href={asset('/site.webmanifest')} />
-    <meta name="theme-color" content="#f3f5f0" />
+    <meta name="theme-color" content="#eceef3" />
 
     <meta property="og:type" content={ogType} />
     <meta property="og:site_name" content={site.name} />

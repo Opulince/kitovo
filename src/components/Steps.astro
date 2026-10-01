@@ -16,7 +16,7 @@ const { steps } = Astro.props;
     steps.map((step, i) => (
       <li class="step">
         <span class="step-index" aria-hidden="true">
-          {String(i + 1)}
+          {String(i + 1).padStart(2, '0')}
         </span>
         <h3 class="step-title">
           <span class="visually-hidden">Step {i + 1}: </span>
@@ -30,58 +30,47 @@ const { steps } = Astro.props;
 
 <style>
   .steps {
-    position: relative;
     display: grid;
-    gap: 28px;
+    gap: 12px;
     margin: 0;
   }
 
   .step {
-    position: relative;
-    padding: 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: clamp(24px, 3vw, 32px);
     border-radius: var(--r-lg);
-    background: var(--surface);
-    border: 1px solid var(--line);
+    background: var(--white);
+    transition: transform 0.4s var(--ease-spring);
+  }
+
+  .step:hover {
+    transform: translateY(-4px);
   }
 
   .step-index {
-    display: grid;
-    place-items: center;
-    inline-size: 44px;
-    block-size: 44px;
-    border-radius: 14px;
-    background: var(--pine);
-    color: #fff;
     font-family: var(--font-display);
-    font-size: 1.25rem;
-    font-weight: 750;
+    font-size: clamp(3.5rem, 2.6rem + 3vw, 5.5rem);
+    font-weight: 800;
+    line-height: 0.85;
+    letter-spacing: -0.06em;
+    color: var(--blue);
+    margin-bottom: 18px;
   }
 
   .step-title {
-    margin-top: 18px;
     font-size: var(--step-2);
+    letter-spacing: -0.035em;
   }
 
   .step p {
-    margin-top: 8px;
     color: var(--muted);
   }
 
   @media (min-width: 860px) {
     .steps {
       grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 20px;
-    }
-
-    /* the thread between steps */
-    .step:not(:last-child)::after {
-      content: '';
-      position: absolute;
-      top: 49px;
-      left: calc(28px + 44px + 12px);
-      right: -8px;
-      border-top: 2px dashed var(--line-strong);
-      z-index: 1;
     }
   }
 </style>

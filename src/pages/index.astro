@@ -1,29 +1,52 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
-import Shelf from '@/components/Shelf.astro';
+import HomeScreen from '@/components/HomeScreen.astro';
 import AppCard from '@/components/AppCard.astro';
 import MoreAppsCard from '@/components/MoreAppsCard.astro';
 import CtaBand from '@/components/CtaBand.astro';
 import Icon from '@/components/Icon.astro';
+import type { IconName } from '@/components/icons';
 import { site, mailto, toHref } from '@/config/site';
 import { apps } from '@/data/apps';
 import { organizationJsonLd, websiteJsonLd } from '@/lib/seo';
 
-const principles = [
+interface Setting {
+  icon: IconName;
+  title: string;
+  on: boolean;
+  body: string;
+  tone: 'tangerine' | 'blue' | 'lilac' | 'off';
+}
+
+/** How every Kitovo app is built, as Android quick-settings tiles. */
+const settings: Setting[] = [
   {
-    keep: 'Useful',
-    drop: 'bloated',
-    body: 'Every feature has to earn its place. If it doesn’t help you get something done, it doesn’t go in.',
+    icon: 'check',
+    title: 'Useful',
+    on: true,
+    tone: 'tangerine',
+    body: 'Every feature has to earn its place by helping you get something done.',
   },
   {
-    keep: 'Simple',
-    drop: 'complicated',
-    body: 'You should understand a Kitovo app in a minute, without a tutorial or a maze of settings.',
+    icon: 'minus',
+    title: 'Simple',
+    on: true,
+    tone: 'blue',
+    body: 'You should get a Kitovo app in a minute. No tutorial, no maze of settings.',
   },
   {
-    keep: 'Real problems',
-    drop: 'feature lists',
-    body: 'Each app starts from one specific, everyday annoyance, like a free trial that quietly turns into a charge.',
+    icon: 'target',
+    title: 'Real problems',
+    on: true,
+    tone: 'lilac',
+    body: 'Each app starts from one everyday annoyance, like a free trial that quietly turns into a charge.',
+  },
+  {
+    icon: 'layers',
+    title: 'Bloat',
+    on: false,
+    tone: 'off',
+    body: 'Feature lists for their own sake. Switched off, and it stays off.',
   },
 ];
 ---
@@ -34,38 +57,16 @@ const principles = [
   description={site.description}
   jsonLd={[organizationJsonLd(), websiteJsonLd()]}
 >
-  <!-- Hero -->
-  <section class="hero" aria-labelledby="hero-title">
-    <div class="container hero-grid">
-      <div class="hero-copy">
-        <p class="eyebrow rise">Independent Android app publisher</p>
-        <h1 id="hero-title" class="hero-title rise" style="--delay: 60ms">
-          <span class="hero-useful">Useful</span> apps for everyday problems.
-        </h1>
-        <p class="hero-lead rise" style="--delay: 140ms">
-          Kitovo builds simple Android apps that each solve one specific, everyday problem, and
-          do that one job properly.
-        </p>
-        <div class="btn-row btn-row-stack hero-actions rise" style="--delay: 220ms">
-          <a href="#apps" class="btn btn-primary">
-            Explore apps
-            <Icon name="arrow-right" />
-          </a>
-          <a href={toHref('/about')} class="btn btn-secondary">About Kitovo</a>
-        </div>
-      </div>
-      <Shelf />
-    </div>
-  </section>
+  <HomeScreen />
 
-  <!-- Apps -->
-  <section id="apps" class="section apps-section" aria-labelledby="apps-title">
+  <!-- App drawer -->
+  <section id="apps" class="panel" aria-labelledby="apps-title">
     <div class="container">
-      <div class="section-header">
-        <p class="eyebrow">The apps</p>
+      <div class="section-header drawer-head">
+        <p class="eyebrow">App drawer</p>
         <h2 id="apps-title">Small apps that each do one job well.</h2>
         <p>
-          Everything Kitovo publishes lives here. Each app has its own page, its own support and
+          Everything Kitovo publishes lives here. Every app gets its own page, its own support and
           its own privacy policy.
         </p>
       </div>
@@ -77,23 +78,32 @@ const principles = [
     </div>
   </section>
 
-  <!-- Why Kitovo -->
-  <section class="section band" aria-labelledby="why-title">
+  <!-- Quick settings -->
+  <section class="panel panel-ink on-dark" aria-labelledby="qs-title">
     <div class="container">
       <div class="section-header">
-        <p class="eyebrow">Why Kitovo</p>
-        <h2 id="why-title">How every Kitovo app gets made.</h2>
+        <p class="eyebrow">How we build</p>
+        <h2 id="qs-title">Kitovo’s quick settings.</h2>
+        <p>The defaults every Kitovo app ships with.</p>
       </div>
 
-      <ul class="principles" role="list">
+      <ul role="list" class="qs-grid">
         {
-          principles.map((p) => (
-            <li class="principle">
-              <h3 class="principle-title">
-                <span class="keep">{p.keep}</span> <span class="over">over</span>{' '}
-                <s class="drop">{p.drop}</s>
+          settings.map((s) => (
+            <li class:list={['qs-tile', `qs-${s.tone}`]}>
+              <div class="qs-top">
+                <span class="qs-icon" aria-hidden="true">
+                  <Icon name={s.icon} size={22} strokeWidth={2} />
+                </span>
+                <span class:list={['qs-switch', { 'is-on': s.on }]} aria-hidden="true">
+                  <span class="qs-knob" />
+                </span>
+              </div>
+              <h3 class="qs-title">
+                <span class:list={{ 'qs-struck': !s.on }}>{s.title}</span>
               </h3>
-              <p>{p.body}</p>
+              <p class="qs-state">{s.on ? 'On' : 'Off'}</p>
+              <p class="qs-body">{s.body}</p>
             </li>
           ))
         }
@@ -101,9 +111,8 @@ const principles = [
     </div>
   </section>
 
-  <!-- Final CTA -->
-  <CtaBand labelledby="idea-title">
-    <h2 id="idea-title">Have a problem that should have an app?</h2>
+  <CtaBand tone="tangerine" labelledby="idea-title">
+    <h2 id="idea-title">Got a problem that should have an app?</h2>
     <p>
       Kitovo’s apps start with everyday annoyances. If one keeps getting in your way, tell us
       about it.
@@ -119,141 +128,184 @@ const principles = [
 </BaseLayout>
 
 <style>
-  .hero {
-    position: relative;
-    isolation: isolate;
-    padding-top: clamp(40px, 7vw, 96px);
-    padding-bottom: clamp(56px, 8vw, 112px);
-    overflow: hidden;
-  }
-
-  /* soft ground under the shelf */
-  .hero::before {
-    content: '';
-    position: absolute;
-    z-index: -1;
-    inset: 8% -12% 4% 38%;
-    background: radial-gradient(closest-side, rgb(207 223 211 / 0.85), rgb(207 223 211 / 0) 100%);
-    pointer-events: none;
-  }
-
-  .hero-grid {
-    display: grid;
-    gap: clamp(44px, 8vw, 72px);
-    align-items: center;
-  }
-
-  .hero-title {
-    margin-top: 18px;
-    font-size: var(--step-5);
-    font-weight: 780;
-    line-height: 0.98;
-    letter-spacing: -0.045em;
-    max-width: 12ch;
-  }
-
-  .hero-useful {
-    color: var(--pine);
-    position: relative;
-    white-space: nowrap;
-  }
-
-  /* a short marigold stroke under "Useful", drawn on load */
-  .hero-useful::after {
-    content: '';
-    position: absolute;
-    left: 0.04em;
-    right: 0.06em;
-    bottom: 0.02em;
-    height: 0.11em;
-    border-radius: 999px;
-    background: var(--marigold);
-    transform-origin: left center;
-    animation: underline-draw 0.9s var(--ease-out) 0.55s both;
-    z-index: -1;
-  }
-
-  @keyframes underline-draw {
-    from {
-      transform: scaleX(0);
-    }
-    to {
-      transform: scaleX(1);
-    }
-  }
-
-  .hero-lead {
-    margin-top: 22px;
-    font-size: var(--step-1);
-    line-height: 1.55;
-    color: var(--muted);
-    max-width: 44ch;
-  }
-
-  .hero-actions {
-    margin-top: 32px;
-  }
-
-  @media (min-width: 960px) {
-    .hero-grid {
-      grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
-    }
-  }
-
-  /* ---- apps ---- */
-  .apps-section {
-    padding-top: clamp(24px, 4vw, 48px);
+  .drawer-head {
+    max-width: 820px;
   }
 
   .apps-list {
     display: grid;
-    gap: 20px;
+    gap: 14px;
   }
 
-  /* ---- principles ---- */
-  .principles {
+  /* ---- quick settings ---- */
+  .qs-grid {
     display: grid;
-    gap: clamp(28px, 4vw, 40px);
+    gap: 12px;
     margin: 0;
   }
 
-  .principle {
-    padding-top: 22px;
-    border-top: 2px solid var(--ink);
-  }
-
-  .principle-title {
-    font-size: clamp(1.625rem, 1.2rem + 1.3vw, 2.25rem);
-    line-height: 1.05;
-    letter-spacing: -0.035em;
-    font-weight: 760;
-  }
-
-  .principle-title .keep {
+  .qs-tile {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 24px;
+    border-radius: var(--r-lg);
     color: var(--ink);
+    transition: transform 0.4s var(--ease-spring);
   }
 
-  .principle-title .over,
-  .principle-title .drop {
-    color: #7d8b84;
-    font-weight: 560;
+  .qs-tile:hover {
+    transform: translateY(-4px) rotate(-0.6deg);
   }
 
-  .principle-title .drop {
+  .qs-tangerine {
+    background: var(--tangerine);
+  }
+
+  .qs-blue {
+    background: var(--blue);
+    color: #fff;
+  }
+
+  .qs-lilac {
+    background: var(--lilac);
+  }
+
+  .qs-off {
+    background: var(--ink-2);
+    color: #fff;
+    box-shadow: inset 0 0 0 1.5px rgb(255 255 255 / 0.1);
+  }
+
+  .qs-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 28px;
+  }
+
+  .qs-icon {
+    display: grid;
+    place-items: center;
+    inline-size: 48px;
+    block-size: 48px;
+    border-radius: 50%;
+    background: rgb(16 17 20 / 0.1);
+  }
+
+  .qs-blue .qs-icon,
+  .qs-off .qs-icon {
+    background: rgb(255 255 255 / 0.14);
+  }
+
+  .qs-switch {
+    position: relative;
+    inline-size: 52px;
+    block-size: 30px;
+    border-radius: var(--r-pill);
+    background: rgb(16 17 20 / 0.85);
+  }
+
+  .qs-blue .qs-switch {
+    background: rgb(255 255 255 / 0.95);
+  }
+
+  .qs-knob {
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    inline-size: 22px;
+    block-size: 22px;
+    border-radius: 50%;
+    background: #fff;
+    transition: transform 0.4s var(--ease-spring);
+  }
+
+  .qs-switch.is-on .qs-knob {
+    transform: translateX(22px);
+  }
+
+  .qs-blue .qs-knob {
+    background: var(--blue);
+  }
+
+  .qs-off .qs-switch {
+    background: rgb(255 255 255 / 0.16);
+  }
+
+  .qs-off .qs-knob {
+    background: #8b8f9a;
+  }
+
+  /* try to turn bloat on: it refuses */
+  .qs-off:hover .qs-knob {
+    animation: nope 0.5s var(--ease-out);
+  }
+
+  .qs-title {
+    font-size: var(--step-3);
+    letter-spacing: -0.045em;
+  }
+
+  .qs-struck {
     text-decoration: line-through;
-    text-decoration-color: var(--marigold);
+    text-decoration-color: var(--tangerine);
     text-decoration-thickness: 0.09em;
   }
 
-  .principle p {
-    margin-top: 14px;
-    color: var(--muted);
-    max-width: 38ch;
+  .qs-state {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
   }
 
-  @media (min-width: 860px) {
-    .principles {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
+  .qs-body {
+    margin-top: auto;
+    padding-top: 18px;
+    line-height: 1.5;
+    max-width: 34ch;
+  }
+
+  .qs-off .qs-body,
+  .qs-off .qs-state {
+    color: #c4c7d0;
+    opacity: 1;
+  }
+
+  .qs-blue .qs-body {
+    color: var(--blue-soft);
+  }
+
+  @keyframes nope {
+    0%,
+    100% {
+      transform: translateX(0);
+    }
+    25% {
+      transform: translateX(9px);
+    }
+    50% {
+      transform: translateX(-3px);
+    }
+    75% {
+      transform: translateX(4px);
+    }
+  }
+
+  @media (min-width: 640px) {
+    .qs-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 1100px) {
+    .qs-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .qs-tile {
+      min-height: 340px;
     }
   }
 </style>

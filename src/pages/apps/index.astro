@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageHeader from '@/components/PageHeader.astro';
 import AppCard from '@/components/AppCard.astro';
 import MoreAppsCard from '@/components/MoreAppsCard.astro';
 import Icon from '@/components/Icon.astro';
@@ -24,50 +25,47 @@ const itemList = {
   description="Every Android app published by Kitovo, in one place. Each app is built to do one everyday job, with its own support and privacy policy."
   jsonLd={[itemList]}
 >
-  <header class="page-header container">
-    <p class="eyebrow">Apps</p>
-    <h1>Kitovo apps</h1>
-    <p class="lead">
-      Every app Kitovo publishes, in one place. Each one is built for a single everyday job and
-      has its own support page and privacy policy.
-    </p>
-  </header>
+  <PageHeader
+    eyebrow="App drawer"
+    title="Kitovo apps"
+    lead="Every app Kitovo publishes, in one place. Each one is built for a single everyday job and has its own support page and privacy policy."
+  />
 
-  <section class="container apps-directory" aria-label="All apps">
-    <ul role="list" class="apps-grid">
-      {
-        apps.map((app) => (
-          <li>
-            <AppCard app={app} headingLevel="h2" />
-          </li>
-        ))
-      }
-      <li>
-        <MoreAppsCard compact />
-      </li>
-    </ul>
-  </section>
+  <section class="panel panel-snow apps-panel" aria-label="All apps">
+    <div class="container">
+      <ul role="list" class="apps-grid">
+        {
+          apps.map((app) => (
+            <li>
+              <AppCard app={app} headingLevel="h2" />
+            </li>
+          ))
+        }
+        <li>
+          <MoreAppsCard compact />
+        </li>
+      </ul>
 
-  <section class="container section-tight">
-    <div class="apps-help">
-      <Icon name="help" size={22} />
-      <p>
-        Looking for help with an app you already use?{' '}
-        <a href={toHref('/support')}>Go to Support</a>, or read each app’s{' '}
-        <a href={toHref('/privacy')}>privacy policy</a>.
-      </p>
+      <div class="apps-help">
+        <Icon name="help" size={22} />
+        <p>
+          Using one of our apps and need help?{' '}
+          <a href={toHref('/support')}>Go to Support</a>, or read each app’s{' '}
+          <a href={toHref('/privacy')}>privacy policy</a>.
+        </p>
+      </div>
     </div>
   </section>
 </BaseLayout>
 
 <style>
-  .apps-directory {
-    padding-bottom: 24px;
+  .apps-panel {
+    padding-block: 0 clamp(24px, 4vw, 48px);
   }
 
   .apps-grid {
     display: grid;
-    gap: 20px;
+    gap: 12px;
     margin: 0;
   }
 
@@ -91,15 +89,15 @@ const itemList = {
     display: flex;
     gap: 14px;
     align-items: flex-start;
+    margin-top: 12px;
     padding: 20px 24px;
-    border-radius: var(--r-md);
-    background: var(--mint);
-    color: var(--ink);
+    border-radius: var(--r-lg);
+    background: var(--white);
   }
 
   .apps-help :global(svg) {
     flex: none;
     margin-top: 2px;
-    color: var(--pine);
+    color: var(--blue);
   }
 </style>

@@ -4,9 +4,8 @@
  *
  * With a store URL it is a real button. Without one it is a plain status line
  * ("Coming soon to Google Play"), not a button: a button that goes nowhere
- * would be a lie. Google's official Play badge artwork is intentionally not
- * used until the listing exists; when it does, a text button keeps us inside
- * Google's brand rules without shipping their artwork.
+ * would be a lie. Google's Play badge artwork isn't used; a text button keeps
+ * within Google's brand rules.
  */
 import type { AppDefinition } from '@/data/apps';
 import { androidPlatform } from '@/data/apps';
@@ -46,28 +45,37 @@ const url = android?.status === 'available' ? android.storeUrl : null;
   .store-pending {
     display: inline-flex;
     align-items: center;
-    gap: 0.6em;
-    min-height: 48px;
-    padding: 0 1.2rem;
+    justify-content: center;
+    gap: 0.65em;
+    min-height: 52px;
+    padding: 0 1.4rem;
     border-radius: var(--r-pill);
-    border: 1.5px dashed var(--line-strong);
+    border: 2px dashed var(--line-strong);
     color: var(--ink);
-    font-weight: 620;
+    font-weight: 650;
     font-size: 1rem;
-    background: rgb(255 255 255 / 0.5);
   }
 
   .store-pending-dark {
-    color: var(--pine-ink);
-    border-color: rgb(255 255 255 / 0.28);
-    background: transparent;
+    color: #fff;
+    border-color: rgb(255 255 255 / 0.4);
   }
 
   .store-pending-dot {
-    inline-size: 0.55em;
-    block-size: 0.55em;
+    inline-size: 0.6em;
+    block-size: 0.6em;
     border-radius: 50%;
-    background: var(--marigold);
-    box-shadow: 0 0 0 3px rgb(242 179 61 / 0.25);
+    background: var(--tangerine);
+    animation: pulse 2.4s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%,
+    100% {
+      box-shadow: 0 0 0 0 rgb(255 106 61 / 0.55);
+    }
+    50% {
+      box-shadow: 0 0 0 7px rgb(255 106 61 / 0);
+    }
   }
 </style>

@@ -1,15 +1,16 @@
 ---
 /**
- * The top of an app page: name, promise, availability and the three actions
- * people come for (get it, get help, read the privacy policy). The panel on
- * the right is drawn in the app's own colours, like a store feature graphic.
+ * The top of an app page, drawn in the app's own colours like its splash
+ * screen: name, promise, availability and the three things people come for
+ * (get it, get help, read the privacy policy).
  */
 import type { AppDefinition } from '@/data/apps';
+import { supportPath, privacyPath, appPath } from '@/data/apps';
 import { toHref } from '@/config/site';
-import { supportPath, privacyPath } from '@/data/apps';
 import AppIcon from './AppIcon.astro';
 import PlatformBadges from './PlatformBadges.astro';
 import StoreButton from './StoreButton.astro';
+import Breadcrumbs from './Breadcrumbs.astro';
 import Icon from './Icon.astro';
 
 interface Props {
@@ -17,181 +18,181 @@ interface Props {
 }
 
 const { app } = Astro.props;
+const crumbs = [
+  { href: '/apps', label: 'Apps' },
+  { href: appPath(app), label: app.name },
+];
 ---
 
-<section class="app-hero" aria-labelledby="app-title">
-  <div class="app-hero-copy">
-    <div class="app-hero-id rise">
-      <AppIcon app={app} size={64} class="app-hero-icon-sm" />
-      <h1 id="app-title" class="app-hero-name">{app.name}</h1>
-    </div>
-    <p class="app-hero-tagline rise" style="--delay: 60ms">{app.tagline}</p>
-    <p class="app-hero-intro rise" style="--delay: 120ms">{app.intro[0]}</p>
-    <div class="rise" style="--delay: 160ms">
-      <PlatformBadges app={app} size="md" />
-    </div>
-    <div class="btn-row btn-row-stack app-hero-actions rise" style="--delay: 200ms">
-      <StoreButton app={app} />
-      <a href={toHref(supportPath(app))} class="btn btn-secondary">
-        <Icon name="help" />
-        Get support
-      </a>
-    </div>
-    <p class="app-hero-links rise" style="--delay: 240ms">
-      <a href={toHref(privacyPath(app))}>{app.name} privacy policy</a>
-      <span aria-hidden="true">·</span>
-      <a href={`mailto:${app.supportEmail}`}>{app.supportEmail}</a>
-    </p>
-  </div>
+<section
+  class="app-hero panel on-dark"
+  style={`--app-bg:${app.icon.background};--app-fg:${app.icon.foreground};`}
+  aria-labelledby="app-title"
+>
+  <div class="hero-rings" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
 
-  <div
-    class="app-hero-panel"
-    style={`--panel-bg:${app.icon.background};--panel-fg:${app.icon.foreground};`}
-    aria-hidden="true"
-  >
-    <div class="panel-rings">
-      <span></span><span></span><span></span>
+  <div class="container app-hero-grid">
+    <div class="app-hero-copy">
+      <Breadcrumbs items={crumbs} tone="dark" />
+      <h1 id="app-title" class="app-name rise">{app.name}</h1>
+      <p class="app-tagline rise" style="--delay: 70ms">{app.tagline}</p>
+      <p class="app-intro rise" style="--delay: 140ms">{app.intro[0]}</p>
+      <div class="rise" style="--delay: 180ms">
+        <PlatformBadges app={app} size="md" tone="dark" />
+      </div>
+      <div class="btn-row btn-row-stack app-actions rise" style="--delay: 220ms">
+        <StoreButton app={app} tone="dark" />
+        <a href={toHref(supportPath(app))} class="btn btn-light">
+          <Icon name="help" />
+          Get support
+        </a>
+      </div>
+      <p class="app-links">
+        <a href={toHref(privacyPath(app))}>{app.name} privacy policy</a>
+        <a href={`mailto:${app.supportEmail}`}>{app.supportEmail}</a>
+      </p>
     </div>
-    <AppIcon app={app} size={168} animated class="panel-icon" loading="eager" />
-    <p class="panel-name">{app.name}</p>
+
+    <div class="app-hero-art" aria-hidden="true">
+      <AppIcon app={app} size={220} animated class="art-icon" loading="eager" />
+    </div>
   </div>
 </section>
 
 <style>
   .app-hero {
-    display: grid;
-    gap: clamp(36px, 6vw, 64px);
-    align-items: center;
-  }
-
-  .app-hero-id {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-  }
-
-  .app-hero-name {
-    font-size: var(--step-4);
-    letter-spacing: -0.04em;
-  }
-
-  .app-hero-tagline {
-    margin-top: 14px;
-    font-family: var(--font-display);
-    font-size: var(--step-3);
-    font-weight: 700;
-    line-height: 1.08;
-    letter-spacing: -0.03em;
-    color: var(--pine);
-    max-width: 18ch;
-    text-wrap: balance;
-  }
-
-  .app-hero-intro {
-    margin: 20px 0 22px;
-    font-size: var(--step-1);
-    line-height: 1.55;
-    color: var(--muted);
-    max-width: 50ch;
-  }
-
-  .app-hero-actions {
-    margin-top: 26px;
-  }
-
-  .app-hero-links {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 4px 12px;
-    margin-top: 18px;
-    font-size: 0.975rem;
-    color: var(--muted);
-  }
-
-  .app-hero-links a {
-    display: inline-flex;
-    align-items: center;
-    min-height: 40px;
-  }
-
-  /* ---- brand panel ---- */
-  .app-hero-panel {
-    position: relative;
-    display: none;
-    place-items: center;
-    align-content: center;
-    gap: 22px;
-    aspect-ratio: 1 / 1;
-    max-width: 480px;
-    width: 100%;
-    justify-self: end;
-    border-radius: var(--r-xl);
-    background: var(--panel-bg);
-    color: var(--panel-fg);
+    background: var(--app-bg);
+    color: #fff;
     overflow: hidden;
-    isolation: isolate;
-    box-shadow: var(--shadow-lg);
+    padding-block: clamp(36px, 5vw, 64px) clamp(44px, 6vw, 88px);
   }
 
-  .panel-rings {
+  .hero-rings {
     position: absolute;
     inset: 0;
-    display: grid;
-    place-items: center;
     z-index: -1;
+    color: var(--app-fg);
+    pointer-events: none;
   }
 
-  .panel-rings span {
-    grid-area: 1 / 1;
+  .hero-rings span {
+    position: absolute;
+    top: 50%;
+    right: 18%;
+    translate: 50% -50%;
     border-radius: 50%;
-    border: 1px solid currentColor;
-    opacity: 0.14;
+    border: 1.5px solid currentColor;
   }
 
-  .panel-rings span:nth-child(1) {
-    inline-size: 52%;
+  .hero-rings span:nth-child(1) {
+    width: 380px;
     aspect-ratio: 1;
+    opacity: 0.26;
   }
 
-  .panel-rings span:nth-child(2) {
-    inline-size: 76%;
+  .hero-rings span:nth-child(2) {
+    width: 620px;
+    aspect-ratio: 1;
+    opacity: 0.16;
+  }
+
+  .hero-rings span:nth-child(3) {
+    width: 880px;
     aspect-ratio: 1;
     opacity: 0.09;
   }
 
-  .panel-rings span:nth-child(3) {
-    inline-size: 100%;
+  .hero-rings span:nth-child(4) {
+    width: 1160px;
     aspect-ratio: 1;
     opacity: 0.05;
   }
 
-  .app-hero-panel :global(.panel-icon) {
-    box-shadow:
-      inset 0 0 0 1px rgb(255 255 255 / 0.12),
-      0 30px 60px -20px rgb(0 0 0 / 0.6),
-      0 0 80px -10px color-mix(in srgb, var(--panel-fg) 45%, transparent);
+  .app-hero-grid {
+    display: grid;
+    gap: 40px;
+    align-items: center;
   }
 
-  .panel-name {
+  .app-hero-copy {
+    display: grid;
+    justify-items: start;
+    gap: 18px;
+  }
+
+  .app-name {
+    margin-top: clamp(12px, 3vw, 32px);
+    font-size: var(--step-5);
+    letter-spacing: -0.06em;
+    line-height: 0.88;
+  }
+
+  .app-tagline {
     font-family: var(--font-display);
-    font-size: 1.5rem;
+    font-size: var(--step-3);
     font-weight: 700;
-    letter-spacing: -0.02em;
-    color: #fff;
+    line-height: 1;
+    letter-spacing: -0.04em;
+    color: var(--app-fg);
+    max-width: 14ch;
+    text-wrap: balance;
+  }
+
+  .app-intro {
+    font-size: var(--step-1);
+    line-height: 1.5;
+    color: rgb(255 255 255 / 0.84);
+    max-width: 48ch;
+  }
+
+  .app-actions {
+    margin-top: 8px;
+  }
+
+  .app-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 22px;
+    font-size: 0.975rem;
+  }
+
+  .app-links a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    color: rgb(255 255 255 / 0.9);
+  }
+
+  .app-hero-art {
+    display: none;
+    justify-self: center;
+  }
+
+  .app-hero-art :global(.art-icon) {
+    box-shadow:
+      inset 0 0 0 1px rgb(255 255 255 / 0.14),
+      0 40px 80px -24px rgb(0 0 0 / 0.7),
+      0 0 120px -10px color-mix(in srgb, var(--app-fg) 50%, transparent);
+    animation: float 6s ease-in-out infinite;
+  }
+
+  @keyframes float {
+    0%,
+    100% {
+      transform: translateY(0) rotate(-3deg);
+    }
+    50% {
+      transform: translateY(-14px) rotate(2deg);
+    }
   }
 
   @media (min-width: 960px) {
-    .app-hero {
-      grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+    .app-hero-grid {
+      grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.75fr);
     }
 
-    .app-hero-panel {
-      display: grid;
-    }
-
-    .app-hero-id :global(.app-hero-icon-sm) {
-      display: none;
+    .app-hero-art {
+      display: block;
     }
   }
 </style>

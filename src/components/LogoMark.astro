@@ -1,18 +1,18 @@
 ---
 /**
- * The Kitovo mark: three app tiles and a signal dot, arranged like a corner of
- * a phone's home screen. The dot sits where a notification badge would, which
- * is the whole idea: a small app that tells you something useful.
+ * The Kitovo mark: three app tiles and a signal dot, like the corner of a
+ * phone's home screen. The dot sits where a notification badge would: a small
+ * app telling you something useful at the right moment.
  */
 interface Props {
   size?: number;
   class?: string;
-  /** Tile colour. The dot is always marigold. */
-  tone?: 'pine' | 'light';
+  /** Tile colour. The dot is always tangerine. */
+  tone?: 'ink' | 'light';
 }
 
-const { size = 28, class: className, tone = 'pine' } = Astro.props;
-const tile = tone === 'light' ? '#e6eee9' : '#123a2c';
+const { size = 28, class: className, tone = 'ink' } = Astro.props;
+const tile = tone === 'light' ? '#ffffff' : '#101114';
 ---
 
 <svg
@@ -24,8 +24,8 @@ const tile = tone === 'light' ? '#e6eee9' : '#123a2c';
   aria-hidden="true"
   focusable="false"
 >
-  <rect x="0" y="0" width="10.5" height="10.5" rx="3" fill={tile}></rect>
-  <rect x="0" y="13.5" width="10.5" height="10.5" rx="3" fill={tile}></rect>
-  <rect x="13.5" y="13.5" width="10.5" height="10.5" rx="3" fill={tile}></rect>
-  <circle cx="18.75" cy="5.25" r="5.25" fill="#f2b33d"></circle>
+  <rect x="0" y="0" width="10.5" height="10.5" rx="3.2" fill={tile}></rect>
+  <rect x="0" y="13.5" width="10.5" height="10.5" rx="3.2" fill={tile}></rect>
+  <rect x="13.5" y="13.5" width="10.5" height="10.5" rx="3.2" fill={tile}></rect>
+  <circle cx="18.75" cy="5.25" r="5.25" fill="#ff6a3d"></circle>
 </svg>

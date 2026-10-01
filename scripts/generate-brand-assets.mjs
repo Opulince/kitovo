@@ -35,31 +35,32 @@ try {
 // Inlined as data URIs: a page created with setContent cannot load file:// fonts.
 const font = (p) =>
   `data:font/woff2;base64,${readFileSync(join(root, 'node_modules', p)).toString('base64')}`;
-const DISPLAY = font('@fontsource-variable/bricolage-grotesque/files/bricolage-grotesque-latin-opsz-normal.woff2');
-const BODY = font('@fontsource-variable/figtree/files/figtree-latin-wght-normal.woff2');
+const DISPLAY = font('@fontsource-variable/funnel-display/files/funnel-display-latin-wght-normal.woff2');
+const BODY = font('@fontsource-variable/funnel-sans/files/funnel-sans-latin-wght-normal.woff2');
+const MONO = font('@fontsource/jetbrains-mono/files/jetbrains-mono-latin-500-normal.woff2');
 
 const C = {
-  paper: '#f3f5f0',
-  pine: '#123a2c',
-  pineDeep: '#0b241b',
-  ink: '#0f1d17',
-  muted: '#4c5b54',
-  mint: '#e3ece5',
-  marigold: '#f2b33d',
+  snow: '#eceef3',
+  ink: '#101114',
+  blue: '#2e4bff',
+  blueSoft: '#e3e7ff',
+  tangerine: '#ff6a3d',
+  lilac: '#e3ddff',
 };
 
-const mark = (size, tile = C.pine) => `
+const mark = (size, tile = C.ink) => `
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="${size}" height="${size}">
-  <rect x="0" y="0" width="10.5" height="10.5" rx="3" fill="${tile}"/>
-  <rect x="0" y="13.5" width="10.5" height="10.5" rx="3" fill="${tile}"/>
-  <rect x="13.5" y="13.5" width="10.5" height="10.5" rx="3" fill="${tile}"/>
-  <circle cx="18.75" cy="5.25" r="5.25" fill="${C.marigold}"/>
+  <rect x="0" y="0" width="10.5" height="10.5" rx="3.2" fill="${tile}"/>
+  <rect x="0" y="13.5" width="10.5" height="10.5" rx="3.2" fill="${tile}"/>
+  <rect x="13.5" y="13.5" width="10.5" height="10.5" rx="3.2" fill="${tile}"/>
+  <circle cx="18.75" cy="5.25" r="5.25" fill="${C.tangerine}"/>
 </svg>`;
 
 const base = `
 <style>
-  @font-face { font-family: Display; src: url(${DISPLAY}) format('woff2'); font-weight: 200 800; }
-  @font-face { font-family: Body; src: url(${BODY}) format('woff2'); font-weight: 300 900; }
+  @font-face { font-family: Display; src: url(${DISPLAY}) format('woff2'); font-weight: 300 800; }
+  @font-face { font-family: Body; src: url(${BODY}) format('woff2'); font-weight: 300 800; }
+  @font-face { font-family: Mono; src: url(${MONO}) format('woff2'); font-weight: 500; }
   * { margin: 0; box-sizing: border-box; }
   html, body { width: 100%; height: 100%; }
   body { font-family: Body, sans-serif; -webkit-font-smoothing: antialiased; }
@@ -81,7 +82,7 @@ const APP_CARDS = [
     name: 'Cancelly',
     tagline: 'Never forget another free trial.',
     line: 'Reminders before a free trial turns into a charge.',
-    status: 'Android · Coming soon to Google Play',
+    status: 'Android · Coming soon',
     background: 'radial-gradient(120% 120% at 28% 18%, #13237a 0%, #000046 48%, #04050e 100%)',
     foreground: '#1cb5e0',
     mark: CANCELLY_MARK,
@@ -100,45 +101,40 @@ const iconHtml = ({ size, pad, bg, radius }) => `${base}
   </div>
 </body>`;
 
+const statusIcons = `
+<svg viewBox="0 0 24 24" width="22" height="22"><path d="M2 20h3v-4H2zm5 0h3v-8H7zm5 0h3V8h-3zm5 0h3V4h-3z" fill="currentColor"/></svg>
+<svg viewBox="0 0 24 24" width="22" height="22"><path d="M12 20 1.5 8.5a15 15 0 0 1 21 0Z" fill="currentColor"/></svg>
+<svg viewBox="0 0 24 24" width="24" height="24"><rect x="2" y="7" width="17" height="10" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.6"/><rect x="4" y="9" width="12" height="6" rx="1.2" fill="currentColor"/><rect x="20" y="10" width="2" height="4" rx="1" fill="currentColor"/></svg>`;
+
 const siteOg = `${base}
-<body style="background:${C.paper};position:relative;overflow:hidden;">
-  <div style="position:absolute;inset:auto -120px -260px 520px;height:620px;background:radial-gradient(closest-side, #cfdfd3, transparent);"></div>
-  <div style="position:absolute;left:84px;top:78px;display:flex;align-items:center;gap:16px;">
-    ${mark(46)}
-    <span style="font-family:Display;font-weight:800;font-size:34px;letter-spacing:0.06em;color:${C.ink};">KITOVO</span>
+<body style="background:${C.blue};position:relative;overflow:hidden;color:#fff;">
+  <div style="position:absolute;width:720px;height:720px;border-radius:50%;background:#3a57ff;right:-180px;top:-260px;"></div>
+  <div style="position:absolute;width:420px;height:420px;border-radius:50%;background:#2541f0;right:200px;bottom:-260px;"></div>
+  <div style="position:absolute;left:72px;right:72px;top:40px;display:flex;justify-content:space-between;align-items:center;font-family:Mono;font-size:20px;color:${C.blueSoft};">
+    <span style="display:flex;align-items:center;gap:14px;">${mark(34, '#ffffff')}<span style="font-family:Display;font-weight:800;font-size:34px;letter-spacing:-0.05em;color:#fff;">kitovo</span></span>
+    <span style="display:flex;gap:8px;align-items:center;">${statusIcons}</span>
   </div>
-  <h1 style="position:absolute;left:84px;top:178px;width:600px;font-family:Display;font-weight:780;font-size:84px;line-height:0.98;letter-spacing:-0.045em;color:${C.ink};">
-    <span style="color:${C.pine}">Useful</span> apps for everyday problems.
-  </h1>
-  <p style="position:absolute;left:84px;bottom:74px;font-size:26px;color:${C.muted};font-weight:500;">Independent Android app publisher</p>
-  <div style="position:absolute;right:84px;top:118px;width:384px;padding:34px 30px 26px;border-radius:34px;background:radial-gradient(120% 90% at 0% 0%, rgb(255 255 255/.09), transparent 55%), ${C.pine};box-shadow:0 30px 70px -30px rgb(15 29 23/.5);">
-    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:22px 12px;justify-items:center;">
-      <div style="display:grid;justify-items:center;gap:8px;position:relative;">
-        ${appTile(APP_CARDS[0], 68)}
-        <span style="position:absolute;top:-5px;right:-5px;width:18px;height:18px;border-radius:50%;background:${C.marigold};border:3px solid ${C.pine};"></span>
-        <span style="font-size:13px;font-weight:600;color:#fff;">Cancelly</span>
-      </div>
-      ${Array.from({ length: 7 }, () => `<div style="display:grid;justify-items:center;gap:8px;"><div style="width:68px;height:68px;border-radius:28%;border:1.5px dashed rgb(255 255 255/.22);"></div><span style="height:16px"></span></div>`).join('')}
-    </div>
-    <div style="margin-top:26px;height:40px;border-radius:999px;background:rgb(255 255 255/.08);"></div>
+  <h1 style="position:absolute;left:72px;top:150px;width:900px;font-family:Display;font-weight:800;font-size:116px;line-height:0.9;letter-spacing:-0.055em;">Useful apps for everyday problems<span style="display:inline-block;width:0.19em;height:0.19em;border-radius:50%;background:${C.tangerine};margin-left:0.04em;"></span></h1>
+  <p style="position:absolute;left:72px;bottom:64px;font-family:Mono;font-size:22px;letter-spacing:0.06em;text-transform:uppercase;color:${C.blueSoft};">Independent Android studio</p>
+  <div style="position:absolute;right:72px;bottom:44px;display:flex;gap:18px;padding:14px 18px;border-radius:34px;background:rgb(255 255 255/.14);border:1px solid rgb(255 255 255/.2);">
+    <div style="position:relative;">${appTile(APP_CARDS[0], 76)}<span style="position:absolute;top:-6px;right:-6px;width:22px;height:22px;border-radius:50%;background:${C.tangerine};border:4px solid #3a55ff;"></span></div>
+    ${Array.from({ length: 3 }, () => `<div style="width:76px;height:76px;border-radius:28%;border:2.5px dashed rgb(255 255 255/.4);"></div>`).join('')}
   </div>
 </body>`;
 
 const appOg = (app) => `${base}
-<body style="background:${C.paper};position:relative;overflow:hidden;">
-  <div style="position:absolute;right:0;top:0;bottom:0;width:470px;background:${app.background};color:${app.foreground};display:grid;place-items:center;">
-    <div style="position:absolute;width:420px;height:420px;border-radius:50%;border:1px solid currentColor;opacity:.12;"></div>
-    <div style="position:absolute;width:300px;height:300px;border-radius:50%;border:1px solid currentColor;opacity:.18;"></div>
-    ${appTile(app, 190)}
+<body style="background:${app.background};position:relative;overflow:hidden;color:#fff;">
+  <div style="position:absolute;right:250px;top:315px;color:${app.foreground};">
+    ${[300, 500, 700, 900].map((d, i) => `<div style="position:absolute;width:${d}px;height:${d}px;left:${-d / 2}px;top:${-d / 2}px;border-radius:50%;border:2px solid currentColor;opacity:${[0.28, 0.17, 0.1, 0.06][i]};"></div>`).join('')}
   </div>
-  <div style="position:absolute;left:80px;top:72px;display:flex;align-items:center;gap:12px;">
-    ${mark(32)}
-    <span style="font-family:Display;font-weight:800;font-size:24px;letter-spacing:0.06em;color:${C.ink};">KITOVO</span>
+  <div style="position:absolute;right:155px;top:220px;">${appTile(app, 190)}</div>
+  <div style="position:absolute;left:72px;top:56px;display:flex;align-items:center;gap:12px;">
+    ${mark(30, '#ffffff')}<span style="font-family:Display;font-weight:800;font-size:30px;letter-spacing:-0.05em;">kitovo</span>
   </div>
-  <h1 style="position:absolute;left:80px;top:158px;font-family:Display;font-weight:780;font-size:96px;letter-spacing:-0.045em;color:${C.ink};line-height:1;">${app.name}</h1>
-  <p style="position:absolute;left:80px;top:276px;width:600px;text-wrap:balance;font-family:Display;font-weight:700;font-size:48px;line-height:1.05;letter-spacing:-0.03em;color:${C.pine};">${app.tagline}</p>
-  <p style="position:absolute;left:80px;bottom:72px;display:flex;align-items:center;gap:12px;font-size:24px;font-weight:600;color:${C.ink};">
-    <span style="width:12px;height:12px;border-radius:50%;background:${C.marigold};box-shadow:0 0 0 5px rgb(242 179 61/.25)"></span>${app.status}
+  <h1 style="position:absolute;left:72px;top:150px;font-family:Display;font-weight:800;font-size:136px;letter-spacing:-0.06em;line-height:0.88;">${app.name}</h1>
+  <p style="position:absolute;left:72px;top:300px;width:600px;font-family:Display;font-weight:700;font-size:60px;line-height:1;letter-spacing:-0.04em;color:${app.foreground};text-wrap:balance;">${app.tagline}</p>
+  <p style="position:absolute;left:72px;bottom:64px;display:flex;align-items:center;gap:12px;padding:12px 22px;border-radius:999px;background:${C.tangerine};color:${C.ink};font-family:Mono;font-size:20px;letter-spacing:0.06em;text-transform:uppercase;">
+    <span style="width:12px;height:12px;border-radius:50%;background:${C.ink};"></span>${app.status}
   </p>
 </body>`;
 
@@ -186,14 +182,14 @@ const write = (rel, data) => {
 
 // Icons: rounded paper tile with the mark (transparent corners) for favicons,
 // full-bleed squares for touch and maskable icons.
-const fav16 = await render(iconHtml({ size: 16, pad: 2, bg: C.paper, radius: 4 }), 16, 16, { transparent: true });
-const fav32 = await render(iconHtml({ size: 32, pad: 5, bg: C.paper, radius: 8 }), 32, 32, { transparent: true });
-const fav48 = await render(iconHtml({ size: 48, pad: 7, bg: C.paper, radius: 12 }), 48, 48, { transparent: true });
+const fav16 = await render(iconHtml({ size: 16, pad: 2, bg: C.snow, radius: 4 }), 16, 16, { transparent: true });
+const fav32 = await render(iconHtml({ size: 32, pad: 5, bg: C.snow, radius: 8 }), 32, 32, { transparent: true });
+const fav48 = await render(iconHtml({ size: 48, pad: 7, bg: C.snow, radius: 12 }), 48, 48, { transparent: true });
 write('favicon.ico', toIco([{ size: 16, data: fav16 }, { size: 32, data: fav32 }, { size: 48, data: fav48 }]));
-write('apple-touch-icon.png', await render(iconHtml({ size: 180, pad: 36, bg: C.paper, radius: 0 }), 180, 180));
-write('icon-192.png', await render(iconHtml({ size: 192, pad: 34, bg: C.paper, radius: 0 }), 192, 192));
-write('icon-512.png', await render(iconHtml({ size: 512, pad: 92, bg: C.paper, radius: 0 }), 512, 512));
-write('icon-maskable-512.png', await render(iconHtml({ size: 512, pad: 136, bg: C.paper, radius: 0 }), 512, 512));
+write('apple-touch-icon.png', await render(iconHtml({ size: 180, pad: 36, bg: C.snow, radius: 0 }), 180, 180));
+write('icon-192.png', await render(iconHtml({ size: 192, pad: 34, bg: C.snow, radius: 0 }), 192, 192));
+write('icon-512.png', await render(iconHtml({ size: 512, pad: 92, bg: C.snow, radius: 0 }), 512, 512));
+write('icon-maskable-512.png', await render(iconHtml({ size: 512, pad: 136, bg: C.snow, radius: 0 }), 512, 512));
 
 write('og.png', await render(siteOg, 1200, 630));
 for (const app of APP_CARDS) {

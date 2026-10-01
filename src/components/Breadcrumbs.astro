@@ -1,20 +1,20 @@
 ---
 /**
- * Breadcrumb trail for nested pages, with matching BreadcrumbList JSON-LD
- * produced by `breadcrumbJsonLd` in the page.
+ * Breadcrumb trail for nested pages (the matching BreadcrumbList JSON-LD is
+ * produced by `breadcrumbJsonLd` in the page).
  */
-import Icon from './Icon.astro';
 import { toHref } from '@/config/site';
 import type { Crumb } from '@/lib/seo';
 
 interface Props {
   items: Crumb[];
+  tone?: 'light' | 'dark';
 }
 
-const { items } = Astro.props;
+const { items, tone = 'light' } = Astro.props;
 ---
 
-<nav class="crumbs" aria-label="Breadcrumb">
+<nav class:list={['crumbs', `crumbs-${tone}`]} aria-label="Breadcrumb">
   <ol role="list">
     {
       items.map((item, i) => (
@@ -22,7 +22,7 @@ const { items } = Astro.props;
           {i < items.length - 1 ? (
             <>
               <a href={toHref(item.href)}>{item.label}</a>
-              <Icon name="chevron-right" size={14} class="crumb-sep" />
+              <span class="crumb-sep" aria-hidden="true">/</span>
             </>
           ) : (
             <span aria-current="page">{item.label}</span>
@@ -40,39 +40,45 @@ const { items } = Astro.props;
     align-items: center;
     gap: 2px;
     margin: 0;
-    font-size: 0.9rem;
-    color: var(--muted);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
   }
 
   .crumbs li {
     display: inline-flex;
     align-items: center;
-    gap: 2px;
+    gap: 6px;
   }
 
   .crumbs a {
     display: inline-flex;
     align-items: center;
     min-height: 32px;
-    padding: 0 4px;
-    margin-left: -4px;
-    color: var(--muted);
     text-decoration: none;
-    border-radius: 6px;
+    opacity: 0.7;
   }
 
   .crumbs a:hover {
-    color: var(--pine);
+    opacity: 1;
     text-decoration: underline;
   }
 
-  .crumbs :global(.crumb-sep) {
-    color: var(--line-strong);
-    margin-inline: 2px;
+  .crumb-sep {
+    opacity: 0.4;
+    margin-right: 4px;
   }
 
   .crumbs [aria-current='page'] {
-    color: var(--ink);
-    font-weight: 600;
+    font-weight: 500;
+  }
+
+  .crumbs-dark {
+    color: #fff;
+  }
+
+  .crumbs-dark a {
+    opacity: 0.85;
   }
 </style>

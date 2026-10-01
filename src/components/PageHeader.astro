@@ -1,0 +1,66 @@
+---
+/**
+ * The top panel of an inner page: label (or breadcrumbs), a big title and
+ * an optional lead. Extra content (an icon, actions) goes in the slot.
+ */
+import Breadcrumbs from './Breadcrumbs.astro';
+import type { Crumb } from '@/lib/seo';
+
+interface Props {
+  title: string;
+  eyebrow?: string;
+  lead?: string;
+  crumbs?: Crumb[];
+  tone?: 'lilac' | 'blue' | 'white' | 'tangerine';
+  /** 'lg' for long, functional titles (legal pages). */
+  size?: 'xl' | 'lg';
+}
+
+const { title, eyebrow, lead, crumbs, tone = 'lilac', size = 'xl' } = Astro.props;
+const dark = tone === 'blue';
+---
+
+<header class:list={['page-head panel', `panel-${tone}`, { 'on-blue': dark }]}>
+  <div class="container page-head-inner">
+    {crumbs ? <Breadcrumbs items={crumbs} tone={dark ? 'dark' : 'light'} /> : eyebrow && <p class="eyebrow">{eyebrow}</p>}
+    <slot name="before-title" />
+    <h1 class:list={['page-title rise', `page-title-${size}`]}>{title}</h1>
+    {lead && <p class="lead page-lead rise" style="--delay: 80ms">{lead}</p>}
+    <slot />
+  </div>
+</header>
+
+<style>
+  .page-head {
+    padding-block: clamp(40px, 6vw, 88px) clamp(36px, 5vw, 72px);
+    overflow: hidden;
+  }
+
+  .page-head-inner {
+    display: grid;
+    gap: 18px;
+    justify-items: start;
+  }
+
+  .page-title {
+    font-size: var(--step-5);
+    line-height: 0.92;
+    letter-spacing: -0.055em;
+    max-width: 14ch;
+  }
+
+  .page-title-lg {
+    font-size: var(--step-4);
+    max-width: 18ch;
+  }
+
+  .page-lead {
+    color: var(--ink);
+    opacity: 0.85;
+  }
+
+  .panel-blue .page-lead {
+    color: var(--blue-soft);
+    opacity: 1;
+  }
+</style>

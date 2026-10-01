@@ -1,81 +1,69 @@
 ---
 /**
- * A closing call to action. Content goes in the default slot (heading and
- * copy) and the `actions` slot (buttons).
+ * A closing call-to-action panel. Heading and copy go in the default slot,
+ * buttons in the `actions` slot.
  */
 interface Props {
-  tone?: 'mint' | 'pine';
+  tone?: 'tangerine' | 'blue' | 'ink' | 'lilac';
   id?: string;
   labelledby?: string;
 }
 
-const { tone = 'mint', id, labelledby } = Astro.props;
+const { tone = 'tangerine', id, labelledby } = Astro.props;
+const dark = tone === 'blue' || tone === 'ink';
 ---
 
-<section class="section-tight" id={id} aria-labelledby={labelledby}>
-  <div class="container">
-    <div class:list={['cta-band', `cta-${tone}`, { 'on-dark': tone === 'pine' }]}>
-      <div class="cta-copy">
-        <slot />
-      </div>
-      <div class="cta-actions btn-row btn-row-stack">
-        <slot name="actions" />
-      </div>
+<section
+  class:list={['cta panel', `panel-${tone}`, { 'on-dark': dark, 'cta-dark': dark }]}
+  id={id}
+  aria-labelledby={labelledby}
+>
+  <div class="container cta-inner">
+    <div class="cta-copy">
+      <slot />
+    </div>
+    <div class="cta-actions btn-row btn-row-stack">
+      <slot name="actions" />
     </div>
   </div>
 </section>
 
 <style>
-  .cta-band {
-    position: relative;
-    display: grid;
-    gap: 28px;
-    align-items: center;
-    padding: clamp(28px, 5vw, 56px);
-    border-radius: var(--r-xl);
+  .cta {
+    padding-block: clamp(48px, 7vw, 96px);
     overflow: hidden;
-    isolation: isolate;
   }
 
-  .cta-mint {
-    background: var(--mint);
-  }
-
-  .cta-pine {
-    background: var(--pine);
-    color: var(--pine-ink);
+  .cta-inner {
+    display: grid;
+    gap: 32px;
+    align-items: end;
   }
 
   .cta-copy :global(h2) {
-    font-size: var(--step-3);
-    max-width: 22ch;
+    font-size: var(--step-4);
+    letter-spacing: -0.05em;
+    line-height: 0.95;
+    max-width: 14ch;
   }
 
   .cta-copy :global(p) {
-    margin-top: 12px;
-    color: var(--muted);
+    margin-top: 18px;
     font-size: var(--step-1);
-    max-width: 50ch;
+    line-height: 1.5;
+    max-width: 46ch;
   }
 
-  .cta-pine .cta-copy :global(h2) {
-    color: #fff;
+  .cta-dark .cta-copy :global(p) {
+    color: var(--blue-soft);
   }
 
-  .cta-pine .cta-copy :global(p) {
-    color: var(--pine-muted);
-  }
-
-  .cta-pine :global(.btn-ghost) {
-    --btn-fg: #fff;
-  }
-
-  .cta-pine :global(.btn-ghost:hover) {
-    --btn-bg: rgb(255 255 255 / 0.1);
+  .panel-ink .cta-copy :global(p) {
+    color: #c4c7d0;
   }
 
   @media (min-width: 900px) {
-    .cta-band {
+    .cta-inner {
       grid-template-columns: minmax(0, 1fr) auto;
       gap: 48px;
     }

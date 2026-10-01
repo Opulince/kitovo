@@ -1,6 +1,6 @@
 ---
 /**
- * A release status pill: "Android · Coming soon".
+ * A release status chip: "Android · Coming soon".
  */
 import { statusLabel } from '@/data/apps';
 import type { ReleaseStatus } from '@/data/apps/types';
@@ -26,74 +26,70 @@ const { status, platform, size = 'md', tone = 'light' } = Astro.props;
   .status {
     display: inline-flex;
     align-items: center;
-    gap: 0.45em;
-    padding: 0.3em 0.75em 0.3em 0.65em;
+    gap: 0.5em;
+    min-height: 30px;
+    padding: 0 0.85em 0 0.75em;
     border-radius: var(--r-pill);
-    font-size: 0.8125rem;
-    font-weight: 620;
-    line-height: 1.3;
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
     white-space: nowrap;
-    border: 1px solid transparent;
   }
 
   .status-md {
-    font-size: 0.875rem;
+    min-height: 34px;
+    font-size: 0.75rem;
   }
 
   .status-dot {
-    inline-size: 0.5em;
-    block-size: 0.5em;
+    inline-size: 0.7em;
+    block-size: 0.7em;
     border-radius: 50%;
     background: currentColor;
     flex: none;
   }
 
-  .status-platform {
-    font-weight: 700;
-  }
-
   .status-sep {
-    opacity: 0.55;
+    opacity: 0.5;
   }
 
   .status-available {
-    background: #dcefe2;
-    color: #0f4a2c;
-    border-color: #bcdcc6;
+    background: var(--mint);
+    color: var(--mint-ink);
   }
 
   .status-coming-soon {
-    background: var(--marigold-soft);
-    color: var(--marigold-ink);
-    border-color: #f0d9a2;
+    background: var(--tangerine-soft);
+    color: #7a2a0d;
   }
 
   .status-coming-soon .status-dot {
-    background: var(--marigold);
-    box-shadow: 0 0 0 2px rgb(242 179 61 / 0.25);
+    background: var(--tangerine);
   }
 
   .status-in-development {
-    background: #eceeec;
-    color: #3e4a44;
-    border-color: #d7dcd8;
+    background: var(--snow);
+    color: #3d414b;
   }
 
   .status-on-dark.status-coming-soon {
-    background: rgb(242 179 61 / 0.14);
-    color: #ffd98c;
-    border-color: rgb(242 179 61 / 0.3);
+    background: var(--tangerine);
+    color: var(--ink);
+  }
+
+  .status-on-dark.status-coming-soon .status-dot {
+    background: var(--ink);
   }
 
   .status-on-dark.status-in-development {
-    background: rgb(255 255 255 / 0.08);
-    color: var(--pine-ink);
-    border-color: rgb(255 255 255 / 0.14);
+    background: rgb(255 255 255 / 0.14);
+    color: #fff;
   }
 
   .status-on-dark.status-available {
-    background: rgb(120 220 160 / 0.14);
-    color: #b8f0cc;
-    border-color: rgb(120 220 160 / 0.3);
+    background: var(--mint);
+    color: var(--mint-ink);
   }
 </style>

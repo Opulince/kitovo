@@ -1,8 +1,9 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
-import { toHref } from '@/config/site';
+import PageHeader from '@/components/PageHeader.astro';
 import AppCard from '@/components/AppCard.astro';
 import Icon from '@/components/Icon.astro';
+import { toHref } from '@/config/site';
 import { apps, supportPath } from '@/data/apps';
 
 const other = [
@@ -11,21 +12,18 @@ const other = [
     title: 'Contact Kitovo',
     body: 'General questions, business inquiries, or anything not about a specific app.',
     href: '/contact',
-    label: 'Contact options',
   },
   {
     icon: 'lock' as const,
     title: 'Privacy questions',
     body: 'How the website and each app handle your information, and how to make a request.',
     href: '/privacy',
-    label: 'Privacy policies',
   },
   {
     icon: 'doc' as const,
     title: 'Terms and disclaimer',
     body: 'The rules for using Kitovo apps, and what they can and can’t guarantee.',
     href: '/terms',
-    label: 'Read the terms',
   },
 ];
 ---
@@ -34,63 +32,68 @@ const other = [
   title="Support"
   description="Get help with Kitovo apps: troubleshooting steps, account help, bug reporting and how to contact support for each app."
 >
-  <header class="page-header container">
-    <p class="eyebrow">Support</p>
-    <h1>How can we help?</h1>
-    <p class="lead">
-      Pick an app for troubleshooting steps, answers to common questions and the right way to reach
-      us.
-    </p>
-  </header>
+  <PageHeader
+    eyebrow="Support"
+    title="How can we help?"
+    lead="Pick an app for troubleshooting steps, answers to common questions and the right way to reach us."
+  />
 
-  <section class="container" aria-labelledby="choose-title">
-    <h2 id="choose-title" class="support-sub">Choose an app</h2>
-    <ul role="list" class="support-apps">
-      {
-        apps.map((app) => (
-          <li>
-            <AppCard app={app} href={supportPath(app)} cta="Get help" />
-          </li>
-        ))
-      }
-    </ul>
-  </section>
+  <section class="panel panel-snow support-panel" aria-labelledby="choose-title">
+    <div class="container">
+      <h2 id="choose-title" class="support-sub">Choose an app</h2>
+      <ul role="list" class="support-apps">
+        {
+          apps.map((app) => (
+            <li>
+              <AppCard app={app} href={supportPath(app)} cta="Get help" />
+            </li>
+          ))
+        }
+      </ul>
 
-  <section class="container section" aria-labelledby="other-title">
-    <h2 id="other-title" class="support-sub">Something else?</h2>
-    <ul role="list" class="other-help">
-      {
-        other.map((item) => (
-          <li class="other-card card card-interactive">
-            <span class="other-icon" aria-hidden="true">
-              <Icon name={item.icon} size={22} />
-            </span>
-            <h3>
-              <a href={toHref(item.href)} class="stretched-link">
-                {item.title}
-              </a>
-            </h3>
-            <p>{item.body}</p>
-            <span class="other-link" aria-hidden="true">
-              {item.label}
-              <Icon name="arrow-right" size={18} />
-            </span>
-          </li>
-        ))
-      }
-    </ul>
+      <h2 class="support-sub support-sub-2" id="other-title">Something else?</h2>
+      <ul role="list" class="other-help" aria-labelledby="other-title">
+        {
+          other.map((item) => (
+            <li class="other-card card card-interactive">
+              <span class="other-icon" aria-hidden="true">
+                <Icon name={item.icon} size={22} strokeWidth={2} />
+              </span>
+              <h3>
+                <a href={toHref(item.href)} class="stretched-link">
+                  {item.title}
+                </a>
+              </h3>
+              <p>{item.body}</p>
+              <span class="other-go" aria-hidden="true">
+                <Icon name="arrow-right" size={20} strokeWidth={2} />
+              </span>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
   </section>
 </BaseLayout>
 
 <style>
-  .support-sub {
-    font-size: var(--step-2);
-    margin-bottom: 20px;
+  .support-panel {
+    padding-block: clamp(24px, 4vw, 48px);
   }
 
-  .support-apps {
+  .support-sub {
+    font-size: var(--step-2);
+    margin-bottom: 16px;
+  }
+
+  .support-sub-2 {
+    margin-top: clamp(40px, 6vw, 64px);
+  }
+
+  .support-apps,
+  .other-help {
     display: grid;
-    gap: 20px;
+    gap: 12px;
     margin: 0;
   }
 
@@ -104,12 +107,6 @@ const other = [
     .support-apps {
       grid-template-columns: repeat(3, minmax(0, 1fr));
     }
-  }
-
-  .other-help {
-    display: grid;
-    gap: 16px;
-    margin: 0;
   }
 
   @media (min-width: 860px) {
@@ -128,16 +125,15 @@ const other = [
   .other-icon {
     display: grid;
     place-items: center;
-    inline-size: 46px;
-    block-size: 46px;
-    border-radius: 14px;
-    background: var(--mint);
-    color: var(--pine);
-    margin-bottom: 8px;
+    inline-size: 48px;
+    block-size: 48px;
+    border-radius: 50%;
+    background: var(--lilac);
+    margin-bottom: 14px;
   }
 
   .other-card h3 {
-    font-size: 1.25rem;
+    font-size: 1.5rem;
   }
 
   .other-card h3 a {
@@ -149,17 +145,32 @@ const other = [
     color: var(--muted);
   }
 
-  .other-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
+  .other-go {
+    display: grid;
+    place-items: center;
+    inline-size: 44px;
+    block-size: 44px;
     margin-top: auto;
-    padding-top: 8px;
-    font-weight: 650;
-    color: var(--pine);
+    border-radius: 50%;
+    background: var(--snow);
+    transition:
+      background-color 0.2s ease,
+      color 0.2s ease,
+      transform 0.35s var(--ease-spring);
+  }
+
+  .other-card:hover .other-go {
+    background: var(--ink);
+    color: #fff;
+    transform: translateX(4px);
   }
 
   .other-card:focus-within {
-    border-color: var(--pine);
+    outline: 3px solid var(--blue);
+    outline-offset: 3px;
+  }
+
+  .other-card:focus-within :focus-visible {
+    outline: none;
   }
 </style>
