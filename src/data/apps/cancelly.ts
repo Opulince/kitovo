@@ -123,6 +123,7 @@ export const cancelly: AppDefinition = {
     uses: [
       'The name of each trial and the date it turns into a charge.',
       'Your email address, to sign you in and send your reminders.',
+      'In the free version, your device’s advertising ID, used by Google AdMob to show one ad.',
     ],
     neverAsksFor: [
       'Your bank login or card numbers.',
@@ -248,7 +249,7 @@ export const cancelly: AppDefinition = {
   ],
 
   privacyPolicy: {
-    updated: '2026-10-01',
+    updated: '2026-10-02',
   },
 
   seo: {

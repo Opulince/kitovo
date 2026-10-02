@@ -53,13 +53,15 @@ We also keep a short log of a few important account events, such as replacing yo
 
 The free version of Cancelly shows one small, labelled ad at the bottom of your trial list.
 
-<div class="pending" role="note"><p><strong>Pending confirmation.</strong> Which advertising provider serves this ad, what information that provider collects from your device (for example, an advertising ID), and how you can limit ad personalization.</p></div>
+The ad is served by **Google AdMob**. To show the ad and measure how it performs, AdMob collects information from your device, such as your device’s advertising ID, your IP address and how you interact with the ad. Ads may be personalized using that information. Google explains how it uses this information at [policies.google.com/technologies/partner-sites](https://policies.google.com/technologies/partner-sites).
+
+You can limit personalized ads by deleting or resetting your advertising ID in your phone’s ad settings (on most Android phones, under **Settings › Privacy › Ads** or **Settings › Google › Ads**). Cancelly Premium removes the ad entirely.
 
 ### Cancelly Premium
 
 Cancelly Premium removes the ad from the free version.
 
-<div class="pending" role="note"><p><strong>Pending confirmation.</strong> How Premium is purchased (for example, through Google Play) and what purchase information we receive. We never ask you to type your card number into Cancelly.</p></div>
+Premium is bought through **Google Play**, and Google handles the payment under its own privacy policy. We never see your card or payment details, and we never ask you to type a card number into Cancelly. Google tells us whether your purchase is active, along with its order details, so we can turn Premium on for your account.
 
 ### Diagnostics
 
@@ -83,21 +85,23 @@ We do not sell your personal data.
 Cancelly relies on a small number of providers that process data on our behalf, only to provide the service:
 
 - **Supabase:** database and sign-in. Stores your account and trial data.
-- **Vercel:** runs the server code that schedules reminders and processes forwarded emails.
 - **Resend:** sends reminder emails.
 - **Postmark:** receives the emails you forward to Cancelly.
+- **Google AdMob:** shows the ad in the free version (see [Advertising in the free version](#advertising-in-the-free-version)).
+- **Google Play:** processes Cancelly Premium purchases.
 
 We may also share information if the law requires it, or to protect the rights and safety of our users or others.
 
-<div class="pending" role="note"><p><strong>Pending confirmation.</strong> The full list of providers used by the Android release (including any advertising, payment, analytics or crash-reporting providers above), and the countries where your data is stored and processed.</p></div>
+### Where your data is stored
+
+Your account and trial data is stored by Supabase in Japan (its Tokyo region). Our other providers may process information in other countries, including the United States.
 
 ## How long we keep it
 
 - **Account and trial data** is kept while you have an account. When you delete your account, your account and everything attached to it, including your trials, reminder history and forwarding address, is deleted from our database.
 - **Forwarded emails** are not stored by Cancelly. Only the details read from them are kept, and those are deleted with the trial or with your account.
 - **Support emails** are kept as long as we need them to help you.
-
-<div class="pending" role="note"><p><strong>Pending confirmation.</strong> How long database backups are kept before deleted data is gone from them too.</p></div>
+- **Backups:** our current database plan does not include daily backups, so we do not keep backup copies of your data. If that changes, this section will say how long backups are kept.
 
 ## Your choices and rights
 
@@ -115,9 +119,7 @@ No system is perfectly secure, but we work to protect your information and colle
 
 ## Children
 
-Cancelly is not directed at children.
-
-<div class="pending" role="note"><p><strong>Pending confirmation.</strong> The minimum age for using Cancelly, matching the age rating and target audience set in the Google Play listing.</p></div>
+You must be at least 13 years old to use Cancelly. Cancelly is not directed at children under 13, and we do not knowingly collect information from them. If you believe a child under 13 has given us information, email [{{supportEmail}}](mailto:{{supportEmail}}) and we will delete it.
 
 ## Changes to this policy
 
