@@ -67,7 +67,10 @@ const columns = [
   </div>
 
   <div class="container footer-bottom">
-    <p>Copyright © {site.copyrightYear} Kitovo. All rights reserved.</p>
+    <div class="footer-legal">
+      <p>Copyright © {site.copyrightYear} Kitovo. All rights reserved.</p>
+      <p class="footer-small">Made by {site.makers.join(' and ')}.</p>
+    </div>
     <p class="footer-small">
       Android and Google Play are trademarks of Google LLC.
     </p>
@@ -170,10 +173,16 @@ const columns = [
     margin-bottom: 0.4%;
   }
 
+  .footer-legal {
+    display: grid;
+    gap: 4px;
+  }
+
   .footer-bottom {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
+    align-items: flex-start;
     gap: 6px 32px;
     margin-top: 28px;
     padding-top: 20px;

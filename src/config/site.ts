@@ -21,6 +21,8 @@ export const site = {
   description:
     'Kitovo is an independent Android app publisher. We build simple, focused apps that each solve one everyday problem, starting with Cancelly, the free-trial reminder.',
   locale: 'en',
+  /** The people behind Kitovo, credited in the footer under the copyright. */
+  makers: ['Advay Srivastava', 'Anupam Srivastava'],
   /** Shown in the footer copyright line. Computed at build time. */
   copyrightYear: new Date().getFullYear(),
 
