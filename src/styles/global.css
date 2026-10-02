@@ -8,13 +8,13 @@
 /* ---------- Tokens ------------------------------------------------------- */
 :root {
   /* Colour */
-  --snow: #eceef3;            /* page */
-  --white: #ffffff;           /* panels and cards */
+  --snow: #d3daeb;            /* page: cool blue-grey, easy on the eyes */
+  --white: #e6eaf5;           /* panels and cards: soft cool tint, not pure white */
   --ink: #101114;             /* text, dark panels */
   --ink-2: #1c1d22;           /* raised surface on ink */
   --muted: #555a66;           /* secondary text (AA on white and snow) */
-  --line: #dcdfe7;
-  --line-strong: #c3c8d4;
+  --line: #c5cde0;
+  --line-strong: #a9b2c9;
   --blue: #2e4bff;            /* Kitovo blue */
   --blue-deep: #1f36d6;
   --blue-soft: #e3e7ff;       /* secondary text on blue (AA) */
