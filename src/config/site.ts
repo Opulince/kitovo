@@ -52,9 +52,9 @@ export const site = {
     /** Shown on legal pages. Update whenever the text changes. */
     termsUpdated: '2026-10-01',
     disclaimerUpdated: '2026-10-01',
-    websitePrivacyUpdated: '2026-10-01',
+    websitePrivacyUpdated: '2026-10-02',
     /** Where the website is hosted. Used by the website privacy policy. */
-    hostingProvider: 'Vercel',
+    hostingProvider: 'GitHub Pages, run by GitHub, Inc.',
   },
 } as const;
 
