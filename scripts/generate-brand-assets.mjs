@@ -67,31 +67,23 @@ const base = `
 </style>`;
 
 /** App cards for per-app share images. Mirror the app's icon config. */
-const CANCELLY_MARK = `
-<circle cx="14" cy="14" r="10" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.35"/>
-<g stroke="currentColor" stroke-width="1.5" stroke-linecap="round" opacity="0.45">
-<line x1="14" y1="3.6" x2="14" y2="5.6"/><line x1="24.4" y1="14" x2="22.4" y2="14"/>
-<line x1="14" y1="24.4" x2="14" y2="22.4"/><line x1="3.6" y1="14" x2="5.6" y2="14"/></g>
-<line x1="14" y1="14" x2="19" y2="5.4" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/>
-<circle cx="19" cy="5.4" r="2.5" fill="currentColor"/>
-<circle cx="14" cy="14" r="1.6" fill="currentColor"/>`;
+const png = (rel) => `data:image/png;base64,${readFileSync(join(root, 'scripts/assets', rel)).toString('base64')}`;
 
 const APP_CARDS = [
   {
     slug: 'cancelly',
     name: 'Cancelly',
     tagline: 'Never forget another free trial.',
-    line: 'Reminders before a free trial turns into a charge.',
     status: 'Android · Coming soon',
-    background: 'radial-gradient(120% 120% at 28% 18%, #13237a 0%, #000046 48%, #04050e 100%)',
-    foreground: '#1cb5e0',
-    mark: CANCELLY_MARK,
+    background: 'linear-gradient(180deg, #0e2b3c 0%, #0f5871 100%)',
+    foreground: '#6fc7e3',
+    image: png('cancelly-icon-512.png'),
   },
 ];
 
 const appTile = (app, size) => `
-<div style="width:${size}px;height:${size}px;border-radius:28%;background:${app.background};color:${app.foreground};display:grid;place-items:center;box-shadow:inset 0 0 0 1px rgb(255 255 255/.1),0 30px 60px -24px rgb(0 0 0/.55);">
-  <svg viewBox="0 0 28 28" width="${size * 0.66}" height="${size * 0.66}" style="overflow:visible;filter:drop-shadow(0 0 ${size * 0.06}px ${app.foreground}88)">${app.mark}</svg>
+<div style="width:${size}px;height:${size}px;border-radius:28%;overflow:hidden;box-shadow:inset 0 0 0 1px rgb(255 255 255/.1),0 30px 60px -24px rgb(0 0 0/.55);">
+  <img src="${app.image}" width="${size}" height="${size}" style="display:block;width:100%;height:100%;" alt="">
 </div>`;
 
 const iconHtml = ({ size, pad, bg, radius }) => `${base}

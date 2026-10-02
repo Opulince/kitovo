@@ -43,24 +43,11 @@ export const cancelly: AppDefinition = {
   ],
 
   icon: {
-    // TODO(kitovo): drop the final launcher icon at
-    // public/apps/cancelly/icon.png (512×512) and set src: '/apps/cancelly/icon.png'.
-    // Until then the tile uses Cancelly's own mark: a dial with one dot on the
-    // approaching moment, in the navy and cyan of the Cancelly brand.
-    mark: [
-      '<circle cx="14" cy="14" r="10" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.35"/>',
-      '<g stroke="currentColor" stroke-width="1.5" stroke-linecap="round" opacity="0.45">',
-      '<line x1="14" y1="3.6" x2="14" y2="5.6"/><line x1="24.4" y1="14" x2="22.4" y2="14"/>',
-      '<line x1="14" y1="24.4" x2="14" y2="22.4"/><line x1="3.6" y1="14" x2="5.6" y2="14"/>',
-      '</g>',
-      '<g class="mark-hand">',
-      '<line x1="14" y1="14" x2="19" y2="5.4" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/>',
-      '<circle cx="19" cy="5.4" r="2.5" fill="currentColor"/>',
-      '</g>',
-      '<circle cx="14" cy="14" r="1.6" fill="currentColor"/>',
-    ].join(''),
-    background: 'radial-gradient(120% 120% at 28% 18%, #13237a 0%, #000046 48%, #04050e 100%)',
-    foreground: '#1cb5e0',
+    // The real launcher icon. Tile colours are sampled from it, so the app
+    // page and cards match the icon.
+    src: '/apps/cancelly/icon.webp',
+    background: 'linear-gradient(180deg, #0e2b3c 0%, #0f5871 100%)',
+    foreground: '#6fc7e3',
   },
 
   supportEmail: 'support@kitovo.in',
@@ -72,7 +59,7 @@ export const cancelly: AppDefinition = {
     },
     {
       title: 'Get a heads-up',
-      body: 'Cancelly holds the date so you don’t have to, and warns you before the charge, more than once as the day gets close.',
+      body: 'Cancelly holds the date so you don’t have to, and warns you three times: three days before, the day before, and on the last morning.',
     },
     {
       title: 'Decide in time',
@@ -84,7 +71,7 @@ export const cancelly: AppDefinition = {
     {
       icon: 'plus',
       title: 'Add a trial in seconds',
-      body: 'All Cancelly needs is the name of the trial and the date it turns into a charge.',
+      body: 'Type the trial’s name and pick when it charges: 7, 14 or 30 days from now, or any date. The price is optional.',
     },
     {
       icon: 'forward',
@@ -93,8 +80,8 @@ export const cancelly: AppDefinition = {
     },
     {
       icon: 'bell',
-      title: 'More than one heads-up',
-      body: 'Reminders arrive before the charge and again as it gets close, so one missed message is not the end of it.',
+      title: 'Three heads-ups',
+      body: 'Three days before the charge, the day before, and on the last morning, so one missed message is not the end of it.'
     },
     {
       icon: 'clock',
@@ -132,9 +119,14 @@ export const cancelly: AppDefinition = {
     ],
   },
 
-  // TODO(kitovo): add real screenshots (see README.md). The section stays
-  // hidden while this list is empty, so nothing fake is ever shown.
-  screenshots: [],
+  // Real Play Store screenshots (1080×1920 originals, resized to 560 wide).
+  screenshots: [
+    { src: '/apps/cancelly/screens/intro.webp', width: 560, height: 996, alt: 'Cancelly’s welcome screen: “Free trials end. Your money shouldn’t go with them.”' },
+    { src: '/apps/cancelly/screens/home.webp', width: 560, height: 996, alt: 'The home screen: “You’re protected”, with the next trial to charge (Disney+, tomorrow) and three more trials being watched.' },
+    { src: '/apps/cancelly/screens/add-trial.webp', width: 560, height: 996, alt: 'Adding a trial: its name, when it charges (7, 14 or 30 days, or a date you pick) and the price.' },
+    { src: '/apps/cancelly/screens/detail.webp', width: 560, height: 996, alt: 'A trial’s detail screen showing the charge date, the amount and when each reminder is sent.' },
+    { src: '/apps/cancelly/screens/past-trials.webp', width: 560, height: 996, alt: 'Past trials: the money saved by cancelling before the charge, and the trials you kept.' },
+  ],
 
   faq: [
     {
