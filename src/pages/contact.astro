@@ -107,7 +107,7 @@ const sharedInbox = allAddresses.size === 1 ? [...allAddresses][0] : null;
 
       {
         topics.map((topic) => (
-          <article id={topic.id} class:list={['topic', `topic-${topic.tone}`]}>
+          <article id={topic.id} class:list={['topic', `topic-${topic.tone}`, { 'on-tangerine': topic.tone === 'tangerine' }]}>
             <span class="topic-icon" aria-hidden="true">
               <Icon name={topic.icon} size={24} strokeWidth={2} />
             </span>

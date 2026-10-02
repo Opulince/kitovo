@@ -12,6 +12,10 @@
   --white: #e6eaf5;           /* panels and cards: soft cool tint, not pure white */
   --ink: #101114;             /* text, dark panels */
   --ink-2: #1c1d22;           /* raised surface on ink */
+  --text: #101114;            /* body text on page and panels */
+  --text-2: #2a2d34;          /* long-form text */
+  --accent-text: #2e4bff;     /* blue used as text */
+  --header-bg: rgb(230 234 245 / 0.88);
   --muted: #555a66;           /* secondary text (AA on white and snow) */
   --line: #c5cde0;
   --line-strong: #a9b2c9;
@@ -68,6 +72,45 @@
   color-scheme: light;
 }
 
+/* ---------- Dark theme --------------------------------------------------
+   Follows the device setting until the visitor picks a theme with the
+   header toggle (stored by /theme.js as data-theme on <html>). */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+  --snow: #0a0c14;
+  --white: #151926;
+  --ink: #232840;
+  --ink-2: #1b2033;
+  --text: #e8ebf5;
+  --text-2: #cfd4e3;
+  --muted: #a3aabd;
+  --line: #262c40;
+  --line-strong: #3b4259;
+  --lilac: #2a2552;
+  --lilac-deep: #3c3474;
+  --header-bg: rgb(21 25 38 / 0.86);
+  --accent-text: #9aaaff;
+  color-scheme: dark;
+  }
+}
+
+:root[data-theme='dark'] {
+  --snow: #0a0c14;
+  --white: #151926;
+  --ink: #232840;
+  --ink-2: #1b2033;
+  --text: #e8ebf5;
+  --text-2: #cfd4e3;
+  --muted: #a3aabd;
+  --line: #262c40;
+  --line-strong: #3b4259;
+  --lilac: #2a2552;
+  --lilac-deep: #3c3474;
+  --header-bg: rgb(21 25 38 / 0.86);
+  --accent-text: #9aaaff;
+  color-scheme: dark;
+}
+
 /* ---------- Reset -------------------------------------------------------- */
 *,
 *::before,
@@ -99,7 +142,7 @@ body {
   gap: var(--edge);
   padding-bottom: var(--edge);
   background: var(--snow);
-  color: var(--ink);
+  color: var(--text);
   font-family: var(--font-body);
   font-size: var(--step-0);
   line-height: 1.6;
@@ -205,12 +248,12 @@ strong {
 
 ::selection {
   background: var(--tangerine);
-  color: var(--ink);
+  color: #101114;
 }
 
 /* ---------- Focus -------------------------------------------------------- */
 :focus-visible {
-  outline: 3px solid var(--blue);
+  outline: 3px solid var(--accent-text);
   outline-offset: 3px;
   border-radius: 8px;
 }
@@ -261,6 +304,15 @@ strong {
 
 .panel-tangerine {
   background: var(--tangerine);
+}
+
+/* Tangerine surfaces always carry dark text, in both themes. */
+.panel-tangerine,
+.on-tangerine {
+  --text: #101114;
+  --text-2: #101114;
+  --muted: #3b2219;
+  color: #101114;
 }
 
 .panel-tight {
@@ -350,7 +402,7 @@ strong {
   text-transform: uppercase;
   white-space: nowrap;
   background: var(--snow);
-  color: var(--ink);
+  color: var(--text);
 }
 
 .lead {
@@ -446,13 +498,30 @@ strong {
 
 .btn-secondary {
   --btn-bg: transparent;
-  --btn-fg: var(--ink);
-  --btn-border: var(--ink);
+  --btn-fg: var(--text);
+  --btn-border: var(--text);
 }
 
 .btn-secondary:hover {
-  --btn-bg: var(--ink);
-  --btn-fg: #fff;
+  --btn-bg: var(--text);
+  --btn-fg: var(--snow);
+}
+
+/* In dark mode the primary button turns light so it still stands out. */
+:root[data-theme='dark'] .btn-primary {
+  --btn-bg: #eef1fa;
+  --btn-fg: #101114;
+}
+
+:root[data-theme='dark'] .btn-primary:hover {
+  --btn-bg: #fff;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) .btn-primary {
+    --btn-bg: #eef1fa;
+    --btn-fg: #101114;
+  }
 }
 
 .btn-outline-light {
@@ -585,7 +654,7 @@ strong {
   padding: 16px 20px;
   border-radius: var(--r-md);
   background: var(--lilac);
-  color: var(--ink);
+  color: var(--text);
   font-size: 0.975rem;
 }
 
@@ -598,6 +667,7 @@ strong {
 
 .callout-warn {
   background: var(--tangerine-soft);
+  color: #101114;
 }
 
 /* ---------- Motion ------------------------------------------------------- */

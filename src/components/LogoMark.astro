@@ -12,7 +12,7 @@ interface Props {
 }
 
 const { size = 28, class: className, tone = 'ink' } = Astro.props;
-const tile = tone === 'light' ? '#ffffff' : '#101114';
+const tile = tone === 'light' ? '#ffffff' : 'var(--text)';
 ---
 
 <svg
@@ -24,8 +24,8 @@ const tile = tone === 'light' ? '#ffffff' : '#101114';
   aria-hidden="true"
   focusable="false"
 >
-  <rect x="0" y="0" width="10.5" height="10.5" rx="3.2" fill={tile}></rect>
-  <rect x="0" y="13.5" width="10.5" height="10.5" rx="3.2" fill={tile}></rect>
-  <rect x="13.5" y="13.5" width="10.5" height="10.5" rx="3.2" fill={tile}></rect>
+  <rect x="0" y="0" width="10.5" height="10.5" rx="3.2" style={`fill:${tile}`}></rect>
+  <rect x="0" y="13.5" width="10.5" height="10.5" rx="3.2" style={`fill:${tile}`}></rect>
+  <rect x="13.5" y="13.5" width="10.5" height="10.5" rx="3.2" style={`fill:${tile}`}></rect>
   <circle cx="18.75" cy="5.25" r="5.25" fill="#ff6a3d"></circle>
 </svg>

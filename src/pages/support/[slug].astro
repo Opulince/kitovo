@@ -137,7 +137,7 @@ const bugMail = mailto(app.supportEmail, `Bug report: ${app.name}`);
           </a>
         </section>
 
-        <section id="report-a-bug" class="support-section bug-box" aria-labelledby="bug-title">
+        <section id="report-a-bug" class="support-section bug-box on-tangerine" aria-labelledby="bug-title">
           <h2 id="bug-title">Report a bug</h2>
           <p>
             Found something that isn’t working? Email <a href={bugMail}>{app.supportEmail}</a> with
@@ -305,7 +305,7 @@ const bugMail = mailto(app.supportEmail, `Bug report: ${app.name}`);
   }
 
   .trouble li::marker {
-    color: var(--blue);
+    color: var(--accent-text);
     font-family: var(--font-mono);
     font-weight: 500;
   }
