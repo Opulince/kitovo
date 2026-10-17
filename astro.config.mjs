@@ -18,6 +18,8 @@ function sitemapGuard() {
         const canonicals = new Set();
         for (const file of files) {
           const html = await readFile(join(root, file), 'utf8');
+          // Not a page, e.g. a Search Console verification file (google<token>.html).
+          if (!/<html[\s>]/i.test(html)) continue;
           if (/<meta name="robots" content="[^"]*noindex/.test(html)) continue;
           const canonical = html.match(/<link rel="canonical" href="([^"]+)"/)?.[1];
           if (!canonical) throw new Error(`${file} is indexable but has no canonical URL.`);

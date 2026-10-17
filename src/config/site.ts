@@ -43,6 +43,18 @@ export const site = {
    */
   playDeveloperUrl: null as string | null,
 
+  /**
+   * Search engine ownership tokens, for verifying with an HTML tag instead of
+   * DNS (DNS is recommended: see docs/seo/HANDOFF.md). Paste only the value
+   * of content="...", not the whole tag. Rendered on the homepage when set.
+   */
+  verification: {
+    // TODO(kitovo): Google Search Console token, only if verifying by HTML tag.
+    google: null as string | null,
+    // TODO(kitovo): Bing Webmaster Tools token (msvalidate.01), only if not importing from Search Console.
+    bing: null as string | null,
+  },
+
   legal: {
     /** The name used in legal pages. Change if Kitovo is a registered entity. */
     entityName: 'Kitovo',

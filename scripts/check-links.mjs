@@ -322,7 +322,10 @@ const allHtml = (await readdir(DIST, { recursive: true }))
   .filter((f) => f.endsWith('.html'))
   .map((f) => join(DIST, f));
 for (const file of allHtml) {
-  if (!linked.has(file)) warnings.push(`[orphan page] ${show(pageUrlOf(file))} is built but no page links to it`);
+  if (linked.has(file)) continue;
+  // Files like google<token>.html (Search Console verification) aren't pages.
+  if (!/<html[\s>]/i.test(await readFile(file, 'utf8'))) continue;
+  warnings.push(`[orphan page] ${show(pageUrlOf(file))} is built but no page links to it`);
 }
 
 // ---------------------------------------------------------------- external
