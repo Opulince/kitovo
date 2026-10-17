@@ -1,4 +1,44 @@
 import { defineConfig } from 'astro/config';
+import { readFile, readdir } from 'node:fs/promises';
+import { join } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+/**
+ * /sitemap.xml is a hand-kept list (src/pages/sitemap.xml.ts). This fails the
+ * build if it drifts from the pages actually built: every indexable page's
+ * canonical URL must be in it, and it must list nothing else.
+ */
+function sitemapGuard() {
+  return {
+    name: 'kitovo:sitemap-guard',
+    hooks: {
+      'astro:build:done': async ({ dir, logger }) => {
+        const root = fileURLToPath(dir);
+        const files = (await readdir(root, { recursive: true })).filter((f) => f.endsWith('.html'));
+        const canonicals = new Set();
+        for (const file of files) {
+          const html = await readFile(join(root, file), 'utf8');
+          if (/<meta name="robots" content="[^"]*noindex/.test(html)) continue;
+          const canonical = html.match(/<link rel="canonical" href="([^"]+)"/)?.[1];
+          if (!canonical) throw new Error(`${file} is indexable but has no canonical URL.`);
+          canonicals.add(canonical);
+        }
+        const sitemap = await readFile(join(root, 'sitemap.xml'), 'utf8');
+        const listed = new Set([...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1]));
+        const missing = [...canonicals].filter((u) => !listed.has(u));
+        const extra = [...listed].filter((u) => !canonicals.has(u));
+        if (missing.length || extra.length) {
+          throw new Error(
+            'sitemap.xml is out of date (edit src/pages/sitemap.xml.ts).' +
+              (missing.length ? `\n  Missing: ${missing.join(', ')}` : '') +
+              (extra.length ? `\n  Not an indexable page: ${extra.join(', ')}` : ''),
+          );
+        }
+        logger.info(`sitemap.xml lists all ${listed.size} indexable pages.`);
+      },
+    },
+  };
+}
 
 /**
  * Where the site is served from. Canonical URLs, Open Graph images, the
@@ -37,4 +77,5 @@ export default defineConfig({
     inlineStylesheets: 'auto',
   },
   prefetch: false,
+  integrations: [sitemapGuard()],
 });
