@@ -21,8 +21,14 @@ export const site = {
   description:
     'Kitovo is an independent Android app publisher. We build simple, focused apps that each solve one everyday problem, starting with Cancelly, the free-trial reminder.',
   locale: 'en',
-  /** The people behind Kitovo, credited in the footer under the copyright. */
-  makers: ['Advay Srivastava', 'Anupam Srivastava'],
+  /**
+   * The people behind Kitovo, credited in the footer under the copyright. A
+   * handle is shown next to the name, linked to `url`.
+   */
+  makers: [
+    { name: 'Advay Srivastava', handle: 'Opulince', url: 'https://github.com/Opulince' },
+    { name: 'Anupam Srivastava' },
+  ] as { name: string; handle?: string; url?: string }[],
   /** Shown in the footer copyright line. Computed at build time. */
   copyrightYear: new Date().getFullYear(),
 

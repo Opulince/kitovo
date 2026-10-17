@@ -69,7 +69,22 @@ const columns = [
   <div class="container footer-bottom">
     <div class="footer-legal">
       <p>Copyright © {site.copyrightYear} Kitovo. All rights reserved.</p>
-      <p class="footer-small">Made by {site.makers.join(' and ')}.</p>
+      <p class="footer-small">
+        Made by{' '}
+        {
+          site.makers.map((m, i) => (
+            <>
+              {i > 0 && ' and '}
+              {m.name}
+              {m.handle && (
+                <>
+                  {' '}(<a class="footer-handle" href={m.url} rel="me noopener">@{m.handle}</a>)
+                </>
+              )}
+            </>
+          ))
+        }.
+      </p>
     </div>
     <p class="footer-small">
       Android and Google Play are trademarks of Google LLC.
@@ -194,6 +209,16 @@ const columns = [
   .footer-small {
     color: #9da1ad;
     font-size: 0.8125rem;
+  }
+
+  .footer-handle {
+    color: inherit;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .footer-handle:hover {
+    color: #fff;
   }
 
   @media (min-width: 560px) {
