@@ -2,7 +2,8 @@
  * Light / dark theme.
  * Starts from the device setting. Once the visitor picks a theme with the
  * header toggle, that choice is stored and becomes their default.
- * Loaded as a blocking script in <head> so the right theme paints first.
+ * Inlined as a blocking script in <head> (see BaseLayout) so the right theme
+ * paints first without an extra request.
  */
 (function () {
   var KEY = 'kitovo-theme';

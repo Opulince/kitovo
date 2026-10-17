@@ -74,7 +74,10 @@ export default defineConfig({
   trailingSlash: 'always',
   build: {
     format: 'directory',
-    inlineStylesheets: 'auto',
+    // The CSS is small (about 7 KB gzipped per page) and GitHub Pages only
+    // lets browsers cache it for 10 minutes, so inlining it beats a
+    // render-blocking request.
+    inlineStylesheets: 'always',
   },
   prefetch: false,
   integrations: [sitemapGuard()],

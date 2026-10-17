@@ -74,7 +74,7 @@
 
 /* ---------- Dark theme --------------------------------------------------
    Follows the device setting until the visitor picks a theme with the
-   header toggle (stored by /theme.js as data-theme on <html>). */
+   header toggle (stored by src/scripts/theme.js as data-theme on <html>). */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme='light']) {
   --snow: #0a0c14;
