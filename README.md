@@ -10,6 +10,7 @@ npm run dev       # http://localhost:4321
 npm run build     # static output in dist/
 npm run preview   # serve dist/
 npm run check     # type-check .astro and .ts files
+npm run check:links  # after a build: crawl dist/ for broken links, anchors, images, redirects
 ```
 
 Requires Node 22.12+.
@@ -27,7 +28,8 @@ src/
   pages/                    Routes. apps/[slug], support/[slug], privacy/[slug] are generated per app
   lib/                      JSON-LD builders, legal-text helpers
 public/                     Favicons, share images, manifest
-scripts/                    generate-brand-assets.mjs (renders icons and share images)
+scripts/                    generate-brand-assets.mjs (renders icons and share images),
+                            check-links.mjs (link health check, see below)
 ```
 
 Everything about an app comes from its file in `src/data/apps/`. The homepage shelf, `/apps`, `/apps/<slug>`, `/support/<slug>`, `/privacy/<slug>`, the disclaimer, the footer and the sitemap are all generated from the registry.
@@ -57,6 +59,10 @@ These are intentionally left as TODOs rather than invented. Search the code for 
 | `src/config/site.ts` → `legal.governingLaw` | Jurisdiction for the Terms. Shown as "Pending confirmation" until set. |
 | `src/config/site.ts` → `legal.entityName` | Change if Kitovo is a registered legal entity. |
 | `src/content/privacy/cancelly.md` | Sections marked "Pending confirmation": ad provider, Premium purchases, diagnostics SDKs, data locations, backup retention, inbound email retention, minimum age. **Fill these in before submitting the policy URL to Google Play.** |
+
+## Link health
+
+`npm run build && npm run check:links` crawls the built site the way GitHub Pages serves it and checks every internal link, `#anchor`, image, font, canonical, JSON-LD URL, sitemap entry and external link. It exits with an error for anything broken or for internal links that would redirect. External links that redirect or can't be reached are listed as warnings for you to review, never removed. Add `--skip-external` to stay offline.
 
 ## Deployment
 
