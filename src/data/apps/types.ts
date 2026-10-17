@@ -116,6 +116,25 @@ export interface AppDefinition {
   /** App-specific paragraphs for /disclaimer. */
   disclaimer: string[];
 
+  /**
+   * How to delete an account, shown at /<slug>/delete-account (the URL given
+   * to Google Play as the "Delete account URL"). The rest of the page's text
+   * lives in src/content/delete-account/<slug>.md. Leave out for apps without
+   * accounts.
+   */
+  accountDeletion?: {
+    /** Steps inside the app, in order. */
+    inApp: string[];
+    /** Inbox that handles deletion requests by email. Must be real and monitored. */
+    email: string;
+    /** Subject line to use, pre-filled in the email link. */
+    emailSubject: string;
+    /** Days within which an emailed request is carried out. */
+    emailDays: number;
+    /** ISO date the page text last changed. */
+    updated: string;
+  };
+
   /** The app's privacy policy lives in src/content/privacy/<slug>.md. */
   privacyPolicy: {
     /** ISO date the policy text last changed. */

@@ -4,7 +4,7 @@
  */
 import type { APIRoute } from 'astro';
 import { pageUrl, site } from '@/config/site';
-import { apps, appPath, supportPath, privacyPath } from '@/data/apps';
+import { apps, appPath, supportPath, privacyPath, deleteAccountPath } from '@/data/apps';
 
 interface Entry {
   path: string;
@@ -27,6 +27,11 @@ export const GET: APIRoute = () => {
       lastmod: app.privacyPolicy.updated,
       priority: '0.5',
     })),
+    ...apps.flatMap((app) =>
+      app.accountDeletion
+        ? [{ path: deleteAccountPath(app), lastmod: app.accountDeletion.updated, priority: '0.4' }]
+        : [],
+    ),
     { path: '/terms', lastmod: site.legal.termsUpdated, priority: '0.3' },
     { path: '/disclaimer', lastmod: site.legal.disclaimerUpdated, priority: '0.3' },
   ];

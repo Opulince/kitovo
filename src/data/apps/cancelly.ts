@@ -240,8 +240,16 @@ export const cancelly: AppDefinition = {
     'Cancelly is not a bank, a payment service or a financial adviser, and nothing in the app is financial advice.',
   ],
 
+  accountDeletion: {
+    inApp: ['Open Cancelly.', 'Go to Settings.', 'Tap Delete account.', 'Tap Delete everything to confirm.'],
+    email: 'cancelly@kitovo.in',
+    emailSubject: 'Delete my Cancelly account',
+    emailDays: 7,
+    updated: '2026-10-17',
+  },
+
   privacyPolicy: {
-    updated: '2026-10-02',
+    updated: '2026-10-17',
   },
 
   seo: {

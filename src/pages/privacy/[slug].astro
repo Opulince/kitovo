@@ -9,7 +9,7 @@ import { toHref } from '@/config/site';
 import LegalLayout from '@/layouts/LegalLayout.astro';
 import Icon from '@/components/Icon.astro';
 import { renderLegal, tokensFor } from '@/lib/legal';
-import { apps, appPath, privacyPath, supportPath } from '@/data/apps';
+import { apps, appPath, deleteAccountPath, privacyPath, supportPath } from '@/data/apps';
 import type { AppDefinition } from '@/data/apps';
 
 type Doc = MarkdownInstance<Record<string, unknown>>;
@@ -53,6 +53,11 @@ const crumbs = [
   <div slot="after" class="policy-links">
     <a class="link-arrow" href={toHref(appPath(app))}>About {app.name}<Icon name="arrow-right" /></a>
     <a class="link-arrow" href={toHref(supportPath(app))}>{app.name} support<Icon name="arrow-right" /></a>
+    {
+      app.accountDeletion && (
+        <a class="link-arrow" href={toHref(deleteAccountPath(app))}>Delete your {app.name} account<Icon name="arrow-right" /></a>
+      )
+    }
   </div>
 </LegalLayout>
 

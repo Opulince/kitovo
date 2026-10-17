@@ -1,0 +1,159 @@
+---
+/**
+ * Account deletion for one app: /<slug>/delete-account. This is the URL given
+ * to Google Play (Data safety › Delete account URL), so it must stay public
+ * and keep this address. The steps come from the app's `accountDeletion` data;
+ * the rest of the text lives in src/content/delete-account/<slug>.md.
+ */
+import type { MarkdownInstance } from 'astro';
+import { mailto, toHref } from '@/config/site';
+import LegalLayout from '@/layouts/LegalLayout.astro';
+import Icon from '@/components/Icon.astro';
+import { renderLegal, tokensFor } from '@/lib/legal';
+import { apps, deleteAccountPath, privacyPath, supportPath } from '@/data/apps';
+import type { AppDefinition } from '@/data/apps';
+
+type Doc = MarkdownInstance<Record<string, unknown>>;
+
+export function getStaticPaths() {
+  const docs = import.meta.glob<Doc>('/src/content/delete-account/*.md', { eager: true });
+  return apps
+    .filter((app) => app.accountDeletion)
+    .map((app) => {
+      const doc = docs[`/src/content/delete-account/${app.slug}.md`];
+      if (!doc) {
+        throw new Error(
+          `Missing account deletion page for "${app.name}". Add src/content/delete-account/${app.slug}.md.`,
+        );
+      }
+      return { params: { slug: app.slug }, props: { app, doc } };
+    });
+}
+
+interface Props {
+  app: AppDefinition;
+  doc: Doc;
+}
+
+const { app, doc } = Astro.props;
+const deletion = app.accountDeletion!;
+const { html, headings } = await renderLegal(doc, {
+  ...tokensFor(app),
+  deletionEmail: deletion.email,
+});
+const crumbs = [
+  { href: '/privacy', label: 'Privacy' },
+  { href: privacyPath(app), label: app.name },
+  { href: deleteAccountPath(app), label: 'Delete account' },
+];
+const requestMail = mailto(deletion.email, deletion.emailSubject);
+---
+
+<LegalLayout
+  title={`Delete your ${app.name} account`}
+  description={`How to delete your ${app.name} account, in the app or by email, and exactly what is deleted and what is kept.`}
+  updated={deletion.updated}
+  lead={`${app.name} by Kitovo`}
+  headings={[{ slug: 'how-to-delete', text: 'How to delete your account' }, ...headings]}
+  crumbs={crumbs}
+>
+  <section slot="before" class="delete-steps" aria-labelledby="how-to-delete">
+    <h2 id="how-to-delete">How to delete your account</h2>
+    <div class="delete-ways">
+      <div class="way">
+        <p class="way-label"><Icon name="phone" size={18} strokeWidth={2} />In the app</p>
+        <ol>
+          {deletion.inApp.map((step) => <li>{step}</li>)}
+        </ol>
+        <p class="way-note">Your account and everything in it are deleted straight away.</p>
+      </div>
+      <div class="way">
+        <p class="way-label"><Icon name="mail" size={18} strokeWidth={2} />Without the app</p>
+        <ol>
+          <li>
+            Email <a href={requestMail}>{deletion.email}</a> from the email address you sign in
+            to {app.name} with.
+          </li>
+          <li>Use the subject “{deletion.emailSubject}”.</li>
+        </ol>
+        <p class="way-note">
+          We delete your account within {deletion.emailDays} days and reply to confirm.
+        </p>
+        <a class="btn btn-primary btn-sm way-btn" href={requestMail}>
+          <Icon name="mail" />
+          Email a deletion request
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <Fragment set:html={html} />
+
+  <div slot="after" class="policy-links">
+    <a class="link-arrow" href={toHref(privacyPath(app))}>{app.name} privacy policy<Icon name="arrow-right" /></a>
+    <a class="link-arrow" href={toHref(supportPath(app))}>{app.name} support<Icon name="arrow-right" /></a>
+  </div>
+</LegalLayout>
+
+<style>
+  .delete-steps {
+    margin-bottom: 2.4em;
+  }
+
+  .delete-steps h2 {
+    margin-top: 0;
+  }
+
+  .delete-ways {
+    display: grid;
+    gap: 12px;
+    margin-top: 0.9em;
+  }
+
+  .way {
+    padding: 22px 26px;
+    border-radius: var(--r-lg);
+    background: var(--lilac);
+  }
+
+  .way-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text) !important;
+  }
+
+  .way ol {
+    margin-top: 0.7em;
+  }
+
+  .way-note {
+    margin-top: 0.8em;
+    font-weight: 600;
+  }
+
+  /* Beats the legal layout's `.prose a` link colour. */
+  :global(.prose) .way-btn {
+    margin-top: 1em;
+    color: var(--btn-fg);
+  }
+
+  .policy-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 28px;
+    margin-top: 2.4em !important;
+    padding-top: 1.2em;
+    border-top: 1px solid var(--line);
+  }
+
+  @media (min-width: 700px) {
+    .delete-ways {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+</style>

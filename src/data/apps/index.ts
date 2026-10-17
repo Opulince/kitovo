@@ -2,8 +2,9 @@
  * The Kitovo app registry.
  *
  * This list is the single source of truth for which apps exist. Pages for
- * /apps/<slug>, /support/<slug> and /privacy/<slug>, the apps directory, the
- * homepage shelf, the footer and the sitemap are all generated from it.
+ * /apps/<slug>, /support/<slug>, /privacy/<slug> and /<slug>/delete-account,
+ * the apps directory, the homepage shelf, the footer and the sitemap are all
+ * generated from it.
  * Order here is display order.
  */
 import { cancelly } from './cancelly';
@@ -34,5 +35,6 @@ export const statusLabel: Record<ReleaseStatus, string> = {
 export const appPath = (app: AppDefinition) => `/apps/${app.slug}`;
 export const supportPath = (app: AppDefinition) => `/support/${app.slug}`;
 export const privacyPath = (app: AppDefinition) => `/privacy/${app.slug}`;
+export const deleteAccountPath = (app: AppDefinition) => `/${app.slug}/delete-account`;
 
 export type { AppDefinition } from './types';

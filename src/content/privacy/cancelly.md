@@ -8,7 +8,7 @@ title: Cancelly Privacy Policy
 <li>Cancelly stores the trials you add and the email address you sign in with, so it can remind you before a trial turns into a charge.</li>
 <li>It never asks for your bank login, card numbers, contacts or location, and it never reads your inbox.</li>
 <li>If you forward an email to Cancelly, it reads that one message to find the trial’s details and keeps only those details, not the message.</li>
-<li>You can delete your account, and everything attached to it, from inside the app at any time.</li>
+<li>You can delete your account, and everything attached to it, from inside the app at any time, or by email. See <a href="/cancelly/delete-account">Delete your Cancelly account</a>.</li>
 <li>We do not sell your personal data.</li>
 </ul>
 </div>
@@ -98,15 +98,15 @@ Your account and trial data is stored by Supabase in Japan (its Tokyo region). O
 
 ## How long we keep it
 
-- **Account and trial data** is kept while you have an account. When you delete your account, your account and everything attached to it, including your trials, reminder history and forwarding address, is deleted from our database.
+- **Account and trial data** is kept while you have an account. When you delete your account, your account and everything attached to it, including your trials, reminder history and forwarding address, is deleted from our database. [Delete your Cancelly account](/cancelly/delete-account) lists exactly what is deleted and what is kept.
 - **Forwarded emails** are not stored by Cancelly. Only the details read from them are kept, and those are deleted with the trial or with your account.
 - **Support emails** are kept as long as we need them to help you.
-- **Backups:** our current database plan does not include daily backups, so we do not keep backup copies of your data. If that changes, this section will say how long backups are kept.
+- **Backups:** our database runs on Supabase’s free plan, which gives us no backups we can restore or download. Supabase may still keep its own internal daily backups for up to 7 days, so any copy of deleted data in them is gone within 7 days. If our plan changes, this section will say how long backups are kept.
 
 ## Your choices and rights
 
 - **Edit or delete any trial** from inside the app.
-- **Delete your account** and everything attached to it from inside the app, at any time.
+- **Delete your account** and everything attached to it from inside the app, at any time, or by email if you no longer have the app. [Here’s how](/cancelly/delete-account).
 - **Ask us** for a copy of your data, to correct it, or anything else about how it’s used, by emailing [{{supportEmail}}](mailto:{{supportEmail}}).
 
 Depending on where you live, you may have additional rights under local law. We will respond to requests within the time the law requires.
