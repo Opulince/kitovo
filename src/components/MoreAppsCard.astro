@@ -5,9 +5,12 @@
  */
 interface Props {
   compact?: boolean;
+  /** h2 when the card sits beside top-level app headings (the /apps grid). */
+  headingLevel?: 'h2' | 'h3';
 }
 
-const { compact = false } = Astro.props;
+const { compact = false, headingLevel = 'h3' } = Astro.props;
+const Heading = headingLevel;
 ---
 
 <aside class:list={['more-apps', { 'more-apps-compact': compact }]} aria-label="More apps">
@@ -15,7 +18,7 @@ const { compact = false } = Astro.props;
     <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"></path></svg>
   </span>
   <div>
-    <h3 class="more-title">More apps coming soon</h3>
+    <Heading class="more-title">More apps coming soon</Heading>
     <p class="more-body">
       New Kitovo apps land here when they are ready for everyday use, not before.
     </p>

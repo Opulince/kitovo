@@ -126,6 +126,8 @@ export interface AppDefinition {
     /** <title> for the app page (the site name is appended automatically). */
     title: string;
     description: string;
+    /** Meta description for /support/<slug>. Falls back to a generic one. */
+    supportDescription?: string;
     /** 1200×630 share image under /public. Falls back to the site image. */
     ogImage?: string;
   };

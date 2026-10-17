@@ -11,7 +11,7 @@ import StatusBadge from '@/components/StatusBadge.astro';
 import { apps, appPath, privacyPath, supportPath, androidPlatform } from '@/data/apps';
 import type { AppDefinition } from '@/data/apps';
 import { mailto, toHref } from '@/config/site';
-import { breadcrumbJsonLd, faqJsonLd } from '@/lib/seo';
+import { breadcrumbJsonLd } from '@/lib/seo';
 
 export function getStaticPaths() {
   return apps.map((app) => ({ params: { slug: app.slug }, props: { app } }));
@@ -41,9 +41,10 @@ const bugMail = mailto(app.supportEmail, `Bug report: ${app.name}`);
 ---
 
 <BaseLayout
-  title={`${app.name} support`}
-  description={`Help with ${app.name}: troubleshooting, account and data questions, bug reporting and how to contact ${app.name} support.`}
-  jsonLd={[breadcrumbJsonLd(crumbs), faqJsonLd(app.faq)]}
+  title={`${app.name} support: troubleshooting and help`}
+  description={app.seo.supportDescription ??
+    `Help with ${app.name}: troubleshooting, account and data questions, bug reporting and how to contact ${app.name} support.`}
+  jsonLd={[breadcrumbJsonLd(crumbs)]}
 >
   <PageHeader
     title={`${app.name} support`}

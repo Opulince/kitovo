@@ -6,6 +6,7 @@ import Icon from '@/components/Icon.astro';
 import type { IconName } from '@/components/icons';
 import { site, mailto, toHref } from '@/config/site';
 import { apps, supportPath } from '@/data/apps';
+import { organizationJsonLd } from '@/lib/seo';
 
 interface Topic {
   id: string;
@@ -58,8 +59,10 @@ const sharedInbox = allAddresses.size === 1 ? [...allAddresses][0] : null;
 ---
 
 <BaseLayout
-  title="Contact"
-  description="How to contact Kitovo: app support, bug reports, general and business inquiries. Email is the fastest way to reach us."
+  title="Contact Kitovo: app support, bug reports and inquiries"
+  exactTitle
+  description="How to contact Kitovo by email: app support, bug reports, general questions and business inquiries. Pick a topic and your email app opens with the subject set."
+  jsonLd={[organizationJsonLd()]}
 >
   <PageHeader
     eyebrow="Contact"
@@ -97,6 +100,7 @@ const sharedInbox = allAddresses.size === 1 ? [...allAddresses][0] : null;
                 </span>
                 <a class="btn btn-light btn-sm" href={toHref(supportPath(app))}>
                   Support page
+                  <span class="visually-hidden">for {app.name}</span>
                   <Icon name="arrow-right" />
                 </a>
               </li>

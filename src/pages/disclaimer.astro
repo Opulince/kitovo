@@ -14,7 +14,9 @@ const appHeadings = apps.map((app) => ({ slug: app.slug, text: app.name }));
 
 <LegalLayout
   title="Disclaimer"
-  description="What Kitovo apps can and can't guarantee. Cancelly is a reminder tool: it does not cancel subscriptions or stop merchants from charging you."
+  metaTitle="Disclaimer: what Kitovo apps can and can't guarantee"
+  exactTitle
+  description="What Kitovo apps are for and the limits of what they promise. Cancelly is a reminder tool: it doesn't cancel subscriptions or stop a merchant from charging you."
   updated={site.legal.disclaimerUpdated}
   lead="What our apps are for, and the limits of what they can promise."
   headings={[general, ...appHeadings, links]}

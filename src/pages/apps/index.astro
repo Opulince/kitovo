@@ -21,8 +21,9 @@ const itemList = {
 ---
 
 <BaseLayout
-  title="Apps"
-  description="Every Android app published by Kitovo, in one place. Each app is built to do one everyday job, with its own support and privacy policy."
+  title="All Kitovo apps: simple Android apps that do one job"
+  exactTitle
+  description="Browse every Android app published by Kitovo. Each one is built to do a single everyday job well, and each has its own support page and its own privacy policy."
   jsonLd={[itemList]}
 >
   <PageHeader
@@ -42,7 +43,7 @@ const itemList = {
           ))
         }
         <li>
-          <MoreAppsCard compact />
+          <MoreAppsCard compact headingLevel="h2" />
         </li>
       </ul>
 

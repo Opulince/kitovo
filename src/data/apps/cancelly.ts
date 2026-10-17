@@ -245,9 +245,13 @@ export const cancelly: AppDefinition = {
   },
 
   seo: {
-    title: 'Cancelly: free-trial reminders for Android',
+    title: 'Cancelly: free trial reminder app for Android',
+    // TODO(kitovo): when Cancelly is live on Google Play, replace "Coming soon
+    // to Android." with "Free on Google Play." (or similar).
     description:
-      'Cancelly reminds you before a free trial turns into a paid charge, so you can keep it or cancel it in time. An Android app by Kitovo, coming soon to Google Play.',
+      'Cancelly reminds you three times before a free trial becomes a paid charge, so you can keep it or cancel in time. No bank login needed. Coming soon to Android.',
+    supportDescription:
+      'Help with Cancelly: what to do if a reminder or sign-in code doesn’t arrive, how to fix a wrong charge date, deleting your account, and how to report a bug.',
     // Rendered by scripts/generate-brand-assets.mjs.
     ogImage: '/apps/cancelly/og.png',
   },

@@ -15,6 +15,8 @@ interface Props {
   title: string;
   /** Overrides the <title> (defaults to `title`). */
   metaTitle?: string;
+  /** Use the <title> as-is, without the site name appended. */
+  exactTitle?: boolean;
   description: string;
   updated: string;
   eyebrow?: string;
@@ -26,6 +28,7 @@ interface Props {
 const {
   title,
   metaTitle,
+  exactTitle = false,
   description,
   updated,
   eyebrow = 'Legal',
@@ -44,6 +47,7 @@ const related = [
 
 <BaseLayout
   title={metaTitle ?? title}
+  exactTitle={exactTitle}
   description={description}
   ogType="article"
   jsonLd={crumbs ? [breadcrumbJsonLd(crumbs)] : []}

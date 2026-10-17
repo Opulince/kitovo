@@ -19,6 +19,13 @@ export function organizationJsonLd() {
     url: pageUrl('/'),
     logo: assetUrl('/icon-512.png'),
     description: site.description,
+    email: site.contact.generalEmail,
+    contactPoint: {
+      '@type': 'ContactPoint',
+      contactType: 'customer support',
+      email: site.contact.generalEmail,
+      url: pageUrl('/contact'),
+    },
   };
 }
 
